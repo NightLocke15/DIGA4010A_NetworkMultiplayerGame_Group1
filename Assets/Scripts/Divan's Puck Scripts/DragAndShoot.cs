@@ -2,24 +2,23 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Mirror;
+using UnityEngine.Serialization;
 
 public class DragAndShoot : MonoBehaviour
 {
-    [Header("Drag and release Settings")] [SerializeField]
-    private float Force = 20f;
+    [Header("Drag and release Settings: Mouse")] [SerializeField]
+    private float mouseForce = 20f; //Force added to the Puck for mouse drag and shoot
     [SerializeField]
-    private float MaxLength = 5f;
-    private Vector2 StartPos, EndPos;
+    private float MaxLength = 5f; //Max distance that the mouse can pull back. The higher this is, the more force players can add by pulling further away from puck.
+    
+    private Vector2 StartPos, EndPos; //Use to get the direction in witch the player will shoot with mouse
     private Vector2 MousePos;
-    private RaycastHit hit;
-    [SerializeField] private Rigidbody rb;
+    private RaycastHit hit; //Selects the puck
+    [SerializeField] private Rigidbody rb; //Rigidbody of the puck
     
     [Header("Controller")]
     private CharacterController controller;
-    [SerializeField] private int ClickValue = 0; //Checks if the Click action is being held or not 
-
-    [Header("Mess Around Variables")] [SerializeField]
-    private Transform TestSprite;
+ 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -30,47 +29,44 @@ public class DragAndShoot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ClickValue == 1)
-        {
-            TheClickMethod();
-        }
         
-      //  Vector2 mouseDeta = Mouse.current.position.ReadValue();
     }
 
     public void OnClick(InputValue value)
     {
-        if (value.isPressed)
+        if (value.isPressed) //Checks if Click-action is pressed
         {
-            Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit);
-            if (hit.collider.tag == "Puck")
+            Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit); //Raycast to select objects we want to interact with
+            if (hit.collider != null) // Checks if we hit something
             {
-                StartPos = Mouse.current.position.ReadValue();
-                rb = hit.collider.gameObject.GetComponent<Rigidbody>();
+                if (hit.collider.tag == "Puck") //Checks if we hit a puck
+                {
+                    StartPos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
+                    rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                }
             }
+           
             
         }
 
-        else
+        else //Is called when the button is released
         {
-            if (hit.collider.tag == "Puck")
+            if (hit.collider != null) // Checks if we hit something
             {
-                Vector3 direction = new Vector3();
-                EndPos = Mouse.current.position.ReadValue();
-                direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).normalized;
-                float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).magnitude;
-                float clampedMag = Mathf.Clamp(mag, 0, MaxLength);
-                rb.AddForce(clampedMag * direction * Force);
-                // Debug.Log("Released");
-                hit = new RaycastHit();
+                if (hit.collider.tag == "Puck") //Checks if we hit a puck
+                {
+                    Vector3 direction = new Vector3(); 
+                    EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released
+                    direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).normalized; //We get only the direction between the start and end pos
+                    float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).magnitude; //We get the lenght between start and end pos
+                    float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
+                    rb.AddForce(clampedMag * direction * mouseForce); //This shoots the puck in the direction
+                    // Debug.Log("Released");
+                    hit = new RaycastHit(); //Reset hit
+                    rb = null; //Reset rb
+                }
             }
-            
         }
-    }
-
-    private void TheClickMethod()
-    {
-       // Debug.Log("Hi daar");
     }
 
     public void OnMoveMouse(InputValue value)
