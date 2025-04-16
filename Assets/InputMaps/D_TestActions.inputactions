@@ -19,7 +19,7 @@
                     "type": "Value",
                     "id": "4b50ec3a-fc06-4258-b0c5-7ae84aebfb32",
                     "expectedControlType": "Vector2",
-                    "processors": "NormalizeVector2",
+                    "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 }
@@ -50,7 +50,7 @@
                 {
                     "name": "",
                     "id": "7919c4eb-127f-4434-a589-831c55ac6309",
-                    "path": "<Mouse>/delta",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Key+Mouse",

@@ -8,7 +8,7 @@ public class DragAndShoot : MonoBehaviour
     [Header("Drag and release Settings")] [SerializeField]
     private float Force = 20f;
     [SerializeField]
-    private float MaxLenght = 5f;
+    private float MaxLength = 5f;
     private Vector2 StartPos, EndPos;
     private Vector2 MousePos;
     private RaycastHit hit;
@@ -43,16 +43,28 @@ public class DragAndShoot : MonoBehaviour
         if (value.isPressed)
         {
             Physics.Raycast(Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()), out hit);
-            StartPos = new Vector2(hit.point.x, hit.point.z);
-            rb = hit.collider.gameObject.GetComponent<Rigidbody>();
+            if (hit.collider.tag == "Puck")
+            {
+                StartPos = Mouse.current.position.ReadValue();
+                rb = hit.collider.gameObject.GetComponent<Rigidbody>();
+            }
+            
         }
 
         else
         {
+            if (hit.collider.tag == "Puck")
+            {
+                Vector3 direction = new Vector3();
+                EndPos = Mouse.current.position.ReadValue();
+                direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).normalized;
+                float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).magnitude;
+                float clampedMag = Mathf.Clamp(mag, 0, MaxLength);
+                rb.AddForce(clampedMag * direction * Force);
+                // Debug.Log("Released");
+                hit = new RaycastHit();
+            }
             
-            rb.AddForce(-MousePos * Force);
-           // Debug.Log("Released");
-            hit = new RaycastHit();
         }
     }
 
@@ -63,11 +75,10 @@ public class DragAndShoot : MonoBehaviour
 
     public void OnMoveMouse(InputValue value)
     {
-      
       if (value.Get<Vector2>() != Vector2.zero)
       {
           MousePos = value.Get<Vector2>();
+          Debug.Log(MousePos);
       }
-      Debug.Log(MousePos);
     }
 }
