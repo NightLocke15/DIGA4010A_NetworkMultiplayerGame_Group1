@@ -16,7 +16,7 @@
                 },
                 {
                     "name": "MoveMouse",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "4b50ec3a-fc06-4258-b0c5-7ae84aebfb32",
                     "expectedControlType": "Vector2",
                     "processors": "",
@@ -31,7 +31,7 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Key+Mouse",
+                    "groups": ";Key+Mouse;Gamepad",
                     "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -49,7 +49,29 @@
                 },
                 {
                     "name": "",
-                    "id": "7919c4eb-127f-4434-a589-831c55ac6309",
+                    "id": "f12152d2-6074-4f87-a4e0-50fa5205f6db",
+                    "path": "<VirtualMouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "def19fbb-baa6-4147-b791-e3d169cc29ac",
+                    "path": "<VirtualMouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "MoveMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f1d34ffa-4098-4cf0-8f06-ae073db67d5d",
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
@@ -85,6 +107,11 @@
                 {
                     "devicePath": "<Gamepad>",
                     "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<VirtualMouse>",
+                    "isOptional": true,
                     "isOR": false
                 }
             ]
