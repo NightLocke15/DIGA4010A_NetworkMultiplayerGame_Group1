@@ -1,6 +1,7 @@
 using UnityEngine;
 using Mirror;
 using UnityEngine.InputSystem;
+using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class FPSPlayer : NetworkBehaviour
 {
@@ -9,24 +10,24 @@ public class FPSPlayer : NetworkBehaviour
     public float lookSpeed = 2f;
     public float jumpHeight = 1.5f;
     public float gravity = -9.81f;
-
+    public float boostedSpeed = 100f;
+    private float currentSpeed;
+    [SyncVar] // Show current speed to all players
+    public bool isSpeedBoosted = false;
     [Header("References")]
     public Transform playerCamera;
-
     [Header("Private Stuff")]
     private CharacterController controller;
     private Vector2 moveInput;
     private Vector2 lookInput;
     private float verticalVelocity;
     private float cameraPitch = 0f;
-
     [Header("Shooting Stuff")]
     public Transform lazerTransform;
     public TrailRenderer lazerBeam;
-    private bool isShooting;
-
     void Start()
     {
+        currentSpeed = moveSpeed;
         controller = GetComponent<CharacterController>();
         if (!isLocalPlayer)
         {
@@ -36,14 +37,13 @@ public class FPSPlayer : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
     private void Update()
     {
         if (!isLocalPlayer) return;
+        Debug.Log(currentSpeed);
         HandleMovement();
         HandleLook();
     }
-
     private void HandleMovement()
     {
         Vector3 move = transform.right * moveInput.x + transform.forward *
@@ -58,7 +58,6 @@ public class FPSPlayer : NetworkBehaviour
         move.y = verticalVelocity;
         controller.Move(move * Time.deltaTime);
     }
-
     private void HandleLook()
     {
         float mouseX = lookInput.x * lookSpeed * Time.deltaTime;
@@ -68,7 +67,6 @@ public class FPSPlayer : NetworkBehaviour
         playerCamera.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
         transform.Rotate(Vector3.up * mouseX);
     }
-
     public void HandleShoot()
     {
         if (!isLocalPlayer) return;
@@ -93,17 +91,27 @@ public class FPSPlayer : NetworkBehaviour
             lazerTransform.forward * 50f;
         }
     }
-
+    [Server]
+    public void ApplySpeedBoost()
+    {
+        StartCoroutine(SpeedBoostRoutine());
+    }
+    IEnumerator SpeedBoostRoutine()
+    {
+        isSpeedBoosted = true;
+        currentSpeed = boostedSpeed;
+        yield return new WaitForSeconds(3f);
+        currentSpeed = moveSpeed;
+        isSpeedBoosted = false;
+    }
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
     }
-
     public void OnLook(InputValue value)
     {
         lookInput = value.Get<Vector2>();
     }
-
     public void OnAttack(InputValue value)
     {
         if (value.isPressed)
@@ -112,4 +120,3 @@ public class FPSPlayer : NetworkBehaviour
         }
     }
 }
-
