@@ -2,6 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 
 public class EnemySpawning : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class EnemySpawning : MonoBehaviour
         for (int i = 0; i < positions.Count; i++) { 
             if (positionTrue[i] == false)
             {
-                GameObject Object = Instantiate(enemy, positions[i], Quaternion.identity);
+                GameObject enemyObject = Instantiate(enemy, positions[i], Quaternion.identity);
                 spawnCount++;
                 positionTrue[i] = true;
                 

@@ -1,4 +1,6 @@
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyMovement : MonoBehaviour
 {
@@ -7,8 +9,13 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private bool move;
     [SerializeField] private float moveTime;
 
+    private NavMeshAgent enemyAgent;
+    private NavMeshSurface navSurface;
+
     private void Start()
     {
+        enemyAgent = gameObject.GetComponent<NavMeshAgent>();
+        navSurface = GameObject.Find("EnemyNavmesh").GetComponent<NavMeshSurface>();
         target = GameObject.Find("Tower");
     }
 
@@ -17,7 +24,13 @@ public class EnemyMovement : MonoBehaviour
         if (move == true)
         {
             moveTime += Time.deltaTime;
+            enemyAgent.isStopped = false;
             EnemyMove();
+        }
+        else
+        {
+            EnemyStop();
+            enemyAgent.isStopped = true;
         }
 
         if (moveTime > 0.5f)
@@ -29,6 +42,12 @@ public class EnemyMovement : MonoBehaviour
 
     private void EnemyMove()
     {
-        transform.position = Vector3.MoveTowards(transform.position, target.transform.position, 2 * Time.deltaTime);
+        navSurface.BuildNavMesh();
+        enemyAgent.SetDestination(target.transform.position);
+    }
+
+    private void EnemyStop()
+    {
+        enemyAgent.SetDestination(transform.position);
     }
 }
