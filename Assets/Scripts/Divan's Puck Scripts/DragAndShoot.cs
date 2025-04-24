@@ -5,6 +5,8 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Users;
 using Mirror;
 using UnityEngine.Serialization;
+using Unity.Cinemachine;
+using UnityEngine.Splines;
 
 public class DragAndShoot : MonoBehaviour
 {
@@ -37,11 +39,17 @@ public class DragAndShoot : MonoBehaviour
     private CharacterController controller;
     [SerializeField] private PlayerInput playerInput;
  
+    [Header("Cinemachine Control")]
+    [SerializeField]private CinemachineSplineDolly splineDolly;
+    [SerializeField] private float dollySpeed = 5f, scrollSpeed = 10f;
+    [SerializeField] private float targetDollyPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        targetDollyPos = splineDolly.CameraPosition;
+
     }
 
     // Update is called once per frame
@@ -192,11 +200,21 @@ public class DragAndShoot : MonoBehaviour
         }
     }
 
-    public void OnMoveMouse(InputValue value)
+    public void OnLook(InputValue value)
     {
-      if (value.Get<Vector2>() != Vector2.zero)
-      {
-          MousePos = value.Get<Vector2>();
-      }
+        Vector2 dir = value.Get<Vector2>();
+        float change = dir.y * scrollSpeed;
+        targetDollyPos += change;
+        targetDollyPos = Mathf.Clamp(targetDollyPos, -1.5f, 1.5f);
+        Debug.Log(change);
+        splineDolly.CameraPosition = Mathf.Lerp(splineDolly.CameraPosition, targetDollyPos,
+            Time.deltaTime * dollySpeed);
     }
+    // public void OnMoveMouse(InputValue value)
+    // {
+    //   if (value.Get<Vector2>() != Vector2.zero)
+    //   {
+    //       MousePos = value.Get<Vector2>();
+    //   }
+    // }
 }
