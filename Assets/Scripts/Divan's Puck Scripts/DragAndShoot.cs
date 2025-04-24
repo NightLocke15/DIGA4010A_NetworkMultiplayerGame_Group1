@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 
 public class DragAndShoot : MonoBehaviour
 {
-    [Header("Drag and release Settings: Mouse")] [SerializeField]
+    [Header("Drag and release Variables")] [SerializeField]
     private float mouseForce = 20f; //Force added to the Puck for mouse drag and shoot
     [SerializeField]
     private float MaxLength = 5f; //Max distance that the mouse can pull back. The higher this is, the more force players can add by pulling further away from puck.
@@ -108,14 +108,14 @@ public class DragAndShoot : MonoBehaviour
         InputState.Change(virtualMouse.position, newPos);
         InputState.Change(virtualMouse.delta, deltaValue);
 
-        bool rightTriggerIsPressed = Gamepad.current.rightShoulder.IsPressed();
-        if (previousMouseState != rightTriggerIsPressed)
+        bool southbuttonTriggerIsPressed = Gamepad.current.buttonSouth.IsPressed();
+        if (previousMouseState != southbuttonTriggerIsPressed)
         {
-          //  Debug.Log("Clicked");
+            Debug.Log("Clicked");
             virtualMouse.CopyState<MouseState>(out var mouseState);
-            mouseState.WithButton(MouseButton.Left, rightTriggerIsPressed);
+            mouseState.WithButton(MouseButton.Left, southbuttonTriggerIsPressed);
             InputState.Change(virtualMouse, mouseState);
-            previousMouseState = rightTriggerIsPressed;
+            previousMouseState = southbuttonTriggerIsPressed;
         }
 
         AnchorCursor(newPos);
