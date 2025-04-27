@@ -903,6 +903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 556ceaf38c0037542b24613d6852d9a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawningScript: {fileID: 0}
 --- !u!1 &757832194
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,6 +1219,7 @@ MonoBehaviour:
   spawnCount: 0
   bigSpawn: 0
   smallSpawn: 0
+  waitTime: 0.2
   enemy: {fileID: 1954547992502422919, guid: eedd1bbc66589814c8c9258c4dd4382f, type: 3}
   tower: {fileID: 0}
 --- !u!4 &967205641
