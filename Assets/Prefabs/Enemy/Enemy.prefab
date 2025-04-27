@@ -116,7 +116,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!64 &1576153972742020591
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -151,9 +151,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7340e44f22945d64ca9cd4b3749a72f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  bigEnemy: 0
+  bigEnemyColour: {fileID: 2100000, guid: 13814a5f7c82b80479b45c40497de7bd, type: 2}
+  smallEnemy: 0
+  smallEnemyColour: {fileID: 2100000, guid: ad32227ae34163247a0b1717fe85bcd7, type: 2}
   move: 0
   moveTime: 0
+  target: {fileID: 0}
 --- !u!195 &-5780744381360234758
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -173,6 +177,6 @@ NavMeshAgent:
   m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0.5
+  m_BaseOffset: 0.1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
