@@ -13,7 +13,7 @@ public class TowerHandler : MonoBehaviour
     {
         if (collision.collider.tag == "Enemy")
         {
-            Destroy(collision.gameObject);
+            Destroy(collision.gameObject); //Destroy the enemy when it hit's the tower
         }
     }
 }

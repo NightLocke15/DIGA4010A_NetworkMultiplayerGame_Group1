@@ -44,6 +44,11 @@ public class DragAndShoot : MonoBehaviour
     [SerializeField] private float dollySpeed = 5f, scrollSpeed = 10f;
     [SerializeField] private float targetDollyPos;
 
+    //Christine Additions
+    [Header("Aiming Line")]
+    [SerializeField] private LineRenderer lineRend;
+    private GameObject puckObject;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -61,6 +66,8 @@ public class DragAndShoot : MonoBehaviour
             OnControlsChange(playerInput);
         }
         previousControlScheme = playerInput.currentControlScheme;
+
+        
     }
 
     private void OnEnable()
@@ -175,8 +182,6 @@ public class DragAndShoot : MonoBehaviour
                     rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
                 }
             }
-           
-            
         }
 
         else //Is called when the button is released

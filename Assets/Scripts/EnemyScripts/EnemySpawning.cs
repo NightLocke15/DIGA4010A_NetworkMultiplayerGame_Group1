@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 
 public class EnemySpawning : MonoBehaviour
 {
-    [Header("Variables")]
+    [Header("Variables")] //Variables needed to keep track of the enemies spawned
     public bool spawned;
 
     public int wave = 1;
@@ -18,9 +18,9 @@ public class EnemySpawning : MonoBehaviour
 
     private float waitTime = 0.2f;
 
-    [Header("Items")]
-    [SerializeField] private GameObject enemy;
-    [SerializeField] private GameObject tower;
+    [Header("Items")] //Items needed to spawn enemies
+    [SerializeField] private GameObject enemy; //Enemy prefab to be instantiated
+    [SerializeField] private GameObject tower; //Tower to determine the mid point of the circle around which the enemies should be spawned
 
     private void Start()
     {
@@ -39,61 +39,35 @@ public class EnemySpawning : MonoBehaviour
     //https://discussions.unity.com/t/how-to-instantiate-objects-in-a-circle-formation-around-a-point/226980
     private IEnumerator SpawnEnemies(float wait)
     {
-        maxSpawn = 4 + 2 * wave;
+        maxSpawn = 4 + 2 * wave; //How many enemies should be spawned based on the current wave
         for (int i = 0; i < maxSpawn; i++)
         {
-            float rad = (2 * Mathf.PI / maxSpawn * i) + 1.5708f;
+            float rad = (2 * Mathf.PI / maxSpawn * i) + 1.5708f; //Finding the degrees at which the next enemy should be spawned at
 
-            float xPos = Mathf.Sin(rad);
-            float zPos = Mathf.Cos(rad);
+            //Finding the x and z position of the direction the enemy should be spawned in
+            float xDirection = Mathf.Sin(rad); 
+            float zDirection = Mathf.Cos(rad);
 
-            Vector3 enemyDirection = new Vector3(xPos, 10, zPos);
+            Vector3 enemyDirection = new Vector3(xDirection, 1, zDirection); //The vector direction the enemy should be spawned in
 
-            Vector3 enemyPosition = tower.transform.position + enemyDirection * 7;
+            Vector3 enemyPosition = tower.transform.position + enemyDirection * 7; //The position at which the enemy is spawned based on the mid point and the radius at which it should be spawned
 
-            if (bigSpawn <= smallSpawn)
+            //Spawing a big enemy and then a small enemy
+            if (bigSpawn <= smallSpawn) 
             {
                 GameObject enemyObject = Instantiate(enemy, enemyPosition, Quaternion.identity);
-                enemyObject.GetComponent<NavMeshAgent>().enabled = false;
-                enemyObject.GetComponent<EnemyController>().bigEnemy = true;
+                enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
+                enemyObject.GetComponent<EnemyController>().bigEnemy = true; //Determining what type of enemy it will be
                 bigSpawn++;
             }
             else if (smallSpawn < bigSpawn)
             {
                 GameObject enemyObject = Instantiate(enemy, enemyPosition, Quaternion.identity);
-                enemyObject.GetComponent<NavMeshAgent>().enabled = false;
-                enemyObject.GetComponent<EnemyController>().smallEnemy = true;
+                enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
+                enemyObject.GetComponent<EnemyController>().smallEnemy = true; //Determining what type of enemy it will be
                 smallSpawn++;
             }
-            yield return new WaitForSeconds(wait);
+            yield return new WaitForSeconds(wait); //Wait a small amount of time before spawing the next enemy
         }
-
-
-        //for (int i = 0; i < positions.Count; i++) {
-        //    if (positionTrue[i].gameObject == null)
-        //    {
-        //        int randomNum = Random.Range(1, 2);
-
-        //        if (randomNum == 1 && bigSpawn < 3)
-        //        {
-        //            GameObject enemyObject = Instantiate(enemy, positions[i], Quaternion.identity);
-        //            enemyObject.GetComponent<NavMeshAgent>().enabled = false;
-        //            enemyObject.GetComponent<EnemyController>().bigEnemy = true;
-        //            spawnCount++;
-        //            bigSpawn++;
-        //            positionTrue[i] = enemyObject;
-        //        }
-        //        else if (randomNum == 2 && smallSpawn < 3)
-        //        {
-        //            GameObject enemyObject = Instantiate(enemy, positions[i], Quaternion.identity);
-        //            enemyObject.GetComponent<NavMeshAgent>().enabled = false;
-        //            enemyObject.GetComponent<EnemyController>().smallEnemy = true;
-        //            spawnCount++;
-        //            smallSpawn++;
-        //            positionTrue[i] = enemyObject;
-        //        }               
-        //    }
-        //    yield return new WaitForSeconds(wait);
-        //}
     }
 }
