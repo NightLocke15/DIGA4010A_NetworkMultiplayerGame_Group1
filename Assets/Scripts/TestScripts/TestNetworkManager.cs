@@ -1,7 +1,7 @@
 using UnityEngine;
 using Mirror;
 using System.Collections.Generic;
-public class CustomNetworkManager : NetworkManager
+public class CustomNetworkManagers : NetworkManager
 {
     [Header("Player Prefabs")]
     public List<GameObject> playerPrefabs = new List<GameObject>(); // Drag allyour player prefabs here

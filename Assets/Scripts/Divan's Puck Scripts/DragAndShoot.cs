@@ -7,11 +7,12 @@ using Mirror;
 using UnityEngine.Serialization;
 using Unity.Cinemachine;
 using UnityEngine.Splines;
+using UnityEngine.InputSystem.UI;
 
 public class DragAndShoot : MonoBehaviour
 {
     [Header("Drag and release Variables")] [SerializeField]
-    private float mouseForce = 20f; //Force added to the Puck for mouse drag and shoot
+    public float mouseForce = 20f; //Force added to the Puck for mouse drag and shoot
     [SerializeField]
     private float MaxLength = 5f; //Max distance that the mouse can pull back. The higher this is, the more force players can add by pulling further away from puck.
     private Vector2 StartPos, EndPos; //Use to get the direction in witch the player will shoot with mouse
@@ -23,7 +24,7 @@ public class DragAndShoot : MonoBehaviour
     [SerializeField] private RectTransform cursorTransform;
     private Mouse virtualMouse;
     private Mouse realMouse;
-    private Mouse currentMouse;
+    public Mouse currentMouse;
     [SerializeField] private RectTransform canvasRectTransform;
     [SerializeField] private Canvas canvas;
     [SerializeField] private Camera PlayerCamera;
@@ -45,16 +46,16 @@ public class DragAndShoot : MonoBehaviour
     [SerializeField] private float targetDollyPos;
 
     //Christine Additions
-    [Header("Aiming Line")]
-    [SerializeField] private LineRenderer lineRend;
-    private GameObject puckObject;
+    private InputSystemUIInputModule inputModule;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         controller = GetComponent<CharacterController>();
         targetDollyPos = splineDolly.CameraPosition;
-
+        inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
+        gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
+        gameObject.transform.GetChild(2).GetComponent<CinemachineCamera>().Target.TrackingTarget = GameObject.Find("TargetLocation").transform;
     }
 
     // Update is called once per frame
