@@ -181,6 +181,7 @@ public class DragAndShoot : MonoBehaviour
                 {
                     StartPos = currentMouse.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
                     rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                    
                 }
             }
         }
@@ -199,6 +200,8 @@ public class DragAndShoot : MonoBehaviour
                     float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
                     rb.AddForce(clampedMag * direction * mouseForce); //This shoots the puck in the direction
                     // Debug.Log("Released");
+                    //hit.collider.gameObject.tag = "Ally";
+                    //hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
                     hit = new RaycastHit(); //Reset hit
                     rb = null; //Reset rb
                 }

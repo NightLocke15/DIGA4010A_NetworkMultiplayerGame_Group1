@@ -18,6 +18,8 @@ public class EnemySpawning : MonoBehaviour
 
     private float waitTime = 0.2f;
 
+    [SerializeField] private List<GameObject> spawnList = new List<GameObject>();
+
     [Header("Items")] //Items needed to spawn enemies
     [SerializeField] private GameObject enemy; //Enemy prefab to be instantiated
     [SerializeField] private GameObject tower; //Tower to determine the mid point of the circle around which the enemies should be spawned
@@ -32,6 +34,14 @@ public class EnemySpawning : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
         {
             StartCoroutine(SpawnEnemies(waitTime));
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            for (int i = 0; i < spawnList.Count; i++) 
+            {
+                spawnList[i].GetComponent<EnemyController>().move = true;
+            }
         }
     }
 
@@ -59,6 +69,7 @@ public class EnemySpawning : MonoBehaviour
                 enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
                 enemyObject.GetComponent<EnemyController>().bigEnemy = true; //Determining what type of enemy it will be
                 bigSpawn++;
+                spawnList.Add(enemyObject);
             }
             else if (smallSpawn < bigSpawn)
             {
@@ -66,6 +77,7 @@ public class EnemySpawning : MonoBehaviour
                 enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
                 enemyObject.GetComponent<EnemyController>().smallEnemy = true; //Determining what type of enemy it will be
                 smallSpawn++;
+                spawnList.Add(enemyObject);
             }
             yield return new WaitForSeconds(wait); //Wait a small amount of time before spawing the next enemy
         }

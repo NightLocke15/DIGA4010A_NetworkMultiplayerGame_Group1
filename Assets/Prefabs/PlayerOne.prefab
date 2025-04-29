@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3260206754032789700}
   - component: {fileID: 8906879992566472264}
-  - component: {fileID: 4950689118974333916}
   - component: {fileID: 4514535499030250652}
   - component: {fileID: 7982960713453782991}
   m_Layer: 0
@@ -86,14 +85,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &4950689118974333916
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 923632804250962371}
-  m_Enabled: 1
 --- !u!114 &4514535499030250652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,7 +582,6 @@ MonoBehaviour:
   dollySpeed: 30
   scrollSpeed: 30
   targetDollyPos: 0
-  lineRend: {fileID: 0}
 --- !u!114 &7480642689343855892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -599,7 +589,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2921166637025824828}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7a0e41596ac5d44b9183bc426248620, type: 3}
   m_Name: 

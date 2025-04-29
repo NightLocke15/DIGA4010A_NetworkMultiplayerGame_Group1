@@ -15,7 +15,7 @@ public class EnemyController : MonoBehaviour
     #endregion
 
     [Header("Variables")] //Variables needed for movement adn any other actions of the enemies
-    [SerializeField] private bool move;
+    public bool move;
     [SerializeField] private float moveTime;
 
 
@@ -67,6 +67,14 @@ public class EnemyController : MonoBehaviour
         {
             move = false;
             moveTime = 0f;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.tag == "Puck" || collision.collider.tag == "Ally")
+        {
+            Destroy(gameObject);
         }
     }
 

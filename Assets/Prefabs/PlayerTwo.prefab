@@ -324,7 +324,6 @@ MonoBehaviour:
   dollySpeed: 30
   scrollSpeed: 30
   targetDollyPos: 0
-  lineRend: {fileID: 0}
 --- !u!114 &1033090628804288496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,7 +331,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2850685191081914487}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7a0e41596ac5d44b9183bc426248620, type: 3}
   m_Name: 
@@ -475,7 +474,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7439821512441213939}
   - component: {fileID: 125481038203992934}
-  - component: {fileID: 9216369977034963469}
   - component: {fileID: 616647698238547628}
   - component: {fileID: 4201687960090124198}
   m_Layer: 0
@@ -551,14 +549,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &9216369977034963469
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5657860302092783002}
-  m_Enabled: 1
 --- !u!114 &616647698238547628
 MonoBehaviour:
   m_ObjectHideFlags: 0
