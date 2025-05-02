@@ -37,7 +37,7 @@ public class DragAndShoot : NetworkBehaviour
     private const string mouseScheme = "Keyboard&Mouse";
     
     [Header("Controller")]
-    private CharacterController controller;
+    [SerializeField] private CharacterController controller;
     [SerializeField] private PlayerInput playerInput;
  
     [Header("Cinemachine Control")]
@@ -56,9 +56,10 @@ public class DragAndShoot : NetworkBehaviour
         inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
         gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
         gameObject.transform.GetChild(2).GetComponent<CinemachineCamera>().Target.TrackingTarget = GameObject.Find("TargetLocation").transform;
+
         if (!isLocalPlayer)
         {
-            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(false);
         }
     }
 
@@ -71,8 +72,6 @@ public class DragAndShoot : NetworkBehaviour
             OnControlsChange(playerInput);
         }
         previousControlScheme = playerInput.currentControlScheme;
-
-        
     }
 
     private void OnEnable()

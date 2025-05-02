@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class AimLine : MonoBehaviour
 {
-    [SerializeField] private DragAndShoot dragAndShootScript;
     [SerializeField] private Camera playerCamera;
     private Vector3 mousePos;
     private Vector3 worldPos;
@@ -17,7 +16,7 @@ public class AimLine : MonoBehaviour
     private void Update()
     {
         //https://stackoverflow.com/questions/75603761/unity-screentoworldpoint-function-always-returns-the-camera-position-even-with-a
-        mousePos = dragAndShootScript.currentMouse.position.ReadValue();
+        mousePos = this.gameObject.GetComponent<DragAndShoot>().currentMouse.position.ReadValue();
         Ray ray = playerCamera.ScreenPointToRay(mousePos);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
