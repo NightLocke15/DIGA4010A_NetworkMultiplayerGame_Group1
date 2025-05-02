@@ -23,27 +23,39 @@ public class AimLine : MonoBehaviour
         {
             worldPos = hit.point;
 
-            if (hit.collider.name == "Puck")
+            if (hit.collider.tag == "Puck")
             {
                 chosenPuck = hit.collider.gameObject;
-                aimLine = chosenPuck.transform.GetChild(0).GetComponent<LineRenderer>(); 
+                Debug.Log(chosenPuck.name);
+                aimLine = chosenPuck.transform.GetChild(0).GetComponent<LineRenderer>();               
             }
 
             if (chosenPuck != null)
             {
                 if (Input.GetMouseButton(0)) 
                 {
-                    aimLine.enabled = true;
-                    aimLine.SetPosition(0, chosenPuck.transform.position);
-                    aimLine.SetPosition(1, new Vector3((chosenPuck.transform.position - (worldPos - chosenPuck.transform.position).normalized * (worldPos - chosenPuck.transform.position).magnitude * 2).x,
-                        chosenPuck.transform.position.y,
-                        (chosenPuck.transform.position - (worldPos - chosenPuck.transform.position).normalized * (worldPos - chosenPuck.transform.position).magnitude * 2).z));
+                    if (aimLine != null)
+                    {
+                        aimLine.enabled = true;
+                        aimLine.SetPosition(0, chosenPuck.transform.position);
+                        aimLine.SetPosition(1, new Vector3((chosenPuck.transform.position - (worldPos - chosenPuck.transform.position).normalized * (worldPos - chosenPuck.transform.position).magnitude * 2).x,
+                            chosenPuck.transform.position.y,
+                            (chosenPuck.transform.position - (worldPos - chosenPuck.transform.position).normalized * (worldPos - chosenPuck.transform.position).magnitude * 2).z));
+                    }
                 }
                 else if (Input.GetMouseButtonUp(0)) 
                 {
-                    aimLine.enabled = false;
+                    if (aimLine != null)
+                    {
+                        aimLine.enabled = false;
+                    }                        
                 }
                 
+            }
+
+            if (hit.collider.tag == "Ally")
+            {
+                Destroy(aimLine);
             }
             
         }

@@ -9,7 +9,7 @@ using Unity.Cinemachine;
 using UnityEngine.Splines;
 using UnityEngine.InputSystem.UI;
 
-public class DragAndShoot : MonoBehaviour
+public class DragAndShoot : NetworkBehaviour
 {
     [Header("Drag and release Variables")] [SerializeField]
     public float mouseForce = 20f; //Force added to the Puck for mouse drag and shoot
@@ -56,6 +56,10 @@ public class DragAndShoot : MonoBehaviour
         inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
         gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
         gameObject.transform.GetChild(2).GetComponent<CinemachineCamera>().Target.TrackingTarget = GameObject.Find("TargetLocation").transform;
+        if (!isLocalPlayer)
+        {
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -200,8 +204,8 @@ public class DragAndShoot : MonoBehaviour
                     float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
                     rb.AddForce(clampedMag * direction * mouseForce); //This shoots the puck in the direction
                     // Debug.Log("Released");
-                    //hit.collider.gameObject.tag = "Ally";
-                    //hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
+                    hit.collider.gameObject.tag = "Ally";
+                    hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
                     hit = new RaycastHit(); //Reset hit
                     rb = null; //Reset rb
                 }

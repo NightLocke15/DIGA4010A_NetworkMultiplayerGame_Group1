@@ -70,14 +70,6 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.tag == "Puck" || collision.collider.tag == "Ally")
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void EnemyMove()
     {
         navSurface.BuildNavMesh(); // Rebuilding the NavMesh in the case that there are new stationary objects on the board that the enemies need to avoid

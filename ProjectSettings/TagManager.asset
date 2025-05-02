@@ -6,17 +6,17 @@ TagManager:
   tags:
   - Enemy
   - Puck
+  - Ally
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
   - Tower
-  - Puck
   - Water
+  - UI
   - UI
   - PlayerAreas
   - Walls
-  - 
   - 
   - 
   - 
