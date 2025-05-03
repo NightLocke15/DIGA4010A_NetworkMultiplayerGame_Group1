@@ -11,7 +11,7 @@ public class AimLine : NetworkBehaviour
 
     private void Start()
     {
-        aimLine.enabled = false;
+        
     }
 
     private void Update()
@@ -19,7 +19,7 @@ public class AimLine : NetworkBehaviour
         //https://stackoverflow.com/questions/75603761/unity-screentoworldpoint-function-always-returns-the-camera-position-even-with-a
         if (isLocalPlayer)
         {
-            mousePos = this.gameObject.GetComponent<DragAndShoot>().currentMouse.position.ReadValue();
+            //mousePos = this.gameObject.GetComponent<DragAndShoot>().currentMouse.position.ReadValue();
         }
         
         Ray ray = playerCamera.ScreenPointToRay(mousePos);

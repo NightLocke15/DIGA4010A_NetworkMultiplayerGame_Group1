@@ -294,7 +294,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 125481038203992934}
@@ -322,6 +322,7 @@ MonoBehaviour:
   PlayerCamera: {fileID: 125481038203992934}
   cursorSpeed: 1000
   padding: 15
+  controller: {fileID: 0}
   playerInput: {fileID: 2370121393118372986}
   splineDolly: {fileID: 8765204425894170709}
   dollySpeed: 30
@@ -339,7 +340,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7a0e41596ac5d44b9183bc426248620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragAndShootScript: {fileID: 4302369096824443299}
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   playerCamera: {fileID: 125481038203992934}
 --- !u!114 &7427582974738579511
 MonoBehaviour:

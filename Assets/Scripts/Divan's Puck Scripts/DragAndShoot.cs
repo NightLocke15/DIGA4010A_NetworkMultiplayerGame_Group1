@@ -60,6 +60,7 @@ public class DragAndShoot : NetworkBehaviour
         if (!isLocalPlayer)
         {
             gameObject.transform.GetChild(2).gameObject.SetActive(false);
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
         }
     }
 
@@ -176,7 +177,7 @@ public class DragAndShoot : NetworkBehaviour
     {
         if (value.isPressed) //Checks if Click-action is pressed
         {
-          // Debug.Log("Pressed");
+           Debug.Log("Pressed");
             Physics.Raycast(PlayerCamera.ScreenPointToRay(currentMouse.position.ReadValue()), out hit); //Raycast to select objects we want to interact with
             if (hit.collider != null) // Checks if we hit something
             {
