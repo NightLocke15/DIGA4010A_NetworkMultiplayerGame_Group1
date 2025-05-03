@@ -587,6 +587,9 @@ MonoBehaviour:
   dollySpeed: 30
   scrollSpeed: 30
   targetDollyPos: 0
+  puckScript: {fileID: 0}
+  placePos: {fileID: 0}
+  storePos: {fileID: 0}
 --- !u!114 &7480642689343855892
 MonoBehaviour:
   m_ObjectHideFlags: 0
