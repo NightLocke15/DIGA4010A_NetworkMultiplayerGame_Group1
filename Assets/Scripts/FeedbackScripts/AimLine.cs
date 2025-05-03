@@ -1,6 +1,7 @@
 using UnityEngine;
+using Mirror;
 
-public class AimLine : MonoBehaviour
+public class AimLine : NetworkBehaviour
 {
     [SerializeField] private Camera playerCamera;
     private Vector3 mousePos;
@@ -16,7 +17,11 @@ public class AimLine : MonoBehaviour
     private void Update()
     {
         //https://stackoverflow.com/questions/75603761/unity-screentoworldpoint-function-always-returns-the-camera-position-even-with-a
-        mousePos = this.gameObject.GetComponent<DragAndShoot>().currentMouse.position.ReadValue();
+        if (isLocalPlayer)
+        {
+            mousePos = this.gameObject.GetComponent<DragAndShoot>().currentMouse.position.ReadValue();
+        }
+        
         Ray ray = playerCamera.ScreenPointToRay(mousePos);
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
@@ -50,11 +55,6 @@ public class AimLine : MonoBehaviour
                     }                        
                 }
                 
-            }
-
-            if (hit.collider.tag == "Ally")
-            {
-                Destroy(aimLine);
             }
             
         }
