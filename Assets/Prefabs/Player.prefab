@@ -28,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 923632804250962371}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15499686, y: -0.0009572798, z: 0.00015019049, w: 0.9879145}
-  m_LocalPosition: {x: -1.9372554, y: 10.408611, z: -28.975792}
+  m_LocalRotation: {x: 0.121065274, y: 0.015550615, z: -0.0018968257, w: 0.992521}
+  m_LocalPosition: {x: -3.0372553, y: 10.408611, z: -34.675797}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -588,6 +588,9 @@ MonoBehaviour:
   dollySpeed: 30
   scrollSpeed: 30
   targetDollyPos: 0
+  puckScript: {fileID: 0}
+  placePos: {fileID: 0}
+  storePos: {fileID: 0}
 --- !u!1 &6856024654971194665
 GameObject:
   m_ObjectHideFlags: 0

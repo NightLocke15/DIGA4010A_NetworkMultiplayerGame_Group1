@@ -6,7 +6,9 @@ using UnityEngine.InputSystem.Users;
 using Mirror;
 using UnityEngine.Serialization;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine.Splines;
+using MouseButton = UnityEngine.InputSystem.LowLevel.MouseButton;
 
 public class DragAndShoot : MonoBehaviour
 {
@@ -44,11 +46,16 @@ public class DragAndShoot : MonoBehaviour
     [SerializeField] private float dollySpeed = 5f, scrollSpeed = 10f;
     [SerializeField] private float targetDollyPos;
 
+    [Header("Puck Control")] [SerializeField]
+    private PuckScript puckScript;
+    [SerializeField] private Transform placePos, storePos;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         controller = GetComponent<CharacterController>();
         targetDollyPos = splineDolly.CameraPosition;
+       // realMouse = Mouse.current;
 
     }
 
@@ -163,6 +170,7 @@ public class DragAndShoot : MonoBehaviour
 
     public void OnAttack(InputValue value)
     {
+        
         if (value.isPressed) //Checks if Click-action is pressed
         {
           // Debug.Log("Pressed");
@@ -170,9 +178,14 @@ public class DragAndShoot : MonoBehaviour
             if (hit.collider != null) // Checks if we hit something
             {
                 if (hit.collider.tag == "Puck") //Checks if we hit a puck
-                {
-                    StartPos = currentMouse.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
-                    rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                { 
+                    puckScript = hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
+                    GameObject puck = hit.collider.gameObject;
+                    if (puckScript != null && puckScript.canDrag)
+                    {
+                        StartPos = currentMouse.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
+                        rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                    }
                 }
             }
            
@@ -184,17 +197,38 @@ public class DragAndShoot : MonoBehaviour
          //  Debug.Log("Released");
             if (hit.collider != null) // Checks if we hit something
             {
-                if (hit.collider.tag == "Puck") //Checks if we hit a puck
+                if (hit.collider.tag == "Puck") 
                 {
-                    Vector3 direction = new Vector3(); 
-                    EndPos = currentMouse.position.ReadValue(); //Grab the position of the mouse when the button is released
-                    direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).normalized; //We get only the direction between the start and end pos
-                    float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).magnitude; //We get the lenght between start and end pos
-                    float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
-                    rb.AddForce(clampedMag * direction * mouseForce); //This shoots the puck in the direction
-                    // Debug.Log("Released");
-                    hit = new RaycastHit(); //Reset hit
-                    rb = null; //Reset rb
+                     puckScript = hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
+
+                     if (!puckScript.isStore && puckScript.canDrag)
+                     {
+                         Vector3 direction = new Vector3(); 
+                         EndPos = currentMouse.position.ReadValue(); //Grab the position of the mouse when the button is released
+                         direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).normalized; //We get only the direction between the start and end pos
+                         float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).magnitude; //We get the lenght between start and end pos
+                         float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
+                         rb.AddForce(clampedMag * direction * mouseForce); //This shoots the puck in the direction]
+                         puckScript.canDrag = false;
+                         hit = new RaycastHit(); //Reset hit
+                         rb.transform.parent = null;
+                         rb = null; //Reset rb
+                         puckScript = null; //Reset puckScript
+                     }
+                     
+                     else if (puckScript.isStore)
+                     {
+                         if (placePos.childCount == 0)
+                         {
+                             puckScript.ChangePosToBoard(placePos);
+                         }
+                         else if (placePos.childCount == 1)
+                         {
+                             PuckScript swicthPuck = placePos.GetChild(0).GetComponent<PuckScript>();
+                             swicthPuck.ChangePosToStorage(storePos);
+                             puckScript.ChangePosToBoard(placePos);
+                         }
+                     }
                 }
             }
         }
@@ -206,15 +240,8 @@ public class DragAndShoot : MonoBehaviour
         float change = dir.y * scrollSpeed;
         targetDollyPos += change;
         targetDollyPos = Mathf.Clamp(targetDollyPos, -1.5f, 1.5f);
-        Debug.Log(change);
         splineDolly.CameraPosition = Mathf.Lerp(splineDolly.CameraPosition, targetDollyPos,
             Time.deltaTime * dollySpeed);
     }
-    // public void OnMoveMouse(InputValue value)
-    // {
-    //   if (value.Get<Vector2>() != Vector2.zero)
-    //   {
-    //       MousePos = value.Get<Vector2>();
-    //   }
-    // }
+   
 }
