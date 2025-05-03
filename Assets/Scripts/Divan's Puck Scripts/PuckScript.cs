@@ -3,7 +3,7 @@ using UnityEngine;
 public class PuckScript : MonoBehaviour
 {
     [Header("Drag and Store variables")]
-    public bool canDrag = true;
+    public bool canDrag = false;
     public bool isStore;
     [SerializeField] private float minX, maxX, minZ, maxZ;
     
@@ -37,8 +37,6 @@ public class PuckScript : MonoBehaviour
 
     public void ChangePosToStorage(Transform newPos)
     {
-        Debug.Log("Hello" + name);
-        
         transform.parent = null;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -59,14 +57,12 @@ public class PuckScript : MonoBehaviour
     {
         
         CanBeDrag();
-        Debug.Log("Bye" + name);
+        
         transform.parent = newPos;
         
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         
         transform.localPosition= new Vector3(0, 0, 0);
-        Debug.Log(transform.localPosition);
-       
     }
 }
