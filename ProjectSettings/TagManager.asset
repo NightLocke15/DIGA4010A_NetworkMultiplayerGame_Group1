@@ -4,17 +4,19 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - Enemy
   - Puck
+  - Ally
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Puck
+  - Tower
   - Water
   - UI
-  - 
-  - 
-  - 
+  - UI
+  - PlayerAreas
+  - Walls
   - 
   - 
   - 

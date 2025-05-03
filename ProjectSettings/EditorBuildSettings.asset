@@ -5,9 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/TestScenes/TestScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 0
+    path: Assets/Mirror/Examples/Pong/Scenes/MirrorPong.unity
+    guid: 89a84548859e3b643b4fb27984dc2b0d
+  - enabled: 0
+    path: Assets/Scenes/TestScenes/Example.unity
+    guid: d71f3ea375b441a4c86eadade63b086b
   - enabled: 1
-    path: Assets/Scenes/Divan's Scene.unity
-    guid: 57c57fe4ea2b3af448e4ae6ef450696e
+    path: Assets/Scenes/TestPlayerEnemyCombop.unity
+    guid: bf645b1b42236154f94c1b825bc97c13
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
