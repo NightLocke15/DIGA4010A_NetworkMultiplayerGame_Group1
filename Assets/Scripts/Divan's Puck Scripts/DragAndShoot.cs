@@ -75,75 +75,79 @@ public class DragAndShoot : NetworkBehaviour
         
     }
 
-   
-
+    
     public void OnAttack(InputValue value)
     {
-        if (value.isPressed) //Checks if Click-action is pressed
+        if (isLocalPlayer)
         {
-          // Debug.Log("Pressed");
-            Vector2 mousePos = Mouse.current.position.ReadValue();
-            Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos), out hit); //Raycast to select objects we want to interact with
-            if (hit.collider != null) // Checks if we hit something
+            if (value.isPressed) //Checks if Click-action is pressed
             {
-                if (hit.collider.tag == "Puck") //Checks if we hit a puck
-                { 
-                    puckScript = hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
-                    GameObject puck = hit.collider.gameObject;
-                    if (puckScript != null && puckScript.canDrag)
+                // Debug.Log("Pressed");
+                Vector2 mousePos = Mouse.current.position.ReadValue();
+                Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos), out hit); //Raycast to select objects we want to interact with
+                if (hit.collider != null) // Checks if we hit something
+                {
+                    if (hit.collider.tag == "Puck") //Checks if we hit a puck
                     {
-                        StartPos =  Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
-                        rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                        puckScript = hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
+                        GameObject puck = hit.collider.gameObject;
+                        if (puckScript != null && puckScript.canDrag)
+                        {
+                            StartPos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
+                            rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                        }
+                    }
+                }
+            }
+
+            else //Is called when the button is released
+            {
+                //  Debug.Log("Released");
+                if (hit.collider != null) // Checks if we hit something
+                {
+                    Debug.Log(hit.collider.gameObject.name);
+                    if (hit.collider.tag == "Puck")
+                    {
+                        puckScript = hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
+
+
+                        if (!puckScript.isStore && puckScript.canDrag)
+                        {
+                            Vector3 direction = new Vector3();
+                            EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released
+                            direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).normalized; //We get only the direction between the start and end pos
+                            float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).magnitude; //We get the lenght between start and end pos
+                            float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
+                            rb.AddForce(clampedMag * direction * mouseForce); //This shoots the puck in the direction]
+                                                                              //hit.collider.gameObject.tag = "Ally";
+                            hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
+                            puckScript.canDrag = false;
+                            hit = new RaycastHit(); //Reset hit
+                            rb.transform.parent = null;
+                            rb = null; //Reset rb
+                            puckScript = null; //Reset puckScript
+                            Debug.Log("Fuck shit");
+                        }
+
+                        else if (puckScript.isStore)
+                        {
+                            Debug.Log("Test");
+                            if (placePos.childCount == 0)
+                            {
+                                puckScript.ChangePosToBoard(placePos);
+                            }
+                            else if (placePos.childCount == 1)
+                            {
+                                PuckScript swicthPuck = placePos.GetChild(0).GetComponent<PuckScript>();
+                                swicthPuck.ChangePosToStorage(storePos);
+                                puckScript.ChangePosToBoard(placePos);
+                            }
+                        }
                     }
                 }
             }
         }
-
-        else //Is called when the button is released
-        {
-         //  Debug.Log("Released");
-            if (hit.collider != null) // Checks if we hit something
-            {
-                Debug.Log(hit.collider.gameObject.name);
-                if (hit.collider.tag == "Puck") 
-                {
-                     puckScript = hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
-                     
-
-                     if (!puckScript.isStore && puckScript.canDrag)
-                     {
-                         Vector3 direction = new Vector3(); 
-                         EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released
-                         direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).normalized; //We get only the direction between the start and end pos
-                         float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y).magnitude; //We get the lenght between start and end pos
-                         float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
-                         rb.AddForce(clampedMag * direction * mouseForce); //This shoots the puck in the direction]
-                         //hit.collider.gameObject.tag = "Ally";
-                         hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
-                         puckScript.canDrag = false;
-                         hit = new RaycastHit(); //Reset hit
-                         rb.transform.parent = null;
-                         rb = null; //Reset rb
-                         puckScript = null; //Reset puckScript
-                     }
-                     
-                     else if (puckScript.isStore)
-                     {
-                         Debug.Log("Test");
-                         if (placePos.childCount == 0)
-                         {
-                             puckScript.ChangePosToBoard(placePos);
-                         }
-                         else if (placePos.childCount == 1)
-                         {
-                             PuckScript swicthPuck = placePos.GetChild(0).GetComponent<PuckScript>();
-                             swicthPuck.ChangePosToStorage(storePos);
-                             puckScript.ChangePosToBoard(placePos);
-                         }
-                     }
-                }
-            }
-        }
+        
     }
 
     public void OnLook(InputValue value)

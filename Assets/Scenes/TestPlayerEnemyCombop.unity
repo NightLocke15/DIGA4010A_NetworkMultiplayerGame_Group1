@@ -1375,6 +1375,7 @@ GameObject:
   - component: {fileID: 672790943}
   - component: {fileID: 672790942}
   - component: {fileID: 672790945}
+  - component: {fileID: 672790946}
   m_Layer: 3
   m_Name: Corner 4
   m_TagString: Untagged
@@ -1485,6 +1486,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0036646386df924491b88cf2d810832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &672790946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672790940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 4182986132
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &676577526
 GameObject:
   m_ObjectHideFlags: 0
@@ -1820,6 +1841,7 @@ GameObject:
   - component: {fileID: 809133206}
   - component: {fileID: 809133205}
   - component: {fileID: 809133208}
+  - component: {fileID: 809133209}
   m_Layer: 3
   m_Name: Corner 1
   m_TagString: Untagged
@@ -1930,6 +1952,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0036646386df924491b88cf2d810832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &809133209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809133203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 1604338098
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &832067988
 GameObject:
   m_ObjectHideFlags: 0
@@ -2599,6 +2641,7 @@ GameObject:
   - component: {fileID: 1074647645}
   - component: {fileID: 1074647644}
   - component: {fileID: 1074647647}
+  - component: {fileID: 1074647648}
   m_Layer: 3
   m_Name: Corner 2
   m_TagString: Untagged
@@ -2709,6 +2752,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0036646386df924491b88cf2d810832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &1074647648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074647642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 4016882417
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &1106200096
 GameObject:
   m_ObjectHideFlags: 0
@@ -4920,6 +4983,7 @@ GameObject:
   - component: {fileID: 2015834035}
   - component: {fileID: 2015834034}
   - component: {fileID: 2015834037}
+  - component: {fileID: 2015834038}
   m_Layer: 3
   m_Name: Corner 3
   m_TagString: Untagged
@@ -5030,6 +5094,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0036646386df924491b88cf2d810832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &2015834038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015834032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 3938946236
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &2021277007
 GameObject:
   m_ObjectHideFlags: 0
