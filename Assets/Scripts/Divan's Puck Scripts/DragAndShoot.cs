@@ -53,32 +53,50 @@ public class DragAndShoot : NetworkBehaviour
     private PuckScript puckScript;
     [SerializeField] private Transform placePos, storePos;
     //Christine Additions
+    [Header("Misc")]
     [SerializeField]
     private InputSystemUIInputModule inputModule;
-    [SerializeField]
-    private NetworkIdentity networkIdentity;
+    // [SerializeField]
+    // private NetworkIdentity networkIdentity;
+
+    [Header("Turn Order Variables")]
+    [SerializeField] private int Turnorder;
+    public GameObject Manager;
+    [SerializeField] private TurnOrderManager turnOrderManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Debug.Log(isOwned + " " + connectionToClient + " " + name);
        
-        if (isLocalPlayer)
+        if (isLocalPlayer) //Checks if this is the playerPrefab connected to the device
         {
-            playerInput.enabled = true;
+            Manager = GameObject.FindGameObjectWithTag("Manager");
+            playerInput.enabled = true;  //VERY IMPORTANT!!!!  Will break input system between the two players if removoved
             //controller = GetComponent<CharacterController>();
-            networkIdentity = GetComponent<NetworkIdentity>();
+            //networkIdentity = GetComponent<NetworkIdentity>();
             targetDollyPos = splineDolly.CameraPosition;
             inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
             gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
             gameObject.transform.GetChild(2).GetComponent<CinemachineCamera>().Target.TrackingTarget = GameObject.Find("TargetLocation").transform;
+            //TurnOrderManager turnOrderManager = Manager.GetComponent<TurnOrderManager>();
         }
 
-      else if (!isLocalPlayer)
+      else if (!isLocalPlayer)  //Removes clashes with other player
         {
             gameObject.transform.GetChild(2).gameObject.SetActive(false);
             gameObject.transform.GetChild(1).gameObject.SetActive(false);
             playerInput.enabled = false;
+        }
+
+        if (isServer) //Checks if this is player one
+        {
+            Turnorder = 1;
+        }
+
+        else  //Checks if this is player two
+        {
+            Turnorder = 2;
         }
     }
     
@@ -89,33 +107,36 @@ public class DragAndShoot : NetworkBehaviour
         
     }
 
-    [Command]
-    public void CmdAuthorityGiven(GameObject item)
-    {
-        if (isLocalPlayer)
-        {
-            item.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
-            Debug.Log("Authority given " + item.GetComponent<NetworkIdentity>().connectionToClient);
-        }
-    }
+    // [Command]
+    // public void CmdAuthorityGiven(GameObject item)
+    // {
+    //     if (isLocalPlayer)
+    //     {
+    //         item.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
+    //         Debug.Log("Authority given " + item.GetComponent<NetworkIdentity>().connectionToClient);
+    //     }
+    // }
 
     [ClientCallback]
     public void OnAttack(InputValue value)
     {
-        
-        if (isLocalPlayer)
+        if (turnOrderManager == null)  //Checks if we have reference to the turnOrderManager
         {
-            if (value.isPressed)
+            turnOrderManager = Manager.GetComponent<TurnOrderManager>();
+        }
+        
+        if (isLocalPlayer && Turnorder == turnOrderManager.currentTurn) //Checks if it is local player and if it is their turn
+        {
+            if (value.isPressed)  //When the button is pressed
             {
-                 Debug.Log("Pressed " + name);
-                Vector2 mousePos = Mouse.current.position.ReadValue();
+                Vector2 mousePos = Mouse.current.position.ReadValue();  //Gets Mouse position
                 Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos),
                     out hit); //Raycast to select objects we want to interact with
                 if (hit.collider != null) // Checks if we hit something
                 {
                     if (hit.collider.tag == "Puck") //Checks if we hit a puck
                     {
-                        Debug.Log("Start");
+                       
                         puckScript =
                             hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
                         GameObject puck = hit.collider.gameObject;
@@ -139,9 +160,8 @@ public class DragAndShoot : NetworkBehaviour
                             hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
 
 
-                        if (!puckScript.isStore && puckScript.canDrag)
+                        if (!puckScript.isStore && puckScript.canDrag) //Checks if the puck is on the board and can be dragged
                         {
-                            Debug.Log("Doing the math");
                             Vector3 direction = new Vector3();
                             EndPos = Mouse.current.position
                                 .ReadValue(); //Grab the position of the mouse when the button is released
@@ -150,14 +170,14 @@ public class DragAndShoot : NetworkBehaviour
                             float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
                                 .magnitude; //We get the lenght between start and end pos
                             float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
-                            if (isServer)
+                            if (isServer) //Checks if this is the host. If not host we have to invert the direction
                             {
-                                puckScript.Drag(clampedMag, direction, mouseForce, networkIdentity); 
+                                puckScript.Drag(clampedMag, direction, mouseForce); 
                                 Debug.Log("Bo");
                             }
-                            else
+                            else  //Inverts the direction
                             {
-                                puckScript.Drag(clampedMag, -direction, mouseForce, networkIdentity);
+                                puckScript.Drag(clampedMag, -direction, mouseForce);
                                 Debug.Log("Onder");
                             }
                             //This shoots the puck in the direction]
@@ -170,14 +190,13 @@ public class DragAndShoot : NetworkBehaviour
                             puckScript = null; //Reset puckScript
                         }
 
-                        else if (puckScript.isStore)
+                        else if (puckScript.isStore) //checks if the puck is stored
                         {
-                            Debug.Log("Test");
-                            if (placePos.childCount == 0)
+                            if (placePos.childCount == 0) //If the puck is stored and the player has no other puck, place selcted puck on board.
                             {
                                 puckScript.ChangePosToBoard(placePos);
                             }
-                            else if (placePos.childCount == 1)
+                            else if (placePos.childCount == 1) //If there is a puck on board, remove it then add the new puck.
                             {
                                 PuckScript swicthPuck = placePos.GetChild(0).GetComponent<PuckScript>();
                                 swicthPuck.ChangePosToStorage(storePos);
@@ -200,24 +219,33 @@ public class DragAndShoot : NetworkBehaviour
         if (isLocalPlayer)
         {
           //  Debug.Log(name);
-            Vector2 dir = value.Get<Vector2>();
-            float change = dir.y * scrollSpeed;
+            Vector2 dir = value.Get<Vector2>(); //Checks if scroll wheel goes up or down
+            float change = dir.y * scrollSpeed; //Controls how fast the camera changes position
             targetDollyPos += change;
-            targetDollyPos = Mathf.Clamp(targetDollyPos, -1.5f, 1.5f);
-            splineDolly.CameraPosition = Mathf.Lerp(splineDolly.CameraPosition, targetDollyPos,
-                Time.deltaTime * dollySpeed); 
+            targetDollyPos = Mathf.Clamp(targetDollyPos, -1.5f, 1.5f); //Improves scroll function. If the values are higher/lower it influences how much the player must scroll before a change happens
+            splineDolly.CameraPosition = Mathf.Lerp(splineDolly.CameraPosition, targetDollyPos, 
+                Time.deltaTime * dollySpeed); //Moves the camera
         }
         
     }
-
-    public void OnLookTwo(InputValue value)
+    
+    
+    public void OnEndturn(InputValue value)
     {
-        Vector2 dir = value.Get<Vector2>();
-        float change = dir.y * scrollSpeed;
-        targetDollyPos += change;
-        targetDollyPos = Mathf.Clamp(targetDollyPos, -1.5f, 1.5f);
-        splineDolly.CameraPosition = Mathf.Lerp(splineDolly.CameraPosition, targetDollyPos,
-            Time.deltaTime * dollySpeed);
+        Debug.Log("Space");
+        if (turnOrderManager == null) //Check if we have a reference to the TurnOrderManager
+        {
+             turnOrderManager = Manager.GetComponent<TurnOrderManager>();
+        }
+
+        if (isLocalPlayer && Turnorder == turnOrderManager.currentTurn) //Checks if it is the player's turn and that they are the local player.
+        {
+            turnOrderManager.ChangeTurn();
+        }
+        
+        
+       
     }
+
 
 }

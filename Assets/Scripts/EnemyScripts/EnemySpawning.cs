@@ -36,6 +36,14 @@ public class EnemySpawning : NetworkBehaviour
         
     }
 
+    public void CallSpawnEnemies()
+    {
+        if (isServer)
+        {
+            SpawnEnemies();
+        }
+    }
+
     
     private void Update()
     {
@@ -90,6 +98,18 @@ public class EnemySpawning : NetworkBehaviour
                 spawnList.Add(enemyObject);
             }
            // yield return new WaitForSeconds(wait); //Wait a small amount of time before spawing the next enemy
+        }
+    }
+
+
+    public void MoveEnemies()
+    {
+        for (int i = 0; i < spawnList.Count; i++)
+        {
+            if (spawnList[i].GetComponent<EnemyController>() != null)
+            {
+                spawnList[i].GetComponent<EnemyController>().move = true;
+            }
         }
     }
 }
