@@ -153,7 +153,7 @@ public class DragAndShoot : NetworkBehaviour
                             //This shoots the puck in the direction]
                             //hit.collider.gameObject.tag = "Ally";
                             hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
-                            puckScript.canDrag = false;
+                           // puckScript.canDrag = false;
                             hit = new RaycastHit(); //Reset hit
                             rb.transform.parent = null;
                             rb = null; //Reset rb

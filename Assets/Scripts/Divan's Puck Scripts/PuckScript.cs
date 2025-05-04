@@ -4,8 +4,8 @@ using Mirror;
 public class PuckScript : NetworkBehaviour
 {
     [Header("Drag and Store variables")]
-    public bool canDrag = false;
-    public bool isStore;
+    [SyncVar]public bool canDrag = false;
+    [SyncVar]public bool isStore;
     [SerializeField] private float minX, maxX, minZ, maxZ;
     
     [Header("Puck variables")]
@@ -32,6 +32,7 @@ public class PuckScript : NetworkBehaviour
     {
         rb.AddForce(clampedMag * direction * mouseForce);
         Debug.Log("did it");
+        canDrag = false;
     }
 
     public void CannotBeDrag()
