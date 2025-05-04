@@ -92,14 +92,14 @@ public class DragAndShoot : NetworkBehaviour
             playerInput.enabled = false;
         }
 
-        if (isServer) //Checks if this is player one
+        if (isServer && isLocalPlayer) //Checks if this is player one
         {
             Turnorder = 1;
             storePos = turnOrderManager.StoreLocPL1;
             placePos = turnOrderManager.PlaceLocPL1;
         }
 
-        else  //Checks if this is player two
+        else if (!isServer && isLocalPlayer)  //Checks if this is player two
         {
             Turnorder = 2;
             storePos = turnOrderManager.StoreLocPL2;
@@ -192,13 +192,16 @@ public class DragAndShoot : NetworkBehaviour
                             hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
                            // puckScript.canDrag = false;
                             hit = new RaycastHit(); //Reset hit
-                            rb.transform.parent = pucksOnBoardTransform;
+                            newParent(pucksOnBoardTransform, rb.transform);
+                           // rb.transform.parent = pucksOnBoardTransform;
                             rb = null; //Reset rb
                             puckScript = null; //Reset puckScript
+                           // turnOrderManager.ChangeTurn();
                         }
 
                         else if (puckScript.isStore && puckScript.transform.parent == storePos) //checks if the puck is stored
                         {
+                            Debug.Log("Store");
                             if (placePos.childCount == 0) //If the puck is stored and the player has no other puck, place selcted puck on board.
                             {
                                 puckScript.ChangePosToBoard(placePos);
@@ -217,6 +220,13 @@ public class DragAndShoot : NetworkBehaviour
         }
         
     }
+
+    [ClientRpc]
+    public void newParent(Transform parent, Transform puckTrans)
+    {
+        puckTrans.parent = parent;
+    }
+    
     
     
     public void OnLook(InputValue value)

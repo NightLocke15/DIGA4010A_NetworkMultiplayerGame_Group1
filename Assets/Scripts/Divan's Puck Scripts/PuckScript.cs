@@ -61,10 +61,16 @@ public class PuckScript : NetworkBehaviour
         transform.position = adjustPos;
         
         //rb.MovePosition(adjustPos);
-        transform.parent = newPos;
+        //transform.parent = newPos;
+        RpcChangePosToStorage(newPos);
      //   transform.localPosition = new Vector3(0, 0, 0);
         CannotBeDrag();
-      
+    }
+
+    [ClientRpc]
+    public void RpcChangePosToStorage(Transform newParent)
+    {
+        transform.parent = newParent;
     }
 
     [Command(requiresAuthority = false)]
@@ -79,6 +85,7 @@ public class PuckScript : NetworkBehaviour
         rb.angularVelocity = Vector3.zero;
         
         transform.localPosition= new Vector3(0, 0, 0);
+        RpcChangePosToStorage(newPos);
     }
 
     // [Client]
