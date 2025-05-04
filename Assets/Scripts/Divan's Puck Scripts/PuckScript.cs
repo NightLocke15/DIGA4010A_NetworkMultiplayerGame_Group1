@@ -34,18 +34,21 @@ public class PuckScript : NetworkBehaviour
         canDrag = false;
     }
 
+    [Command(requiresAuthority = false)]
     public void CannotBeDrag()
     {
         canDrag = false;
         isStore = true;
     }
 
+    [Command(requiresAuthority = false)]
     public void CanBeDrag()
     {
         canDrag = true;
         isStore = false;
     }
 
+    [Command(requiresAuthority = false)]
     public void ChangePosToStorage(Transform newPos)
     {
         transform.parent = null;
@@ -54,7 +57,7 @@ public class PuckScript : NetworkBehaviour
         
         float adjustX = Random.Range(minX, maxX);
         float adjustZ = Random.Range(minZ, maxZ);
-        Vector3 adjustPos = new Vector3(newPos.position.x + adjustX, newPos.position.y, newPos.position.z + adjustZ );
+        Vector3 adjustPos = new Vector3(newPos.position.x + adjustX, newPos.position.y+2f, newPos.position.z + adjustZ );
         transform.position = adjustPos;
         
         //rb.MovePosition(adjustPos);
@@ -64,6 +67,7 @@ public class PuckScript : NetworkBehaviour
       
     }
 
+    [Command(requiresAuthority = false)]
     public void ChangePosToBoard(Transform newPos)
     {
         
@@ -77,13 +81,13 @@ public class PuckScript : NetworkBehaviour
         transform.localPosition= new Vector3(0, 0, 0);
     }
 
-    [Client]
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.collider.tag == "Tower")
-        {
-            onHitTower.transform.position = collision.contacts[0].point;
-            onHitTower.Play();
-        }
-    }
+    // [Client]
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     if (collision.collider.tag == "Tower")
+    //     {
+    //         onHitTower.transform.position = collision.contacts[0].point;
+    //         onHitTower.Play();
+    //     }
+    // }
 }

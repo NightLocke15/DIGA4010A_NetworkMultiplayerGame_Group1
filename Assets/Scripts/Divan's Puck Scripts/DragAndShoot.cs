@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -51,7 +52,7 @@ public class DragAndShoot : NetworkBehaviour
 
     [Header("Puck Control")] [SerializeField]
     private PuckScript puckScript;
-    [SerializeField] private Transform placePos, storePos;
+    [SerializeField] private Transform placePos, storePos, pucksOnBoardTransform;
     //Christine Additions
     [Header("Misc")]
     [SerializeField]
@@ -72,6 +73,8 @@ public class DragAndShoot : NetworkBehaviour
         if (isLocalPlayer) //Checks if this is the playerPrefab connected to the device
         {
             Manager = GameObject.FindGameObjectWithTag("Manager");
+            turnOrderManager = Manager.GetComponent<TurnOrderManager>();
+            pucksOnBoardTransform = turnOrderManager.PucksOnBoard;
             playerInput.enabled = true;  //VERY IMPORTANT!!!!  Will break input system between the two players if removoved
             //controller = GetComponent<CharacterController>();
             //networkIdentity = GetComponent<NetworkIdentity>();
@@ -92,11 +95,15 @@ public class DragAndShoot : NetworkBehaviour
         if (isServer) //Checks if this is player one
         {
             Turnorder = 1;
+            storePos = turnOrderManager.StoreLocPL1;
+            placePos = turnOrderManager.PlaceLocPL1;
         }
 
         else  //Checks if this is player two
         {
             Turnorder = 2;
+            storePos = turnOrderManager.StoreLocPL2;
+            placePos = turnOrderManager.PlaceLocPL2;
         }
     }
     
@@ -185,12 +192,12 @@ public class DragAndShoot : NetworkBehaviour
                             hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
                            // puckScript.canDrag = false;
                             hit = new RaycastHit(); //Reset hit
-                            rb.transform.parent = null;
+                            rb.transform.parent = pucksOnBoardTransform;
                             rb = null; //Reset rb
                             puckScript = null; //Reset puckScript
                         }
 
-                        else if (puckScript.isStore) //checks if the puck is stored
+                        else if (puckScript.isStore && puckScript.transform.parent == storePos) //checks if the puck is stored
                         {
                             if (placePos.childCount == 0) //If the puck is stored and the player has no other puck, place selcted puck on board.
                             {

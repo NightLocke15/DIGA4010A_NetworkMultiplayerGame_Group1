@@ -8,7 +8,14 @@ public class TurnOrderManager : NetworkBehaviour
     [SerializeField] private EnemySpawning enemySpawning;
     [SerializeField] private bool EnemiesAreMoving;
     [SerializeField] private float moveTime = 0f;
-     
+
+    [Header("Player One Info")] [SerializeField]
+    public Transform StoreLocPL1, PlaceLocPL1;
+    
+    [Header("Player Two Info")]
+    [SerializeField] public Transform StoreLocPL2, PlaceLocPL2;
+
+    [Header("Important Info")] public Transform PucksOnBoard;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

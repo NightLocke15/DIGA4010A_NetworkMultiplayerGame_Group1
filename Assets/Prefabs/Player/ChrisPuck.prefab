@@ -259,10 +259,10 @@ MonoBehaviour:
   syncInterval: 0
   canDrag: 1
   isStore: 0
-  minX: 0
-  maxX: 0
-  minZ: 0
-  maxZ: 0
+  minX: -5
+  maxX: 5
+  minZ: -2.5
+  maxZ: 2.5
   rb: {fileID: 8100768062077169593}
   coll: {fileID: 3786735982948612350}
   onHitTower: {fileID: 3521712842886246951}
