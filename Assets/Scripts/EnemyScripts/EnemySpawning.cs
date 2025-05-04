@@ -28,6 +28,10 @@ public class EnemySpawning : NetworkBehaviour
     private void Start()
     {
         tower = GameObject.Find("Tower");
+        if (isServer)
+        {
+            SpawnEnemies();
+        }
         
     }
 
@@ -36,7 +40,7 @@ public class EnemySpawning : NetworkBehaviour
     {
         if (Input.GetKeyDown(KeyCode.S))
         {
-            SpawnEnemies();
+            
         }
 
         if (Input.GetKeyDown(KeyCode.M))

@@ -2,17 +2,22 @@ using Mirror;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class EnemyController : NetworkBehaviour
 {
     [Header("Enemy Information")] //Information on the types of enemies in the game
     #region Enemy Information
+
     public bool bigEnemy;
-    [SerializeField] private Material bigEnemyColour;
+    [SyncVar]
+    [SerializeField] private int bigEnemyColour = 0;
 
 
     public bool smallEnemy;
-    [SerializeField] private Material smallEnemyColour;
+    [SyncVar]
+    [SerializeField] private int smallEnemyColour = 1;
     #endregion
 
     [Header("Variables")] //Variables needed for movement adn any other actions of the enemies
@@ -24,8 +29,9 @@ public class EnemyController : NetworkBehaviour
     [SerializeField] private GameObject target;
     private NavMeshAgent enemyAgent;
     private NavMeshSurface navSurface;
+    [SerializeField] private List<Material> materials = new List<Material>();
 
-    [ClientRpc]
+    
     private void Start()
     {
         //Finding some of the items needed in the hierarchy
@@ -33,7 +39,7 @@ public class EnemyController : NetworkBehaviour
         navSurface = GameObject.Find("EnemyNavmesh").GetComponent<NavMeshSurface>();
         target = GameObject.Find("Tower");
 
-        CmdAssignColours();
+        AssignColours();
     }
 
     private void Update()
@@ -55,12 +61,12 @@ public class EnemyController : NetworkBehaviour
         }
     }
 
-    [Command(requiresAuthority = false)]
-    private void CmdAssignColours()
+    
+    private void AssignColours()
     {
         if (bigEnemy) //If a big enemy is spawned (see EnemySpawning)
         {
-            gameObject.GetComponent<MeshRenderer>().material = bigEnemyColour;
+            gameObject.GetComponent<MeshRenderer>().material = materials[bigEnemyColour];
             gameObject.transform.localScale = new Vector3(1.5f, gameObject.transform.localScale.y, 1.5f); // make the size of the enemy puck bigger
 
             //Making the bigger enemy slower by decreasing the speed and acceleration
@@ -69,7 +75,7 @@ public class EnemyController : NetworkBehaviour
         }
         else if (smallEnemy) //If a small enemy is spawned (see EnemySpawning)
         {
-            gameObject.GetComponent<MeshRenderer>().material = smallEnemyColour;
+            gameObject.GetComponent<MeshRenderer>().material = materials[smallEnemyColour];
             gameObject.transform.localScale = new Vector3(0.7f, gameObject.transform.localScale.y, 0.7f); // make the size of the enemy smaller
 
             //Making the smaller enemy slower by decreasing the speed and acceleration
