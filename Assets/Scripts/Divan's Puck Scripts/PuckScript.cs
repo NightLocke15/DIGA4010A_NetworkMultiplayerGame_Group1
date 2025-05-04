@@ -1,6 +1,7 @@
 using UnityEngine;
+using Mirror;
 
-public class PuckScript : MonoBehaviour
+public class PuckScript : NetworkBehaviour
 {
     [Header("Drag and Store variables")]
     public bool canDrag = false;
@@ -17,10 +18,20 @@ public class PuckScript : MonoBehaviour
         
     }
 
+   
+
+
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    [Command(requiresAuthority = false)]
+    public void Drag(float clampedMag, Vector3 direction ,float mouseForce, NetworkIdentity identity)
+    {
+        rb.AddForce(clampedMag * direction * mouseForce);
+        Debug.Log("did it");
     }
 
     public void CannotBeDrag()

@@ -33,9 +33,10 @@ public class FPSPlayer : NetworkBehaviour
         {
             playerCamera.gameObject.SetActive(false);
         }
-        //Lock cursor
-        //Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
+
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     private void Update()
     {

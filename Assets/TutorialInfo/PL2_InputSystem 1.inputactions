@@ -1,5 +1,5 @@
 {
-    "name": "InputSystem_Actions",
+    "name": "PL2_InputSystem 1",
     "maps": [
         {
             "name": "Player",
@@ -337,17 +337,6 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b9cb5633-520a-43f6-948d-c6dd66e35e9d",
-                    "path": "<Mouse>/scroll",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse2",
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
