@@ -13,7 +13,8 @@ public class PuckScript : NetworkBehaviour
 
     [SerializeField] private Collider coll;
 
-    [SerializeField] private ParticleSystem onHitTower;
+    [SerializeField] private GameObject onHitTower;
+    [SerializeField] private GameObject onHitPuck;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -77,13 +78,19 @@ public class PuckScript : NetworkBehaviour
         transform.localPosition= new Vector3(0, 0, 0);
     }
 
-    [Client]
+    
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == "Tower")
         {
-            onHitTower.transform.position = collision.contacts[0].point;
-            onHitTower.Play();
+            GameObject system = Instantiate(onHitTower, collision.contacts[0].point, onHitTower.transform.rotation);
+            NetworkServer.Spawn(system);
+        }
+        
+        if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck")
+        {
+            GameObject system = Instantiate(onHitPuck, collision.contacts[0].point, onHitTower.transform.rotation);
+            NetworkServer.Spawn(system);
         }
     }
 }

@@ -3,62 +3,64 @@ using Mirror;
 
 public class AimLine : NetworkBehaviour
 {
-    [SerializeField] private Camera playerCamera;
-    private Vector3 mousePos;
-    private Vector3 worldPos;
-    private GameObject chosenPuck;
-    private LineRenderer aimLine;
+    [SerializeField] private LineRenderer aimLine;
 
     private void Start()
     {
-        
+        aimLine.gameObject.SetActive(false);
     }
 
-    private void Update()
+    //Reference mirror billiards example
+    private bool Mouse(out Vector3 mousePos)
     {
-        //https://stackoverflow.com/questions/75603761/unity-screentoworldpoint-function-always-returns-the-camera-position-even-with-a
-        if (isLocalPlayer)
+        Ray ray = GameObject.Find("PlayerCamera").GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, transform.position);
+
+        if (plane.Raycast(ray, out float distance))
         {
-            //mousePos = this.gameObject.GetComponent<DragAndShoot>().currentMouse.position.ReadValue();
+            mousePos = ray.GetPoint(distance);
+            return true;
         }
-        
-        Ray ray = playerCamera.ScreenPointToRay(mousePos);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        mousePos = default;
+        return false;
+    }
+
+    [ClientCallback]
+    private void OnMouseDown()
+    {
+        if (transform.GetComponent<PuckScript>().canDrag == true)
         {
-            worldPos = hit.point;
+            aimLine.SetPosition(0, transform.position);
+            aimLine.SetPosition(1, transform.position);
+            aimLine.gameObject.SetActive(true);
+        }        
+    }
 
-            if (hit.collider.tag == "Puck")
-            {
-                chosenPuck = hit.collider.gameObject;
-                Debug.Log(chosenPuck.name);
-                aimLine = chosenPuck.transform.GetChild(0).GetComponent<LineRenderer>();               
-            }
-
-            if (chosenPuck != null)
-            {
-                if (Input.GetMouseButton(0)) 
-                {
-                    if (aimLine != null)
-                    {
-                        aimLine.enabled = true;
-                        aimLine.SetPosition(0, chosenPuck.transform.position);
-                        aimLine.SetPosition(1, new Vector3((chosenPuck.transform.position - (worldPos - chosenPuck.transform.position).normalized * (worldPos - chosenPuck.transform.position).magnitude * 2).x,
-                            chosenPuck.transform.position.y,
-                            (chosenPuck.transform.position - (worldPos - chosenPuck.transform.position).normalized * (worldPos - chosenPuck.transform.position).magnitude * 2).z));
-                    }
-                }
-                else if (Input.GetMouseButtonUp(0)) 
-                {
-                    if (aimLine != null)
-                    {
-                        aimLine.enabled = false;
-                    }                        
-                }
-                
-            }
-            
+    [ClientCallback]
+    private void OnMouseDrag()
+    {
+        if (!Mouse(out Vector3 currentPos))
+        {
+            return;
         }
 
-        
+        if (transform.GetComponent<PuckScript>().canDrag == true)
+        {
+            aimLine.SetPosition(0, transform.position);
+            aimLine.SetPosition(1, new Vector3((transform.position - (currentPos - transform.position).normalized * (currentPos - transform.position).magnitude * 2).x,
+                                transform.position.y,
+                                (transform.position - (currentPos - transform.position).normalized * (currentPos - transform.position).magnitude * 2).z));
+        }
+    }
+
+    [ClientCallback]
+    private void OnMouseUp()
+    {
+        if (!Mouse(out Vector3 currentPos))
+        {
+            return;
+        }
+
+        aimLine.gameObject.SetActive(false);
     }
 }

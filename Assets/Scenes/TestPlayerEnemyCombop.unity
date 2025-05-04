@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 320555206}
   - component: {fileID: 320555205}
   - component: {fileID: 320555207}
+  - component: {fileID: 320555208}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -225,6 +226,14 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!81 &320555208
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320555204}
+  m_Enabled: 1
 --- !u!1 &370364927
 GameObject:
   m_ObjectHideFlags: 0
@@ -1609,6 +1618,7 @@ MonoBehaviour:
   - {fileID: 2850685191081914487, guid: ef10169ce88df1c4cae0591bdb9db780, type: 3}
   - {fileID: 1954547992502422919, guid: eedd1bbc66589814c8c9258c4dd4382f, type: 3}
   - {fileID: 1954547992502422919, guid: 59d080e66b6c2cc418046bf47f9157d5, type: 3}
+  - {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2

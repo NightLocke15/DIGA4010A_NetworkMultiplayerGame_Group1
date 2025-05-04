@@ -498,7 +498,6 @@ GameObject:
   - component: {fileID: 8523193892108676306}
   - component: {fileID: 1879135372979294372}
   - component: {fileID: 5948594223517670482}
-  - component: {fileID: 7480642689343855892}
   - component: {fileID: -3839216030010492780}
   - component: {fileID: -6618499463838124680}
   - component: {fileID: 8574501273887138932}
@@ -665,7 +664,6 @@ MonoBehaviour:
   MaxLength: 150
   rb: {fileID: 0}
   PlayerCamera: {fileID: 8906879992566472264}
-  controller: {fileID: 0}
   playerInput: {fileID: 1879135372979294372}
   splineDolly: {fileID: 745127820152566111}
   dollySpeed: 30
@@ -675,22 +673,7 @@ MonoBehaviour:
   placePos: {fileID: 0}
   storePos: {fileID: 0}
   inputModule: {fileID: 0}
---- !u!114 &7480642689343855892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2921166637025824828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7a0e41596ac5d44b9183bc426248620, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  playerCamera: {fileID: 8906879992566472264}
+  networkIdentity: {fileID: 0}
 --- !u!114 &-3839216030010492780
 MonoBehaviour:
   m_ObjectHideFlags: 0
