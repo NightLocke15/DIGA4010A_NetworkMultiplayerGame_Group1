@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3150941969974465264}
   - component: {fileID: 4568174069093895874}
   - component: {fileID: 456605416070593237}
+  - component: {fileID: -3463421098430915924}
   m_Layer: 3
   m_Name: Puck
   m_TagString: Puck
@@ -128,6 +129,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce560aab642eefd41a9df9c9dd1097aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   canDrag: 1
   isStore: 0
   minX: -9
@@ -158,3 +162,20 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &-3463421098430915924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5055571589668894363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 925418208
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0

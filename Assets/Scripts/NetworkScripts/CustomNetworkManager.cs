@@ -21,4 +21,9 @@ public class CustomNetworkManager : NetworkManager
         GameObject player = Instantiate(selectedPlayer);
         NetworkServer.AddPlayerForConnection(connection, player);
     }
+    
+    public void OnConnectedToServer()
+    {
+        Debug.Log("OnConnectedToServer"+ name);
+    }
 }
