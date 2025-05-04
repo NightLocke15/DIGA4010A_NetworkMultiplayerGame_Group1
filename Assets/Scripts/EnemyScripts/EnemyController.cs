@@ -1,8 +1,9 @@
+using Mirror;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : NetworkBehaviour
 {
     [Header("Enemy Information")] //Information on the types of enemies in the game
     #region Enemy Information
@@ -24,6 +25,7 @@ public class EnemyController : MonoBehaviour
     private NavMeshAgent enemyAgent;
     private NavMeshSurface navSurface;
 
+    [ClientRpc]
     private void Start()
     {
         //Finding some of the items needed in the hierarchy
@@ -31,24 +33,7 @@ public class EnemyController : MonoBehaviour
         navSurface = GameObject.Find("EnemyNavmesh").GetComponent<NavMeshSurface>();
         target = GameObject.Find("Tower");
 
-        if (bigEnemy) //If a big enemy is spawned (see EnemySpawning)
-        {
-            gameObject.GetComponent<MeshRenderer>().material = bigEnemyColour;
-            gameObject.transform.localScale = new Vector3(1.5f, gameObject.transform.localScale.y, 1.5f); // make the size of the enemy puck bigger
-
-            //Making the bigger enemy slower by decreasing the speed and acceleration
-            enemyAgent.speed = 2;
-            enemyAgent.acceleration = 4;
-        }
-        else if (smallEnemy) //If a small enemy is spawned (see EnemySpawning)
-        {
-            gameObject.GetComponent<MeshRenderer>().material = smallEnemyColour;
-            gameObject.transform.localScale = new Vector3(0.7f, gameObject.transform.localScale.y, 0.7f); // make the size of the enemy smaller
-
-            //Making the smaller enemy slower by decreasing the speed and acceleration
-            enemyAgent.speed = 10;
-            enemyAgent.acceleration = 16;
-        }
+        CmdAssignColours();
     }
 
     private void Update()
@@ -67,6 +52,29 @@ public class EnemyController : MonoBehaviour
         {
             move = false;
             moveTime = 0f;
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void CmdAssignColours()
+    {
+        if (bigEnemy) //If a big enemy is spawned (see EnemySpawning)
+        {
+            gameObject.GetComponent<MeshRenderer>().material = bigEnemyColour;
+            gameObject.transform.localScale = new Vector3(1.5f, gameObject.transform.localScale.y, 1.5f); // make the size of the enemy puck bigger
+
+            //Making the bigger enemy slower by decreasing the speed and acceleration
+            enemyAgent.speed = 2;
+            enemyAgent.acceleration = 4;
+        }
+        else if (smallEnemy) //If a small enemy is spawned (see EnemySpawning)
+        {
+            gameObject.GetComponent<MeshRenderer>().material = smallEnemyColour;
+            gameObject.transform.localScale = new Vector3(0.7f, gameObject.transform.localScale.y, 0.7f); // make the size of the enemy smaller
+
+            //Making the smaller enemy slower by decreasing the speed and acceleration
+            enemyAgent.speed = 10;
+            enemyAgent.acceleration = 16;
         }
     }
 

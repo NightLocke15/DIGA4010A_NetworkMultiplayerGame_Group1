@@ -4,8 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
 using Unity.VisualScripting;
+using Mirror;
 
-public class EnemySpawning : MonoBehaviour
+public class EnemySpawning : NetworkBehaviour
 {
     [Header("Variables")] //Variables needed to keep track of the enemies spawned
     public bool spawned;
@@ -27,13 +28,15 @@ public class EnemySpawning : MonoBehaviour
     private void Start()
     {
         tower = GameObject.Find("Tower");
+        
     }
 
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.S))
         {
-            StartCoroutine(SpawnEnemies(waitTime));
+            SpawnEnemies();
         }
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -47,7 +50,7 @@ public class EnemySpawning : MonoBehaviour
 
 
     //https://discussions.unity.com/t/how-to-instantiate-objects-in-a-circle-formation-around-a-point/226980
-    private IEnumerator SpawnEnemies(float wait)
+    private void SpawnEnemies()
     {
         maxSpawn = 4 + 2 * wave; //How many enemies should be spawned based on the current wave
         for (int i = 0; i < maxSpawn; i++)
@@ -68,6 +71,7 @@ public class EnemySpawning : MonoBehaviour
                 GameObject enemyObject = Instantiate(enemy, enemyPosition, Quaternion.identity);
                 enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
                 enemyObject.GetComponent<EnemyController>().bigEnemy = true; //Determining what type of enemy it will be
+                NetworkServer.Spawn(enemyObject);
                 bigSpawn++;
                 spawnList.Add(enemyObject);
             }
@@ -76,10 +80,11 @@ public class EnemySpawning : MonoBehaviour
                 GameObject enemyObject = Instantiate(enemy, enemyPosition, Quaternion.identity);
                 enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
                 enemyObject.GetComponent<EnemyController>().smallEnemy = true; //Determining what type of enemy it will be
+                NetworkServer.Spawn(enemyObject);
                 smallSpawn++;
                 spawnList.Add(enemyObject);
             }
-            yield return new WaitForSeconds(wait); //Wait a small amount of time before spawing the next enemy
+           // yield return new WaitForSeconds(wait); //Wait a small amount of time before spawing the next enemy
         }
     }
 }
