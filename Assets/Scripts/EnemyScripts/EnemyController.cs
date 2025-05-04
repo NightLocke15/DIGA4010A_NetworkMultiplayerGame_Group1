@@ -1,3 +1,4 @@
+using Mirror;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -35,6 +36,7 @@ public class EnemyController : MonoBehaviour
         {
             gameObject.GetComponent<MeshRenderer>().material = bigEnemyColour;
             gameObject.transform.localScale = new Vector3(1.5f, gameObject.transform.localScale.y, 1.5f); // make the size of the enemy puck bigger
+            
 
             //Making the bigger enemy slower by decreasing the speed and acceleration
             enemyAgent.speed = 2;
