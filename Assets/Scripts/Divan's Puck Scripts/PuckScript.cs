@@ -12,14 +12,13 @@ public class PuckScript : NetworkBehaviour
     [SerializeField] private Rigidbody rb;
 
     [SerializeField] private Collider coll;
+
+    [SerializeField] private ParticleSystem onHitTower;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
-
-   
-
 
     // Update is called once per frame
     void Update()
@@ -76,5 +75,15 @@ public class PuckScript : NetworkBehaviour
         rb.angularVelocity = Vector3.zero;
         
         transform.localPosition= new Vector3(0, 0, 0);
+    }
+
+    [Client]
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.tag == "Tower")
+        {
+            onHitTower.transform.position = collision.contacts[0].point;
+            onHitTower.Play();
+        }
     }
 }

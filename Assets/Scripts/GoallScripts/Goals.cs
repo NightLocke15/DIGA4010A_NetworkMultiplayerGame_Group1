@@ -1,12 +1,19 @@
 using UnityEngine;
+using Mirror;
 
-public class Goals : MonoBehaviour
+public class Goals : NetworkBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Ally" || other.tag == "Puck" || other.tag == "Enemy")
         {
-            Destroy(other.gameObject);
+            CmdDestroyPuck(other.gameObject);
         }
+    }
+
+    [Command]
+    public void CmdDestroyPuck(GameObject puck)
+    {
+        Destroy(puck);
     }
 }

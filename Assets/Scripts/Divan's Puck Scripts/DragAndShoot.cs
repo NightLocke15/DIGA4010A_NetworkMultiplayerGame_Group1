@@ -12,6 +12,7 @@ using MouseButton = UnityEngine.InputSystem.LowLevel.MouseButton;
 using UnityEngine.InputSystem.UI;
 [RequireComponent(typeof(CharacterController))]
 
+
 public class DragAndShoot : NetworkBehaviour
 {
     [Header("Drag and release Variables")] [SerializeField]
@@ -40,7 +41,7 @@ public class DragAndShoot : NetworkBehaviour
   // //  private const string mouseScheme = "Keyboard&Mouse";
     
     [Header("Controller")]
-    [SerializeField] private CharacterController controller;
+    //[SerializeField] private CharacterController controller;
     [SerializeField] private PlayerInput playerInput;
  
     [Header("Cinemachine Control")]
@@ -65,7 +66,7 @@ public class DragAndShoot : NetworkBehaviour
         if (isLocalPlayer)
         {
             playerInput.enabled = true;
-            controller = GetComponent<CharacterController>();
+            //controller = GetComponent<CharacterController>();
             networkIdentity = GetComponent<NetworkIdentity>();
             targetDollyPos = splineDolly.CameraPosition;
             inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
@@ -88,8 +89,17 @@ public class DragAndShoot : NetworkBehaviour
         
     }
 
-   
+    [Command]
+    public void CmdAuthorityGiven(GameObject item)
+    {
+        if (isLocalPlayer)
+        {
+            item.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
+            Debug.Log("Authority given " + item.GetComponent<NetworkIdentity>().connectionToClient);
+        }
+    }
 
+    [ClientCallback]
     public void OnAttack(InputValue value)
     {
         
@@ -199,5 +209,15 @@ public class DragAndShoot : NetworkBehaviour
         }
         
     }
-   
+
+    public void OnLookTwo(InputValue value)
+    {
+        Vector2 dir = value.Get<Vector2>();
+        float change = dir.y * scrollSpeed;
+        targetDollyPos += change;
+        targetDollyPos = Mathf.Clamp(targetDollyPos, -1.5f, 1.5f);
+        splineDolly.CameraPosition = Mathf.Lerp(splineDolly.CameraPosition, targetDollyPos,
+            Time.deltaTime * dollySpeed);
+    }
+
 }
