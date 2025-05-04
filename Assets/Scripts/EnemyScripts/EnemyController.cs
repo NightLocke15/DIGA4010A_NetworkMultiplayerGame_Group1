@@ -18,6 +18,7 @@ public class EnemyController : NetworkBehaviour
     [Header("Variables")] //Variables needed for movement adn any other actions of the enemies
     public bool move;
     [SerializeField] private float moveTime;
+    [SerializeField] private float adjustSmall = 0.7f, adjustBig = 1.5f;
 
 
     [Header("Items")] //Items needed for the enemies to function within the play area
@@ -35,7 +36,8 @@ public class EnemyController : NetworkBehaviour
 
         if (bigEnemy) //If a big enemy is spawned (see EnemySpawning)
         {
-            gameObject.transform.localScale = new Vector3(1.5f, gameObject.transform.localScale.y, 1.5f); // make the size of the enemy puck bigger
+            gameObject.transform.localScale = new Vector3(adjustBig, gameObject.transform.localScale.y, adjustBig); // make the size of the enemy puck bigger
+            
 
             //Making the bigger enemy slower by decreasing the speed and acceleration
             enemyAgent.speed = 2;
@@ -43,7 +45,7 @@ public class EnemyController : NetworkBehaviour
         }
         else if (smallEnemy) //If a small enemy is spawned (see EnemySpawning)
         {
-            gameObject.transform.localScale = new Vector3(0.7f, gameObject.transform.localScale.y, 0.7f); // make the size of the enemy smaller
+            gameObject.transform.localScale = new Vector3(adjustSmall, gameObject.transform.localScale.y, adjustSmall); // make the size of the enemy smaller
 
             //Making the smaller enemy slower by decreasing the speed and acceleration
             enemyAgent.speed = 10;

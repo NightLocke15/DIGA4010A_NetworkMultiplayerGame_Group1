@@ -28,7 +28,7 @@ public class PuckScript : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
-    public void Drag(float clampedMag, Vector3 direction ,float mouseForce, NetworkIdentity identity)
+    public void Drag(float clampedMag, Vector3 direction ,float mouseForce)
     {
         rb.AddForce(clampedMag * direction * mouseForce);
         Debug.Log("did it");

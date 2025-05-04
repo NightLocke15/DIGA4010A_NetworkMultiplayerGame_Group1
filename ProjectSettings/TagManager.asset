@@ -8,6 +8,7 @@ TagManager:
   - Puck
   - Ally
   - Tower
+  - Manager
   layers:
   - Default
   - TransparentFX
