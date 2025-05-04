@@ -66,7 +66,7 @@ public class DragAndShoot : NetworkBehaviour
         if (isLocalPlayer)
         {
             playerInput.enabled = true;
-            controller = GetComponent<CharacterController>();
+            //controller = GetComponent<CharacterController>();
             networkIdentity = GetComponent<NetworkIdentity>();
             targetDollyPos = splineDolly.CameraPosition;
             inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();

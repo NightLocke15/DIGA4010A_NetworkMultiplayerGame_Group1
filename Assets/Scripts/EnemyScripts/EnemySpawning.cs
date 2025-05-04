@@ -22,7 +22,8 @@ public class EnemySpawning : NetworkBehaviour
     [SerializeField] private List<GameObject> spawnList = new List<GameObject>();
 
     [Header("Items")] //Items needed to spawn enemies
-    [SerializeField] private GameObject enemy; //Enemy prefab to be instantiated
+    [SerializeField] private GameObject bigEnemy; //Enemy prefab to be instantiated
+    [SerializeField] private GameObject smallEnemy; //Enemy prefab to be instantiated
     [SerializeField] private GameObject tower; //Tower to determine the mid point of the circle around which the enemies should be spawned
 
     private void Start()
@@ -72,7 +73,7 @@ public class EnemySpawning : NetworkBehaviour
             //Spawing a big enemy and then a small enemy
             if (bigSpawn <= smallSpawn) 
             {
-                GameObject enemyObject = Instantiate(enemy, enemyPosition, Quaternion.identity);
+                GameObject enemyObject = Instantiate(bigEnemy, enemyPosition, Quaternion.identity);
                 enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
                 enemyObject.GetComponent<EnemyController>().bigEnemy = true; //Determining what type of enemy it will be
                 NetworkServer.Spawn(enemyObject);
@@ -81,7 +82,7 @@ public class EnemySpawning : NetworkBehaviour
             }
             else if (smallSpawn < bigSpawn)
             {
-                GameObject enemyObject = Instantiate(enemy, enemyPosition, Quaternion.identity);
+                GameObject enemyObject = Instantiate(smallEnemy, enemyPosition, Quaternion.identity);
                 enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
                 enemyObject.GetComponent<EnemyController>().smallEnemy = true; //Determining what type of enemy it will be
                 NetworkServer.Spawn(enemyObject);
