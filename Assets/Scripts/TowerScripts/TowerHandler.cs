@@ -4,7 +4,8 @@ using UnityEngine;
 public class TowerHandler : NetworkBehaviour
 {
     [SerializeField] private EnemySpawning spawningScript;
-    [SerializeField] private int towerHealth = 100;
+    [SyncVar]
+    public int towerHealth = 100;
     [SerializeField] private ParticleSystem onHitTower;
 
     private void Start()
@@ -26,12 +27,25 @@ public class TowerHandler : NetworkBehaviour
         if (collision.collider.tag == "Enemy")
         {
             towerHealth -= 10;
-            NetworkServer.Destroy(collision.gameObject); //Destroy the enemy when it hit's the tower
+            DestroyEnemyCmd(collision.gameObject);
         }
 
         if (collision.collider.tag == "Puck")
         {
             towerHealth -= 10;
         }
-    }    
+    }
+
+    [Command(requiresAuthority = false)]
+    public void DestroyEnemyCmd(GameObject gameObject)
+    {
+        DestroyEnemyRpc(gameObject);
+    }
+
+    [ClientRpc]
+    public void DestroyEnemyRpc(GameObject gameObject)
+    {
+        
+        NetworkServer.Destroy(gameObject); //Destroy the enemy when it hit's the tower
+    }
 }

@@ -7,7 +7,7 @@ using UnityEngine.InputSystem.UI;
 public class CustomNetworkManager : NetworkManager
 {
     public List<GameObject> playerPrefabs = new List<GameObject>();
-    [SerializeField] private GameObject Manager;
+    [SerializeField] private GameObject menuCanvas;
 
     public override void OnServerAddPlayer(NetworkConnectionToClient connection)
     {
@@ -23,7 +23,7 @@ public class CustomNetworkManager : NetworkManager
 
         if (numPlayers == 2) //Checks if the second player has joined
         {
-            Manager.GetComponent<TurnOrderManager>().FirstTurn();
+            menuCanvas.GetComponent<MenuUI>().startButton.gameObject.SetActive(true);
         }
     }
     

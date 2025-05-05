@@ -1,5 +1,7 @@
 using UnityEngine;
 using Mirror;
+using Unity.Cinemachine;
+using Mirror.BouncyCastle.Crypto.Digests;
 
 public class PuckScript : NetworkBehaviour
 {
@@ -15,16 +17,51 @@ public class PuckScript : NetworkBehaviour
 
     [SerializeField] private GameObject onHitTower;
     [SerializeField] private GameObject onHitPuck;
+    private bool shake;
+    private float shakeTime;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (shake == true)
+        {
+            shakeTime += Time.deltaTime;
+
+            if (isServer)
+            {
+                GameObject.Find("CinemachineCameraOne").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 1;
+                GameObject.Find("CinemachineCameraOne").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 1;
+            }
+            else
+            {
+                GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 1;
+                GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 1;
+            }
+            
+        }
+
+        if (shakeTime > 0.2f)
+        {
+            shake = false;
+            shakeTime = 0;
+
+            if (isServer)
+            {
+                GameObject.Find("CinemachineCameraOne").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 0;
+                GameObject.Find("CinemachineCameraOne").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 0;
+            }
+            else
+            {
+                GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 0;
+                GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 0;
+            }
+        }
     }
 
     [Command(requiresAuthority = false)]
@@ -69,6 +106,7 @@ public class PuckScript : NetworkBehaviour
     {
         
         CanBeDrag();
+
         
         transform.parent = newPos;
         
@@ -83,14 +121,45 @@ public class PuckScript : NetworkBehaviour
     {
         if (collision.collider.tag == "Tower")
         {
-            GameObject system = Instantiate(onHitTower, collision.contacts[0].point, onHitTower.transform.rotation);
-            NetworkServer.Spawn(system);
+            TowerHit(collision.contacts[0].point);
         }
         
         if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck")
         {
-            GameObject system = Instantiate(onHitPuck, collision.contacts[0].point, onHitTower.transform.rotation);
-            NetworkServer.Spawn(system);
+            PuckHit(collision.contacts[0].point);
+        }
+
+        if (collision.collider.tag == "Floor")
+        {
+            shake = true;
         }
     }
+
+    [Command(requiresAuthority = false)]
+    public void TowerHit(Vector3 pos)
+    {
+        TowerHitRpc(pos);
+    }
+
+    [ClientRpc]
+    public void TowerHitRpc(Vector3 pos)
+    {
+        GameObject system = Instantiate(onHitTower, pos, onHitTower.transform.rotation);
+        NetworkServer.Spawn(system);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void PuckHit(Vector3 pos)
+    {
+        PuckHitRpc(pos);
+    }
+
+    [ClientRpc]
+    public void PuckHitRpc(Vector3 pos)
+    {
+        GameObject system = Instantiate(onHitPuck, pos, onHitTower.transform.rotation);
+        NetworkServer.Spawn(system);
+    }
+
+    
 }

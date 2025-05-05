@@ -68,6 +68,8 @@ public class DragAndShoot : NetworkBehaviour
     void Start()
     {
         Debug.Log(isOwned + " " + connectionToClient + " " + name);
+        Manager = GameObject.Find("Manager");
+        turnOrderManager = GameObject.Find("Manager").GetComponent<TurnOrderManager>();
        
         if (isLocalPlayer) //Checks if this is the playerPrefab connected to the device
         {
@@ -98,6 +100,8 @@ public class DragAndShoot : NetworkBehaviour
         {
             Turnorder = 2;
         }
+
+        //gameObject.transform.GetChild(2).GetComponent<CinemachineBasicMultiChannelPerlin>().NoiseProfile.
     }
     
 

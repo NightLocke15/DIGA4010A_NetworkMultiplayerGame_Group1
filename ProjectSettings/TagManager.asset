@@ -9,6 +9,8 @@ TagManager:
   - Ally
   - Tower
   - Manager
+  - Wall
+  - Floor
   layers:
   - Default
   - TransparentFX

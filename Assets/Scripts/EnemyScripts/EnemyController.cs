@@ -25,6 +25,8 @@ public class EnemyController : NetworkBehaviour
     [SerializeField] private GameObject target;
     private NavMeshAgent enemyAgent;
     private NavMeshSurface navSurface;
+    private AudioSource audioSource;
+    private AudioClip moveSound;
 
     //[ClientRpc]
     private void Start()
@@ -72,10 +74,13 @@ public class EnemyController : NetworkBehaviour
         }
     }
 
+    [ClientCallback]
     private void EnemyMove()
     {
+        PlayMoveSound();
         navSurface.BuildNavMesh(); // Rebuilding the NavMesh in the case that there are new stationary objects on the board that the enemies need to avoid
         enemyAgent.enabled = true; // Reenabling the enemy navmesh (it is disabled when not moving in order to prevent it sliding around out of turn)
+        
 
         if (enemyAgent.enabled) // Checking if the navmesh agent is enabled
         {
@@ -90,5 +95,18 @@ public class EnemyController : NetworkBehaviour
             enemyAgent.SetDestination(transform.position); //When stopping the enemy's movement, setting it's destination to it's current destination
         }            
         enemyAgent.enabled = false; // Disabling the nav mesh agent, to prevent the enemy sliding around out of turn.
+    }
+
+    [Command(requiresAuthority =false)]
+    public void PlayMoveSound()
+    {
+        PlayMoveSoundRpc();
+    }
+
+    [ClientRpc]
+    public void PlayMoveSoundRpc()
+    {
+        transform.GetComponent<AudioSource>().clip = moveSound;
+        transform.GetComponent<AudioSource>().Play();
     }
 }

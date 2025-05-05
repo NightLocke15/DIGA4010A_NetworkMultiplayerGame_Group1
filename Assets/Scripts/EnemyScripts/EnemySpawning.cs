@@ -16,23 +16,28 @@ public class EnemySpawning : NetworkBehaviour
     public int spawnCount = 0;
     public int bigSpawn = 0;
     public int smallSpawn = 0;
+    [SyncVar]
+    private bool started;
 
     private float waitTime = 0.2f;
 
-    [SerializeField] private List<GameObject> spawnList = new List<GameObject>();
+    [SyncVar]
+    public List<GameObject> spawnList = new List<GameObject>();
 
     [Header("Items")] //Items needed to spawn enemies
     [SerializeField] private GameObject bigEnemy; //Enemy prefab to be instantiated
     [SerializeField] private GameObject smallEnemy; //Enemy prefab to be instantiated
     [SerializeField] private GameObject tower; //Tower to determine the mid point of the circle around which the enemies should be spawned
+    [SerializeField] private MenuUI menuScript;
+    [SerializeField] private GameObject Manager;
 
     private void Start()
     {
         tower = GameObject.Find("Tower");
-        if (isServer)
-        {
-            SpawnEnemies();
-        }
+        //if (isServer)
+        //{
+        //    SpawnEnemies();
+        //}
         
     }
 
@@ -47,10 +52,19 @@ public class EnemySpawning : NetworkBehaviour
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (started)
         {
-            
+            if (spawnList.Count == 0)
+            {
+                if (isServer)
+                {
+                    wave++;
+                    SpawnEnemies();
+                }
+                
+            }
         }
+        
 
         if (Input.GetKeyDown(KeyCode.M))
         {
@@ -63,9 +77,9 @@ public class EnemySpawning : NetworkBehaviour
 
 
     //https://discussions.unity.com/t/how-to-instantiate-objects-in-a-circle-formation-around-a-point/226980
-    private void SpawnEnemies()
+    public void SpawnEnemies()
     {
-        maxSpawn = 4 + 2 * wave; //How many enemies should be spawned based on the current wave
+        maxSpawn = 2 + 2 * wave; //How many enemies should be spawned based on the current wave
         for (int i = 0; i < maxSpawn; i++)
         {
             float rad = (2 * Mathf.PI / maxSpawn * i) + 1.5708f; //Finding the degrees at which the next enemy should be spawned at
@@ -84,6 +98,7 @@ public class EnemySpawning : NetworkBehaviour
                 GameObject enemyObject = Instantiate(bigEnemy, enemyPosition, Quaternion.identity);
                 enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
                 enemyObject.GetComponent<EnemyController>().bigEnemy = true; //Determining what type of enemy it will be
+                enemyObject.GetComponent<AudioSource>().enabled = false;
                 NetworkServer.Spawn(enemyObject);
                 bigSpawn++;
                 spawnList.Add(enemyObject);
@@ -93,6 +108,7 @@ public class EnemySpawning : NetworkBehaviour
                 GameObject enemyObject = Instantiate(smallEnemy, enemyPosition, Quaternion.identity);
                 enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
                 enemyObject.GetComponent<EnemyController>().smallEnemy = true; //Determining what type of enemy it will be
+                enemyObject.GetComponent<AudioSource>().enabled = false;
                 NetworkServer.Spawn(enemyObject);
                 smallSpawn++;
                 spawnList.Add(enemyObject);
@@ -111,5 +127,30 @@ public class EnemySpawning : NetworkBehaviour
                 spawnList[i].GetComponent<EnemyController>().move = true;
             }
         }
+    }
+
+    [Command(requiresAuthority = false)]
+    public void StartGame()
+    {
+        StartGameFunctions();
+        started = true;
+    }
+
+    [ClientRpc]
+    public void StartGameFunctions()
+    {
+        menuScript.waitingPanel.SetActive(false);
+        if (isServer)
+        {
+            SpawnEnemies();
+            StartCoroutine(StartFirstTurn());
+        }
+    }
+
+    //https://discussions.unity.com/t/how-to-wait-before-running-a-function-called-in-start/631729/2
+    private IEnumerator StartFirstTurn()
+    {
+        yield return new WaitForSeconds(2f);
+        Manager.GetComponent<TurnOrderManager>().FirstTurn();
     }
 }
