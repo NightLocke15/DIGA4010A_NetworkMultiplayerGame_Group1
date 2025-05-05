@@ -9,6 +9,7 @@ public class TurnOrderManager : NetworkBehaviour
     [SerializeField] [SyncVar] public int currentTurn = -1;
     [SerializeField] private EnemySpawning enemySpawning;
     [SerializeField] private GameObject Manager;
+    [SerializeField] private GameObject Tower;
     [FormerlySerializedAs("EnemiesAreMoving")] [SerializeField] private bool enemiesAreMoving;
     [SerializeField] private bool shouldChangeOrder = false;
     [SerializeField] private float moveTime = 0f, waitTime = 0f, bufferTime = 2f;
@@ -100,17 +101,17 @@ public class TurnOrderManager : NetworkBehaviour
             playerTwoText = "Your Turn!";
         }
     }
-    
+
     [Command(requiresAuthority = false)]
     public void ChangeTurn()  //Changes the turnOrder
     {
-        
+
         int placeCountPl1 = placeLocPl1.childCount;
         int placeCountPl2 = placeLocPl2.childCount;
         int storeCountPl1 = storeLocPl1.childCount;
         int storeCountPl2 = storeLocPl2.childCount;
 
-        if ((placeCountPl1 == 0 && storeCountPl1 == 0) && (placeCountPl2 == 0 && storeCountPl2 == 0))
+        if ((placeCountPl1 == 0 && storeCountPl1 == 0) && (placeCountPl2 == 0 && storeCountPl2 == 0) || Tower.GetComponent<TowerHandler>().towerHealth <= 0)
         {
             //Defeat function
             Debug.Log("Yes");

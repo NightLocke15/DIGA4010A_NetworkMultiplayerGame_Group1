@@ -1,5 +1,6 @@
 using UnityEngine;
 using Mirror;
+using static Unity.VisualScripting.Member;
 
 public class AimLine : NetworkBehaviour
 {
@@ -10,7 +11,11 @@ public class AimLine : NetworkBehaviour
         aimLine.gameObject.SetActive(false);
     }
 
-    //Reference mirror billiards example
+    //Title: White Ball (From Billiards Example in Mirror
+    //Author: Mirror Package (Open Source)
+    //Date: 2 May 2025
+    //Availability: In Examples folder in Mirror Package / https://mirror-networking.gitbook.io/docs/manual/examples/billiards 
+    //Usage: Used it as reference to make aim line with line renderer
     private bool Mouse(out Vector3 mousePos)
     {
         Ray ray = GameObject.Find("PlayerCamera").GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);

@@ -65,7 +65,12 @@ public class EnemySpawning : NetworkBehaviour
     }
 
 
-    //https://discussions.unity.com/t/how-to-instantiate-objects-in-a-circle-formation-around-a-point/226980
+    
+    //Title: How to instantiate objects in a circle formation around a point?
+    //Author: Cornelis-de-Jager
+    //Date: 27 April 2025
+    //Availability: https://discussions.unity.com/t/how-to-instantiate-objects-in-a-circle-formation-around-a-point/226980 
+    //Usage: Figuring our how to calculate a point on a circle so I can spawn something there
     [Server]
     public void SpawnEnemies()
     {

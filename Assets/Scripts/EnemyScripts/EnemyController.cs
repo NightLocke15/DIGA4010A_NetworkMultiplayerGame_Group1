@@ -57,8 +57,8 @@ public class EnemyController : NetworkBehaviour
             gameObject.GetComponent<Rigidbody>().mass = gameObject.GetComponent<Rigidbody>().mass * adjustBig;
 
             //Making the bigger enemy slower by decreasing the speed and acceleration
-            enemyAgent.speed = 2;
-            enemyAgent.acceleration = 4;
+            enemyAgent.speed = 6;
+            enemyAgent.acceleration = 8;
         }
         else if (BH == 1) //If a small enemy is spawned (see EnemySpawning)
         {
