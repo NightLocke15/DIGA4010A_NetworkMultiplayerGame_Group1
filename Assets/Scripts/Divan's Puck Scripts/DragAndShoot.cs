@@ -151,7 +151,7 @@ public class DragAndShoot : NetworkBehaviour
                         puckScript =
                             hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
                         GameObject puck = hit.collider.gameObject;
-                        if (puckScript != null && puckScript.canDrag)
+                        if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
                         {
                             StartPos = Mouse.current.position
                                 .ReadValue(); //Gets the current mouse position of when the button is pressed down
@@ -191,23 +191,19 @@ public class DragAndShoot : NetworkBehaviour
                                 puckScript.Drag(clampedMag, -direction, mouseForce);
                                 Debug.Log("Onder");
                             }
-                            //This shoots the puck in the direction]
-                            //hit.collider.gameObject.tag = "Ally";
+                            
                             hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
-                           // puckScript.canDrag = false;
                             hit = new RaycastHit(); //Reset hit
-                            cmdNewParent(pucksOnBoardTransform, rb.transform);
-                           // rb.transform.parent = pucksOnBoardTransform;
+                            cmdNewParent(pucksOnBoardTransform, puckScript);
                             rb = null; //Reset rb
                             puckScript = null; //Reset puckScript
                             haveTakenAShot = true;
                             turnOrderManager.WaitBeforeChangeTurn();
-                            //turnOrderManager.ChangeTurn();
+                            
                         }
 
                         else if (puckScript.isStore && puckScript.transform.parent == storePos) //checks if the puck is stored
                         {
-                            Debug.Log("Store");
                             if (placePos.childCount == 0) //If the puck is stored and the player has no other puck, place selcted puck on board.
                             {
                                 puckScript.ChangePosToBoard(placePos);
@@ -222,20 +218,20 @@ public class DragAndShoot : NetworkBehaviour
                     }
                 }
             }
-
         }
-        
     }
 
     [ClientRpc]
-    public void crpcnewParent(Transform parent, Transform puckTrans)
+    public void crpcnewParent(Transform parent, PuckScript puckTrans)
     {
-        puckTrans.parent = parent;
+        puckTrans.transform.parent = parent;
+      //  puckTrans.gameObject.tag = "Untagged";
+        puckTrans.canDrag = false;
     }
     
 
     [Command]
-    public void cmdNewParent(Transform parent, Transform puckTrans)
+    public void cmdNewParent(Transform parent, PuckScript puckTrans)
     {
         if (isServer)
         {

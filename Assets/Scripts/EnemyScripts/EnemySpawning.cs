@@ -41,29 +41,29 @@ public class EnemySpawning : NetworkBehaviour
         
     }
 
-    public void CallSpawnEnemies()
-    {
-        if (isServer)
-        {
-            SpawnEnemies();
-        }
-    }
+    // public void CallSpawnEnemies()
+    // {
+    //     if (isServer)
+    //     {
+    //         SpawnEnemies();
+    //     }
+    // }
 
     
     private void Update()
     {
-        if (started)
-        {
-            if (spawnList.Count == 0)
-            {
-                if (isServer)
-                {
-                    wave++;
-                    SpawnEnemies();
-                }
-                
-            }
-        }
+        // if (started)
+        // {
+        //     if (spawnList.Count == 0)
+        //     {
+        //         if (isServer)
+        //         {
+        //             wave++;
+        //             SpawnEnemies();
+        //         }
+        //         
+        //     }
+        // }
         
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -77,9 +77,12 @@ public class EnemySpawning : NetworkBehaviour
 
 
     //https://discussions.unity.com/t/how-to-instantiate-objects-in-a-circle-formation-around-a-point/226980
+    [Server]
     public void SpawnEnemies()
     {
-        maxSpawn = 2 + 2 * wave; //How many enemies should be spawned based on the current wave
+        if (isServer)
+        {
+            maxSpawn = 2 + 2 * wave; //How many enemies should be spawned based on the current wave
         for (int i = 0; i < maxSpawn; i++)
         {
             float rad = (2 * Mathf.PI / maxSpawn * i) + 1.5708f; //Finding the degrees at which the next enemy should be spawned at
@@ -102,6 +105,7 @@ public class EnemySpawning : NetworkBehaviour
                 NetworkServer.Spawn(enemyObject);
                 bigSpawn++;
                 spawnList.Add(enemyObject);
+                enemyObject.GetComponent<EnemyController>().SpawnedIn(0);
             }
             else if (smallSpawn < bigSpawn)
             {
@@ -112,9 +116,12 @@ public class EnemySpawning : NetworkBehaviour
                 NetworkServer.Spawn(enemyObject);
                 smallSpawn++;
                 spawnList.Add(enemyObject);
+                enemyObject.GetComponent<EnemyController>().SpawnedIn(1);
             }
            // yield return new WaitForSeconds(wait); //Wait a small amount of time before spawing the next enemy
         }
+        }
+        
     }
 
     public void RemoveTheDead()
@@ -144,6 +151,7 @@ public class EnemySpawning : NetworkBehaviour
     public void StartGame()
     {
         StartGameFunctions();
+        SpawnEnemies();
         started = true;
     }
 
@@ -153,7 +161,7 @@ public class EnemySpawning : NetworkBehaviour
         menuScript.waitingPanel.SetActive(false);
         if (isServer)
         {
-            SpawnEnemies();
+            //SpawnEnemies();
             StartCoroutine(StartFirstTurn());
         }
     }
