@@ -64,6 +64,7 @@ public class DragAndShoot : NetworkBehaviour
     [SerializeField] private int Turnorder;
     public GameObject Manager;
     [SerializeField] private TurnOrderManager turnOrderManager;
+    public bool haveTakenAShot = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -74,7 +75,7 @@ public class DragAndShoot : NetworkBehaviour
         {
             Manager = GameObject.FindGameObjectWithTag("Manager");
             turnOrderManager = Manager.GetComponent<TurnOrderManager>();
-            pucksOnBoardTransform = turnOrderManager.PucksOnBoard;
+            pucksOnBoardTransform = turnOrderManager.pucksOnBoard;
             playerInput.enabled = true;  //VERY IMPORTANT!!!!  Will break input system between the two players if removoved
             //controller = GetComponent<CharacterController>();
             //networkIdentity = GetComponent<NetworkIdentity>();
@@ -83,6 +84,21 @@ public class DragAndShoot : NetworkBehaviour
             gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
             gameObject.transform.GetChild(2).GetComponent<CinemachineCamera>().Target.TrackingTarget = GameObject.Find("TargetLocation").transform;
             //TurnOrderManager turnOrderManager = Manager.GetComponent<TurnOrderManager>();
+            
+            if (Turnorder == 1) //Checks if this is player one
+            {
+            
+                storePos = turnOrderManager.storeLocPl1;
+                placePos = turnOrderManager.placeLocPl1;
+                turnOrderManager.playerOne = this;
+            }
+
+            else if (Turnorder == 2)  //Checks if this is player two
+            {
+                storePos = turnOrderManager.storeLocPl2;
+                placePos = turnOrderManager.placeLocPl2;
+                turnOrderManager.playerTwo = this;
+            }
         }
 
       else if (!isLocalPlayer)  //Removes clashes with other player
@@ -90,20 +106,6 @@ public class DragAndShoot : NetworkBehaviour
             gameObject.transform.GetChild(2).gameObject.SetActive(false);
             gameObject.transform.GetChild(1).gameObject.SetActive(false);
             playerInput.enabled = false;
-        }
-
-        if (isServer && isLocalPlayer) //Checks if this is player one
-        {
-            Turnorder = 1;
-            storePos = turnOrderManager.StoreLocPL1;
-            placePos = turnOrderManager.PlaceLocPL1;
-        }
-
-        else if (!isServer && isLocalPlayer)  //Checks if this is player two
-        {
-            Turnorder = 2;
-            storePos = turnOrderManager.StoreLocPL2;
-            placePos = turnOrderManager.PlaceLocPL2;
         }
     }
     
@@ -132,7 +134,7 @@ public class DragAndShoot : NetworkBehaviour
             turnOrderManager = Manager.GetComponent<TurnOrderManager>();
         }
         
-        if (isLocalPlayer && Turnorder == turnOrderManager.currentTurn) //Checks if it is local player and if it is their turn
+        if (isLocalPlayer && Turnorder == turnOrderManager.currentTurn && !haveTakenAShot) //Checks if it is local player and if it is their turn
         {
             if (value.isPressed)  //When the button is pressed
             {
@@ -167,7 +169,7 @@ public class DragAndShoot : NetworkBehaviour
                             hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
 
 
-                        if (!puckScript.isStore && puckScript.canDrag) //Checks if the puck is on the board and can be dragged
+                        if (!puckScript.isStore && puckScript.canDrag && puckScript.transform.parent == placePos) //Checks if the puck is on the board and can be dragged
                         {
                             Vector3 direction = new Vector3();
                             EndPos = Mouse.current.position
@@ -192,11 +194,13 @@ public class DragAndShoot : NetworkBehaviour
                             hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
                            // puckScript.canDrag = false;
                             hit = new RaycastHit(); //Reset hit
-                            newParent(pucksOnBoardTransform, rb.transform);
+                            cmdNewParent(pucksOnBoardTransform, rb.transform);
                            // rb.transform.parent = pucksOnBoardTransform;
                             rb = null; //Reset rb
                             puckScript = null; //Reset puckScript
-                           // turnOrderManager.ChangeTurn();
+                            haveTakenAShot = true;
+                            turnOrderManager.WaitBeforeChangeTurn();
+                            //turnOrderManager.ChangeTurn();
                         }
 
                         else if (puckScript.isStore && puckScript.transform.parent == storePos) //checks if the puck is stored
@@ -222,9 +226,20 @@ public class DragAndShoot : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void newParent(Transform parent, Transform puckTrans)
+    public void crpcnewParent(Transform parent, Transform puckTrans)
     {
         puckTrans.parent = parent;
+    }
+    
+
+    [Command]
+    public void cmdNewParent(Transform parent, Transform puckTrans)
+    {
+        if (isServer)
+        {
+            crpcnewParent(parent, puckTrans);
+        }
+        
     }
     
     

@@ -24,6 +24,7 @@ public class CustomNetworkManager : NetworkManager
         if (numPlayers == 2) //Checks if the second player has joined
         {
             Manager.GetComponent<TurnOrderManager>().FirstTurn();
+            Manager.GetComponent<TurnOrderManager>().AssignParents(numPlayers);
         }
     }
     

@@ -318,7 +318,6 @@ MonoBehaviour:
   MaxLength: 150
   rb: {fileID: 0}
   PlayerCamera: {fileID: 125481038203992934}
-  controller: {fileID: 0}
   playerInput: {fileID: 2370121393118372986}
   splineDolly: {fileID: 8765204425894170709}
   dollySpeed: 30
@@ -327,7 +326,12 @@ MonoBehaviour:
   puckScript: {fileID: 0}
   placePos: {fileID: 0}
   storePos: {fileID: 0}
+  pucksOnBoardTransform: {fileID: 0}
   inputModule: {fileID: 0}
+  Turnorder: 2
+  Manager: {fileID: 0}
+  turnOrderManager: {fileID: 0}
+  haveTakenAShot: 0
 --- !u!114 &1033090628804288496
 MonoBehaviour:
   m_ObjectHideFlags: 0
