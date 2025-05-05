@@ -22,7 +22,7 @@ public class PuckScript : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+      //  ChangePosToStorage(transform.parent);
     }
 
     // Update is called once per frame
@@ -56,6 +56,7 @@ public class PuckScript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void ChangePosToStorage(Transform newPos)
     {
+        Debug.Log("change pos to storage");
         transform.parent = null;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;

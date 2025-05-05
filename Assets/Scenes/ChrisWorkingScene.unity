@@ -10197,12 +10197,8 @@ MonoBehaviour:
   playerTwoText: 
   placeLocPl2: {fileID: 479375104}
   pucksOnBoard: {fileID: 590838838}
-  pl1BP: {fileID: 0}
-  pl2BP: {fileID: 0}
-  pl1SP: {fileID: 0}
-  pl2SP: {fileID: 0}
   PuckPrefab: {fileID: 4285002100531235846, guid: c8f6f353719e10c43a02ace53ec46119, type: 3}
-  PucksAmountStorage: 1
+  PucksAmountStorage: 2
   playerOne: {fileID: 0}
   playerTwo: {fileID: 0}
 --- !u!114 &1718592642

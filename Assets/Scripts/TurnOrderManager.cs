@@ -30,7 +30,7 @@ public class TurnOrderManager : NetworkBehaviour
 
    
    [Header("Important Info")] public Transform pucksOnBoard;
-   [SerializeField] private PuckScript pl1BP, pl2BP, pl1SP, pl2SP;
+   //[SerializeField] private PuckScript pl1BP, pl2BP, pl1SP, pl2SP;
    [SerializeField] private GameObject PuckPrefab;
    [SerializeField] private int PucksAmountStorage = 1;
    public DragAndShoot playerOne, playerTwo;
@@ -163,11 +163,11 @@ public class TurnOrderManager : NetworkBehaviour
         }
     }
 
-    [Command]
-    public void cmdAssignParents(int value)
-    {
-        AssignParents(value);
-    }
+    // [Command]
+    // public void cmdAssignParents(int value)
+    // {
+    //     AssignParents(value);
+    // }
 
     [Server]
     public void AssignParents(int numPlayers)
@@ -204,7 +204,6 @@ public class TurnOrderManager : NetworkBehaviour
                         GameObject storagePuck = Instantiate(PuckPrefab,pos, Quaternion.identity);
                         NetworkServer.Spawn(storagePuck);
                         storagePuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocPl2);
-                
                     }
                 }
             }
