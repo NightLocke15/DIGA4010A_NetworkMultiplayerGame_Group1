@@ -145,7 +145,7 @@ public class DragAndShoot : NetworkBehaviour
                     out hit); //Raycast to select objects we want to interact with
                 if (hit.collider != null) // Checks if we hit something
                 {
-                    if (hit.collider.tag == "Puck") //Checks if we hit a puck
+                    if (hit.collider.tag == "StoredPuck") //Checks if we hit a puck
                     {
                        
                         puckScript =
@@ -165,7 +165,7 @@ public class DragAndShoot : NetworkBehaviour
                 if (hit.collider != null) // Checks if we hit something
                 {
                     Debug.Log(hit.collider.gameObject.name);
-                    if (hit.collider.tag == "Puck")
+                    if (hit.collider.tag == "StoredPuck")
                     {
                         puckScript =
                             hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
@@ -225,7 +225,7 @@ public class DragAndShoot : NetworkBehaviour
     public void crpcnewParent(Transform parent, PuckScript puckTrans)
     {
         puckTrans.transform.parent = parent;
-      //  puckTrans.gameObject.tag = "Untagged";
+        puckTrans.gameObject.tag = "Puck";
         puckTrans.canDrag = false;
     }
     

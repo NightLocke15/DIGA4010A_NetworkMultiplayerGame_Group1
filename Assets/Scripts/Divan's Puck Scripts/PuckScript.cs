@@ -109,7 +109,7 @@ public class PuckScript : NetworkBehaviour
     public void RpcChangePosToStorage(Transform newParent)
     {
         transform.parent = newParent;
-        transform.gameObject.tag = "Puck";
+        transform.gameObject.tag = "StoredPuck";
     }
 
     [Command(requiresAuthority = false)]

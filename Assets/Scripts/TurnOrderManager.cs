@@ -90,27 +90,36 @@ public class TurnOrderManager : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void ChangeTurn()  //Changes the turnOrder
     {
-        currentTurn++;   // Changes the turn order
-        if (currentTurn > 2)  //If turnorder is more than two we reset it
-        {
-            currentTurn = 0;
-            
-        }
         
-        if (currentTurn == 0)
+        int placeCountPl1 = placeLocPl1.childCount;
+        int placeCountPl2 = placeLocPl2.childCount;
+        int storeCountPl1 = storeLocPl1.childCount;
+        int storeCountPl2 = storeLocPl2.childCount;
+
+        if ((placeCountPl1 == 0 && storeCountPl1 == 0) && (placeCountPl2 == 0 && storeCountPl2 == 0))
         {
-            enemySpawning.MoveEnemies(); //Moves the enemies
-            enemiesAreMoving = true;     //Starts timer
-            return;
+            //Defeat function
         }
-        
-        else if (currentTurn == 1)
+
+        else
         {
+            currentTurn++;   // Changes the turn order
+            if (currentTurn > 2)  //If turnorder is more than two we reset it
+            {
+                currentTurn = 0;
             
-                Debug.Log("Werk saam");
-                int placeCount = placeLocPl1.childCount;
-                int storeCount = storeLocPl1.childCount;
-                if (placeCount == 0 && storeCount == 0)
+            }
+        
+            if (currentTurn == 0)
+            {
+                enemySpawning.MoveEnemies(); //Moves the enemies
+                enemiesAreMoving = true;     //Starts timer
+                return;
+            }
+        
+            else if (currentTurn == 1)
+            {
+                if (placeCountPl1 == 0 && storeCountPl1 == 0)
                 {
                     WaitBeforeChangeTurn();
                     return;
@@ -118,20 +127,19 @@ public class TurnOrderManager : NetworkBehaviour
               
             
          
-        }
+            }
         
-        else if (currentTurn == 2)
-        {
-            
-                int placeCount = placeLocPl2.childCount;
-                int storeCount = storeLocPl2.childCount;
-                if (placeCount == 0 && storeCount == 0)
+            else if (currentTurn == 2)
+            {
+                if (placeCountPl2 == 0 && storeCountPl2 == 0)
                 {
                     WaitBeforeChangeTurn();
                     return;
                 }
             
+            }
         }
+        
     }
 
     public void WaitBeforeChangeTurn() //A buffer before the turn order is changed, so that pucks can finish moving before the turn ends
