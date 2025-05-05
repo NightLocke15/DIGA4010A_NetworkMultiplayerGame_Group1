@@ -31,7 +31,7 @@ public class PlayerPuckSound : NetworkBehaviour
     [ClientCallback]
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.tag == "Wall" || collision.collider.tag == "Tower")
+        if (collision.collider.tag == "Wall" || collision.collider.tag == "Tower" || collision.collider.tag == "Floor")
         {
             PlayWallHitSound();
         }

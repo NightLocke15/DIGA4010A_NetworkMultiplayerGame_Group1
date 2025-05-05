@@ -17,8 +17,7 @@ public class PuckScript : NetworkBehaviour
 
     [SerializeField] private GameObject onHitTower;
     [SerializeField] private GameObject onHitPuck;
-    private bool shake;
-    private float shakeTime;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,39 +28,7 @@ public class PuckScript : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (shake == true)
-        {
-            shakeTime += Time.deltaTime;
-
-            if (isServer)
-            {
-                GameObject.Find("CinemachineCameraOne").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 1;
-                GameObject.Find("CinemachineCameraOne").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 1;
-            }
-            else
-            {
-                GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 1;
-                GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 1;
-            }
-            
-        }
-
-        if (shakeTime > 0.2f)
-        {
-            shake = false;
-            shakeTime = 0;
-
-            if (isServer)
-            {
-                GameObject.Find("CinemachineCameraOne").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 0;
-                GameObject.Find("CinemachineCameraOne").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 0;
-            }
-            else
-            {
-                GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 0;
-                GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 0;
-            }
-        }*/
+       
     }
 
     [Command(requiresAuthority = false)]
@@ -139,11 +106,6 @@ public class PuckScript : NetworkBehaviour
         if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck")
         {
             PuckHit(collision.contacts[0].point);
-        }
-
-        if (collision.collider.tag == "Floor")
-        {
-            shake = true;
         }
     }
 

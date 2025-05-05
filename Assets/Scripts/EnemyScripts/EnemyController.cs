@@ -26,7 +26,7 @@ public class EnemyController : NetworkBehaviour
     private NavMeshAgent enemyAgent;
     private NavMeshSurface navSurface;
     private AudioSource audioSource;
-    private AudioClip moveSound;
+    [SerializeField] private AudioClip moveSound;
 
    // [ClientRpc]
     private void Start()
@@ -79,6 +79,7 @@ public class EnemyController : NetworkBehaviour
         {
             moveTime += Time.deltaTime;
             EnemyMove();
+            PlayMoveSound();
         }
         else
         {
@@ -95,7 +96,7 @@ public class EnemyController : NetworkBehaviour
     [ClientCallback]
     private void EnemyMove()
     {
-        PlayMoveSound();
+        
         navSurface.BuildNavMesh(); // Rebuilding the NavMesh in the case that there are new stationary objects on the board that the enemies need to avoid
         enemyAgent.enabled = true; // Reenabling the enemy navmesh (it is disabled when not moving in order to prevent it sliding around out of turn)
         

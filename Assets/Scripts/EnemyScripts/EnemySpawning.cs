@@ -22,7 +22,7 @@ public class EnemySpawning : NetworkBehaviour
     private float waitTime = 0.2f;
 
     [SyncVar]
-    public List<GameObject> spawnList = new List<GameObject>();
+    public List<EnemyController> spawnList = new List<EnemyController>();
 
     [Header("Items")] //Items needed to spawn enemies
     [SerializeField] private GameObject bigEnemy; //Enemy prefab to be instantiated
@@ -52,25 +52,14 @@ public class EnemySpawning : NetworkBehaviour
     
     private void Update()
     {
-        // if (started)
-        // {
-        //     if (spawnList.Count == 0)
-        //     {
-        //         if (isServer)
-        //         {
-        //             wave++;
-        //             SpawnEnemies();
-        //         }
-        //         
-        //     }
-        // }
+        
         
 
         if (Input.GetKeyDown(KeyCode.M))
         {
             for (int i = 0; i < spawnList.Count; i++) 
             {
-                spawnList[i].GetComponent<EnemyController>().move = true;
+                spawnList[i].move = true;
             }
         }
     }
@@ -104,7 +93,7 @@ public class EnemySpawning : NetworkBehaviour
                 enemyObject.GetComponent<AudioSource>().enabled = false;
                 NetworkServer.Spawn(enemyObject);
                 bigSpawn++;
-                spawnList.Add(enemyObject);
+                spawnList.Add(enemyObject.GetComponent<EnemyController>());
                 enemyObject.GetComponent<EnemyController>().SpawnedIn(0);
             }
             else if (smallSpawn < bigSpawn)
@@ -115,7 +104,7 @@ public class EnemySpawning : NetworkBehaviour
                 enemyObject.GetComponent<AudioSource>().enabled = false;
                 NetworkServer.Spawn(enemyObject);
                 smallSpawn++;
-                spawnList.Add(enemyObject);
+                spawnList.Add(enemyObject.GetComponent<EnemyController>());
                 enemyObject.GetComponent<EnemyController>().SpawnedIn(1);
             }
            // yield return new WaitForSeconds(wait); //Wait a small amount of time before spawing the next enemy
@@ -133,16 +122,32 @@ public class EnemySpawning : NetworkBehaviour
                 spawnList.RemoveAt(i);
             }
         }
+
+
     }
 
     public void MoveEnemies()
     {
         RemoveTheDead();
+
+        if (started)
+        {
+            if (spawnList.Count == 0)
+            {
+                if (isServer)
+                {
+                    wave++;
+                    SpawnEnemies();
+                }
+
+            }
+        }
+
         for (int i = 0; i < spawnList.Count; i++)
         {
-            if (spawnList[i].GetComponent<EnemyController>() != null)
+            if (spawnList[i] != null)
             {
-                spawnList[i].GetComponent<EnemyController>().move = true;
+                spawnList[i].move = true;
             }
         }
     }
