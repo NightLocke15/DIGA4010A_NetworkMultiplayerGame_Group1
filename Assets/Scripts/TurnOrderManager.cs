@@ -109,6 +109,36 @@ public class TurnOrderManager : NetworkBehaviour
         {
             enemySpawning.MoveEnemies(); //Moves the enemies
             enemiesAreMoving = true;     //Starts timer
+            return;
+        }
+        
+        else if (currentTurn == 1)
+        {
+            
+                Debug.Log("Werk saam");
+                int placeCount = placeLocPl1.childCount;
+                int storeCount = storeLocPl1.childCount;
+                if (placeCount == 0 && storeCount == 0)
+                {
+                    WaitBeforeChangeTurn();
+                    return;
+                }
+              
+            
+         
+        }
+        
+        else if (currentTurn == 2)
+        {
+            
+                int placeCount = placeLocPl2.childCount;
+                int storeCount = storeLocPl2.childCount;
+                if (placeCount == 0 && storeCount == 0)
+                {
+                    WaitBeforeChangeTurn();
+                    return;
+                }
+            
         }
     }
 

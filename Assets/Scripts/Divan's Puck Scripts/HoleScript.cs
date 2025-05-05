@@ -28,7 +28,7 @@ public class HoleScript : MonoBehaviour
            if (puck.GetComponent<EnemyController>())
            {
                Destroy(puck.GetComponent<EnemyController>());
-               puck.tag = "Puck";
+              // puck.tag = "Puck";
            }
          
            puck.GetComponent<PuckScript>().ChangePosToStorage(storelocation);
