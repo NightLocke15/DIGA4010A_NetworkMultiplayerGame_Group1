@@ -1,6 +1,7 @@
 using UnityEngine;
 using Mirror;
 using UnityEngine.Serialization;
+using TMPro;
 
 public class TurnOrderManager : NetworkBehaviour
 {
@@ -14,12 +15,16 @@ public class TurnOrderManager : NetworkBehaviour
 
      [Header("Player One Info")] [SerializeField]
     public Transform placeLocPl1;
+    [SyncVar]
+    public string playerOneText;
 
    
     [Header("Player Two Info")]
     [SerializeField] public Transform storeLocPl2;
+    [SyncVar]
+    public string playerTwoText;
 
-    
+
     [Header("Player Two Info")]
     [SerializeField] public Transform placeLocPl2;
 
@@ -73,17 +78,20 @@ public class TurnOrderManager : NetworkBehaviour
 
         if (currentTurn == 0)
         {
-            //enemies turn
+            playerOneText = "Enemy Turn";
+            playerTwoText = "Enemy Turn";
         }
         
         else if (currentTurn == 1)
         {
-            //PL 1 turn
+            playerOneText = "Your Turn!";
+            playerTwoText = "Player One Turn";
         }
         
         else if (currentTurn == 2)
         {
-            //PL 2 turn
+            playerOneText = "Player Two Turn.";
+            playerTwoText = "Your Turn!";
         }
     }
     
