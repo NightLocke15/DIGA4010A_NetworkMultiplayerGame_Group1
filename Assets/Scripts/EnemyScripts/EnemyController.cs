@@ -9,6 +9,7 @@ public class EnemyController : NetworkBehaviour
     #region Enemy Information
     public bool bigEnemy;
     [SerializeField] private Material bigEnemyColour;
+    public GameObject TheOrc;
 
 
     public bool smallEnemy;

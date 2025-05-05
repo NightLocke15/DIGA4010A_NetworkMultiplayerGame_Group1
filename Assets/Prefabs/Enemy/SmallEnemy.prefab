@@ -165,6 +165,7 @@ MonoBehaviour:
   syncInterval: 0
   bigEnemy: 0
   bigEnemyColour: {fileID: 0}
+  TheOrc: {fileID: 5784371829827038118}
   smallEnemy: 0
   smallEnemyColour: {fileID: 0}
   move: 0
@@ -792,6 +793,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52ff2c9d77b462840a90fc5e120c2383, type: 3}
+--- !u!1 &5784371829827038118 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 52ff2c9d77b462840a90fc5e120c2383, type: 3}
+  m_PrefabInstance: {fileID: 6667401512401032951}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6561154377697833244 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 52ff2c9d77b462840a90fc5e120c2383, type: 3}

@@ -34,6 +34,9 @@ public class TurnOrderManager : NetworkBehaviour
    [SerializeField] private GameObject PuckPrefab;
    [SerializeField] private int PucksAmountStorage = 1;
    public DragAndShoot playerOne, playerTwo;
+   
+   [Header("Camera TagetPos")]
+   public Transform targetPL1, targetPL2;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
