@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 6894126683102016883}
   - component: {fileID: 8566707593223903310}
   - component: {fileID: 6423460707606412246}
+  - component: {fileID: 627769897473143971}
   m_Layer: 0
   m_Name: BigEnemy
   m_TagString: Enemy
@@ -419,6 +420,24 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   aimLine: {fileID: 2455784741234961882}
+--- !u!114 &627769897473143971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954547992502422919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 513997800c049d348bcfcd0c1b82ed7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  pull: {fileID: 8300000, guid: 543276886ae653940b5f32a8ef239fb5, type: 3}
+  slide: {fileID: 8300000, guid: bc62e9cb6645a654faf34c814b278026, type: 3}
+  wallHit: {fileID: 8300000, guid: 17d649f1abe90db4aae0589c344f8bfa, type: 3}
 --- !u!1 &6200683892492916983
 GameObject:
   m_ObjectHideFlags: 0
