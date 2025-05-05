@@ -29,7 +29,7 @@ public class PuckScript : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (shake == true)
+        /*if (shake == true)
         {
             shakeTime += Time.deltaTime;
 
@@ -61,7 +61,7 @@ public class PuckScript : NetworkBehaviour
                 GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().AmplitudeGain = 0;
                 GameObject.Find("CinemachineCameraTwo").GetComponent<CinemachineBasicMultiChannelPerlin>().FrequencyGain = 0;
             }
-        }
+        }*/
     }
 
     [Command(requiresAuthority = false)]
@@ -152,11 +152,15 @@ public class PuckScript : NetworkBehaviour
         TowerHitRpc(pos);
     }
 
-    [ClientRpc]
+    [Server]
     public void TowerHitRpc(Vector3 pos)
     {
-        GameObject system = Instantiate(onHitTower, pos, onHitTower.transform.rotation);
-        NetworkServer.Spawn(system);
+        if (isServer)
+        {
+            GameObject system = Instantiate(onHitTower, pos, onHitTower.transform.rotation);
+            NetworkServer.Spawn(system);
+        }
+        
     }
 
     [Command(requiresAuthority = false)]
@@ -165,11 +169,15 @@ public class PuckScript : NetworkBehaviour
         PuckHitRpc(pos);
     }
 
-    [ClientRpc]
+    [Server]
     public void PuckHitRpc(Vector3 pos)
     {
-        GameObject system = Instantiate(onHitPuck, pos, onHitTower.transform.rotation);
-        NetworkServer.Spawn(system);
+        if (isServer)
+        {
+            GameObject system = Instantiate(onHitPuck, pos, onHitTower.transform.rotation);
+            NetworkServer.Spawn(system);
+        }
+        
     }
 
     

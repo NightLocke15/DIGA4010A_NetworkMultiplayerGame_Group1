@@ -117,9 +117,20 @@ public class EnemySpawning : NetworkBehaviour
         }
     }
 
+    public void RemoveTheDead()
+    {
+        for (int i = 0; i < spawnList.Count; i++)
+        {
+            if (spawnList[i] == null)
+            {
+                spawnList.RemoveAt(i);
+            }
+        }
+    }
 
     public void MoveEnemies()
     {
+        RemoveTheDead();
         for (int i = 0; i < spawnList.Count; i++)
         {
             if (spawnList[i].GetComponent<EnemyController>() != null)

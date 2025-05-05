@@ -15,10 +15,7 @@ public class TowerHandler : NetworkBehaviour
 
     private void Update()
     {
-        if (towerHealth <= 0)
-        {
-           NetworkServer.Destroy(gameObject);
-        }
+        
     }
 
     [ClientCallback]
@@ -28,11 +25,19 @@ public class TowerHandler : NetworkBehaviour
         {
             towerHealth -= 10;
             DestroyEnemyCmd(collision.gameObject);
+            if (towerHealth <= 0)
+            {
+                NetworkServer.Destroy(gameObject);
+            }
         }
 
         if (collision.collider.tag == "Puck")
         {
             towerHealth -= 10;
+            if (towerHealth <= 0)
+            {
+                NetworkServer.Destroy(gameObject);
+            }
         }
     }
 
@@ -42,10 +47,13 @@ public class TowerHandler : NetworkBehaviour
         DestroyEnemyRpc(gameObject);
     }
 
-    [ClientRpc]
+    [Server]
     public void DestroyEnemyRpc(GameObject gameObject)
     {
+        if (isServer)
+        {
+            NetworkServer.Destroy(gameObject); //Destroy the enemy when it hit's the tower
+        }
         
-        NetworkServer.Destroy(gameObject); //Destroy the enemy when it hit's the tower
     }
 }
