@@ -52,18 +52,7 @@ public class EnemySpawning : NetworkBehaviour
     
     private void Update()
     {
-        // if (started)
-        // {
-        //     if (spawnList.Count == 0)
-        //     {
-        //         if (isServer)
-        //         {
-        //             wave++;
-        //             SpawnEnemies();
-        //         }
-        //         
-        //     }
-        // }
+        
         
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -133,11 +122,27 @@ public class EnemySpawning : NetworkBehaviour
                 spawnList.RemoveAt(i);
             }
         }
+
+
     }
 
     public void MoveEnemies()
     {
         RemoveTheDead();
+
+        if (started)
+        {
+            if (spawnList.Count == 0)
+            {
+                if (isServer)
+                {
+                    wave++;
+                    SpawnEnemies();
+                }
+
+            }
+        }
+
         for (int i = 0; i < spawnList.Count; i++)
         {
             if (spawnList[i] != null)

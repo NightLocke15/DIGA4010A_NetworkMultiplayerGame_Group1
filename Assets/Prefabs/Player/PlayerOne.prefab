@@ -51,6 +51,7 @@ GameObject:
   - component: {fileID: 6526649921843136069}
   - component: {fileID: 3665226934540329930}
   - component: {fileID: 8617591720329903708}
+  - component: {fileID: 3782495819617963077}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: MainCamera
@@ -91,12 +92,12 @@ Camera:
   m_ShutterSpeed: 0.005
   m_Aperture: 16
   m_FocusDistance: 10
-  m_FocalLength: 50
+  m_FocalLength: 13.858139
   m_BladeCount: 5
   m_Curvature: {x: 2, y: 11}
   m_BarrelClipping: 0.25
   m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
+  m_SensorSize: {x: 21.946, y: 16.002}
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -328,6 +329,15 @@ AudioReverbFilter:
   m_LFReference: 250
   m_ReflectionsDelay: 0
   m_ReverbPreset: 7
+--- !u!45 &3782495819617963077
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923632804250962371}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: c2123875a46f35b4da1273c1af5cefff, type: 2}
 --- !u!1 &1186571522376137051
 GameObject:
   m_ObjectHideFlags: 0
