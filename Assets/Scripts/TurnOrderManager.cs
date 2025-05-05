@@ -2,11 +2,13 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.Serialization;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class TurnOrderManager : NetworkBehaviour
 {
     [SerializeField] [SyncVar] public int currentTurn = -1;
     [SerializeField] private EnemySpawning enemySpawning;
+    [SerializeField] private GameObject Manager;
     [FormerlySerializedAs("EnemiesAreMoving")] [SerializeField] private bool enemiesAreMoving;
     [SerializeField] private bool shouldChangeOrder = false;
     [SerializeField] private float moveTime = 0f, waitTime = 0f, bufferTime = 2f;
@@ -34,6 +36,10 @@ public class TurnOrderManager : NetworkBehaviour
    [SerializeField] private GameObject PuckPrefab;
    [SerializeField] private int PucksAmountStorage = 1;
    public DragAndShoot playerOne, playerTwo;
+
+
+    public GameObject endScreen;
+    public GameObject canvasObject;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -107,6 +113,9 @@ public class TurnOrderManager : NetworkBehaviour
         if ((placeCountPl1 == 0 && storeCountPl1 == 0) && (placeCountPl2 == 0 && storeCountPl2 == 0))
         {
             //Defeat function
+            Debug.Log("Yes");
+            CmdEndScreen();
+            
         }
 
         else
@@ -216,5 +225,19 @@ public class TurnOrderManager : NetworkBehaviour
         //
         // pl1SP.ChangePosToStorage(storeLocPl2);
         // pl2SP.ChangePosToStorage(storeLocPl2);
+    }
+
+    [Command(requiresAuthority = false)] 
+    public void CmdEndScreen()
+    {
+        EndScreen();
+    }
+
+    [ClientRpc] 
+    public void EndScreen()
+    {
+        Debug.Log("And Yes");
+        Manager.GetComponent<EnemySpawning>().enabled = false;
+        endScreen.SetActive(true);
     }
 }

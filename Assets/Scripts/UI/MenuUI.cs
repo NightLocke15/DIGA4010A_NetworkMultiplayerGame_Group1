@@ -14,6 +14,7 @@ public class MenuUI : MonoBehaviour
     public GameObject tutorialPanel;
     public GameObject waitingPanel;
     public GameObject startButton;
+    public GameObject endScreenPanel;
     public EnemySpawning enemySpawningScript;
 
     public NetworkManager networkManager;
@@ -28,6 +29,7 @@ public class MenuUI : MonoBehaviour
         tutorialPanel.SetActive(false);
         waitingPanel.SetActive(false);
         startButton.SetActive(false);
+        endScreenPanel.SetActive(false);
     }
 
     private void Update()
@@ -99,5 +101,6 @@ public class MenuUI : MonoBehaviour
         waitingPanel.SetActive(true);
     }
 
+    
     
 }
