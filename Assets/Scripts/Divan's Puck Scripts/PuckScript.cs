@@ -72,18 +72,21 @@ public class PuckScript : NetworkBehaviour
         canDrag = false;
     }
 
+    [Command(requiresAuthority = false)]
     public void CannotBeDrag()
     {
         canDrag = false;
         isStore = true;
     }
 
+    [Command(requiresAuthority = false)]
     public void CanBeDrag()
     {
         canDrag = true;
         isStore = false;
     }
 
+    [Command(requiresAuthority = false)]
     public void ChangePosToStorage(Transform newPos)
     {
         transform.parent = null;
@@ -92,16 +95,23 @@ public class PuckScript : NetworkBehaviour
         
         float adjustX = Random.Range(minX, maxX);
         float adjustZ = Random.Range(minZ, maxZ);
-        Vector3 adjustPos = new Vector3(newPos.position.x + adjustX, newPos.position.y, newPos.position.z + adjustZ );
+        Vector3 adjustPos = new Vector3(newPos.position.x + adjustX, newPos.position.y+2f, newPos.position.z + adjustZ );
         transform.position = adjustPos;
         
         //rb.MovePosition(adjustPos);
-        transform.parent = newPos;
+        //transform.parent = newPos;
+        RpcChangePosToStorage(newPos);
      //   transform.localPosition = new Vector3(0, 0, 0);
         CannotBeDrag();
-      
     }
 
+    [ClientRpc]
+    public void RpcChangePosToStorage(Transform newParent)
+    {
+        transform.parent = newParent;
+    }
+
+    [Command(requiresAuthority = false)]
     public void ChangePosToBoard(Transform newPos)
     {
         
@@ -114,6 +124,7 @@ public class PuckScript : NetworkBehaviour
         rb.angularVelocity = Vector3.zero;
         
         transform.localPosition= new Vector3(0, 0, 0);
+        RpcChangePosToStorage(newPos);
     }
 
     

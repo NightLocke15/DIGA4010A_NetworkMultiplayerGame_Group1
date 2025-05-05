@@ -39,7 +39,7 @@ public class EnemyController : NetworkBehaviour
         if (bigEnemy) //If a big enemy is spawned (see EnemySpawning)
         {
             gameObject.transform.localScale = new Vector3(adjustBig, gameObject.transform.localScale.y, adjustBig); // make the size of the enemy puck bigger
-            
+            gameObject.GetComponent<Rigidbody>().mass = gameObject.GetComponent<Rigidbody>().mass * adjustBig;
 
             //Making the bigger enemy slower by decreasing the speed and acceleration
             enemyAgent.speed = 2;
@@ -48,6 +48,7 @@ public class EnemyController : NetworkBehaviour
         else if (smallEnemy) //If a small enemy is spawned (see EnemySpawning)
         {
             gameObject.transform.localScale = new Vector3(adjustSmall, gameObject.transform.localScale.y, adjustSmall); // make the size of the enemy smaller
+            gameObject.GetComponent<Rigidbody>().mass = gameObject.GetComponent<Rigidbody>().mass * adjustSmall;
 
             //Making the smaller enemy slower by decreasing the speed and acceleration
             enemyAgent.speed = 10;
