@@ -18,7 +18,7 @@ public class EnemyController : NetworkBehaviour
     [Header("Variables")] //Variables needed for movement adn any other actions of the enemies
     public bool move;
     [SerializeField] private float moveTime;
-    [SerializeField] private float adjustSmall = 1f, adjustBig = 1f;
+    [SerializeField] private float adjustSmall = 0.7f, adjustBig = 1.5f;
 
 
     [Header("Items")] //Items needed for the enemies to function within the play area
