@@ -49,6 +49,7 @@ public class DragAndShoot : NetworkBehaviour
     [SerializeField]private CinemachineSplineDolly splineDolly;
     [SerializeField] private float dollySpeed = 5f, scrollSpeed = 10f;
     [SerializeField] private float targetDollyPos;
+    public Transform target;
 
     [Header("Puck Control")] [SerializeField]
     private PuckScript puckScript;
@@ -84,12 +85,12 @@ public class DragAndShoot : NetworkBehaviour
             targetDollyPos = splineDolly.CameraPosition;
             inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
             gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
-            gameObject.transform.GetChild(2).GetComponent<CinemachineCamera>().Target.TrackingTarget = GameObject.Find("TargetLocation").transform;
+            
             //TurnOrderManager turnOrderManager = Manager.GetComponent<TurnOrderManager>();
             
             if (Turnorder == 1) //Checks if this is player one
             {
-            
+                target = turnOrderManager.targetPL1;
                 storePos = turnOrderManager.storeLocPl1;
                 placePos = turnOrderManager.placeLocPl1;
                 turnOrderManager.playerOne = this;
@@ -97,10 +98,12 @@ public class DragAndShoot : NetworkBehaviour
 
             else if (Turnorder == 2)  //Checks if this is player two
             {
+                target = turnOrderManager.targetPL2;
                 storePos = turnOrderManager.storeLocPl2;
                 placePos = turnOrderManager.placeLocPl2;
                 turnOrderManager.playerTwo = this;
             }
+            gameObject.transform.GetChild(2).GetComponent<CinemachineCamera>().Target.TrackingTarget = target;
         }
 
       else if (!isLocalPlayer)  //Removes clashes with other player

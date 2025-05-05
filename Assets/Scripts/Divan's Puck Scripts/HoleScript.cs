@@ -27,6 +27,7 @@ public class HoleScript : MonoBehaviour
        {
            if (puck.GetComponent<EnemyController>())
            {
+               Destroy(puck.GetComponent<EnemyController>().TheOrc);
                Destroy(puck.GetComponent<EnemyController>());
               // puck.tag = "Puck";
            }
