@@ -24,6 +24,7 @@ public class DragAndShoot : NetworkBehaviour
     private Vector2 MousePos;
     private RaycastHit hit; //Selects the puck
     [SerializeField] private Rigidbody rb; //Rigidbody of the puck
+    [SerializeField] private float adjustlenght = 10f;
 
     [Header("Gamepad Settings: Mouse")] //Variables used to create a virtual mouse that the gamepad can use
  
@@ -113,15 +114,18 @@ public class DragAndShoot : NetworkBehaviour
                 float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
                     .magnitude; //We get the lenght between start and end pos
                 float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
-               
+                clampedMag = clampedMag / adjustlenght;
+                
                 if (isServer) //Checks if this is the host. If not host we have to invert the direction
                 {
-                    aimLine.UpdateAimLine(clampedMag, direction);
+                    aimLine.UpdateAimLine(clampedMag, direction, mouseForce, StartPos);
                 }
                 else  //Inverts the direction
                 {
-                    aimLine.UpdateAimLine(clampedMag, -direction);
+                    aimLine.UpdateAimLine(clampedMag, -direction, mouseForce, StartPos);
                 }
+                
+               
             }
         }
     }
@@ -153,8 +157,7 @@ public class DragAndShoot : NetworkBehaviour
                         aimLine = puck.GetComponent<AimLine>();
                         if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
                         {
-                            StartPos = Mouse.current.position
-                                .ReadValue(); //Gets the current mouse position of when the button is pressed down
+                            StartPos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
                             rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
                             aimLine.StartAimLine();
                             mouseDown = true;

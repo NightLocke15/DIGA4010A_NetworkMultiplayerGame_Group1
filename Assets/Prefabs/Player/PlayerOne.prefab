@@ -1000,11 +1000,13 @@ MonoBehaviour:
   dollySpeed: 30
   scrollSpeed: 30
   targetDollyPos: 0
+  target: {fileID: 0}
   puckScript: {fileID: 0}
   placePos: {fileID: 0}
   storePos: {fileID: 0}
   pucksOnBoardTransform: {fileID: 0}
   inputModule: {fileID: 0}
+  mouseDown: 0
   Turnorder: 1
   Manager: {fileID: 0}
   turnOrderManager: {fileID: 0}

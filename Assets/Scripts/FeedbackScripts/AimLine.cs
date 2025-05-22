@@ -66,10 +66,10 @@ public class AimLine : NetworkBehaviour
     //     }
     // }
 
-    public void UpdateAimLine(float clampedMag, Vector3 direction)
+    public void UpdateAimLine(float clampedMag, Vector3 direction, float force, Vector3 startPos)
     {
         aimLine.SetPosition(0, transform.position);
-        aimLine.SetPosition(1, new Vector3((direction * clampedMag).x, transform.position.y, (direction* clampedMag).z));
+        aimLine.SetPosition(1,new Vector3((transform.position.x+ (direction.x * clampedMag)), transform.position.y, (transform.position.z + (direction.z * clampedMag))));
     }
 
     // [ClientCallback]
