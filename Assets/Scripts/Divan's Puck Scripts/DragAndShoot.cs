@@ -26,20 +26,8 @@ public class DragAndShoot : NetworkBehaviour
     [SerializeField] private Rigidbody rb; //Rigidbody of the puck
 
     [Header("Gamepad Settings: Mouse")] //Variables used to create a virtual mouse that the gamepad can use
-  //   [SerializeField] private RectTransform cursorTransform;
-  //  // private Mouse virtualMouse;
-  //  // private Mouse realMouse;
-  //  // public Mouse currentMouse;
-  //   [SerializeField] private RectTransform canvasRectTransform;
-  //   [SerializeField] private Canvas canvas;
+ 
      [SerializeField] private Camera PlayerCamera;
-  //   [SerializeField] private float cursorSpeed = 1000f;
-  //  //// [SerializeField] private float padding = 35f;
-  // //  private bool previousMouseState;
-  //
-  //  // private string previousControlScheme = "";
-  //  // private const string gamepadScheme = "Gamepad";
-  // //  private const string mouseScheme = "Keyboard&Mouse";
     
     [Header("Controller")]
     //[SerializeField] private CharacterController controller;
@@ -58,8 +46,8 @@ public class DragAndShoot : NetworkBehaviour
     [Header("Misc")]
     [SerializeField]
     private InputSystemUIInputModule inputModule;
-    // [SerializeField]
-    // private NetworkIdentity networkIdentity;
+    [SerializeField]
+    private bool mouseDown = false; //checks if the mouse button is being held down on a puck
 
     [Header("Turn Order Variables")]
     [SerializeField] private int Turnorder;
@@ -70,7 +58,6 @@ public class DragAndShoot : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log(isOwned + " " + connectionToClient + " " + name);
         Manager = GameObject.Find("Manager");
         turnOrderManager = GameObject.Find("Manager").GetComponent<TurnOrderManager>();
        
@@ -80,14 +67,9 @@ public class DragAndShoot : NetworkBehaviour
             turnOrderManager = Manager.GetComponent<TurnOrderManager>();
             pucksOnBoardTransform = turnOrderManager.pucksOnBoard;
             playerInput.enabled = true;  //VERY IMPORTANT!!!!  Will break input system between the two players if removoved
-            //controller = GetComponent<CharacterController>();
-            //networkIdentity = GetComponent<NetworkIdentity>();
             targetDollyPos = splineDolly.CameraPosition;
             inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
             gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
-            
-            //TurnOrderManager turnOrderManager = Manager.GetComponent<TurnOrderManager>();
-            
             if (Turnorder == 1) //Checks if this is player one
             {
                 target = turnOrderManager.targetPL1;
@@ -118,22 +100,36 @@ public class DragAndShoot : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (mouseDown)
+        {
+            if (puckScript != null)
+            {
+                AimLine aimLine = puckScript.GetComponent<AimLine>();
+                Vector3 direction = new Vector3();
+                EndPos = Mouse.current.position
+                    .ReadValue(); //Grab the position of the mouse when the button is released
+                direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
+                    .normalized; //We get only the direction between the start and end pos
+                float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
+                    .magnitude; //We get the lenght between start and end pos
+                float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
+               
+                if (isServer) //Checks if this is the host. If not host we have to invert the direction
+                {
+                    aimLine.UpdateAimLine(clampedMag, direction);
+                }
+                else  //Inverts the direction
+                {
+                    aimLine.UpdateAimLine(clampedMag, -direction);
+                }
+            }
+        }
     }
-
-    // [Command]
-    // public void CmdAuthorityGiven(GameObject item)
-    // {
-    //     if (isLocalPlayer)
-    //     {
-    //         item.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
-    //         Debug.Log("Authority given " + item.GetComponent<NetworkIdentity>().connectionToClient);
-    //     }
-    // }
 
     [ClientCallback]
     public void OnAttack(InputValue value)
     {
+        AimLine aimLine;
         if (turnOrderManager == null)  //Checks if we have reference to the turnOrderManager
         {
             turnOrderManager = Manager.GetComponent<TurnOrderManager>();
@@ -154,11 +150,14 @@ public class DragAndShoot : NetworkBehaviour
                         puckScript =
                             hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
                         GameObject puck = hit.collider.gameObject;
+                        aimLine = puck.GetComponent<AimLine>();
                         if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
                         {
                             StartPos = Mouse.current.position
                                 .ReadValue(); //Gets the current mouse position of when the button is pressed down
                             rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                            aimLine.StartAimLine();
+                            mouseDown = true;
                         }
                     }
                 }
@@ -167,7 +166,6 @@ public class DragAndShoot : NetworkBehaviour
             {
                 if (hit.collider != null) // Checks if we hit something
                 {
-                    Debug.Log(hit.collider.gameObject.name);
                     if (hit.collider.tag == "StoredPuck")
                     {
                         puckScript =
@@ -187,14 +185,13 @@ public class DragAndShoot : NetworkBehaviour
                             if (isServer) //Checks if this is the host. If not host we have to invert the direction
                             {
                                 puckScript.Drag(clampedMag, direction, mouseForce); 
-                                Debug.Log("Bo");
                             }
                             else  //Inverts the direction
                             {
                                 puckScript.Drag(clampedMag, -direction, mouseForce);
-                                Debug.Log("Onder");
                             }
-                            
+                            aimLine = puckScript.GetComponent<AimLine>();
+                            aimLine.StopAimLine();
                             hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
                             hit = new RaycastHit(); //Reset hit
                             cmdNewParent(pucksOnBoardTransform, puckScript);
@@ -247,11 +244,8 @@ public class DragAndShoot : NetworkBehaviour
     
     public void OnLook(InputValue value)
     {
-        //Debug.Log("doesn't check local player"+ name);
-   
         if (isLocalPlayer)
         {
-          //  Debug.Log(name);
             Vector2 dir = value.Get<Vector2>(); //Checks if scroll wheel goes up or down
             float change = dir.y * scrollSpeed; //Controls how fast the camera changes position
             targetDollyPos += change;
@@ -265,7 +259,6 @@ public class DragAndShoot : NetworkBehaviour
     
     public void OnEndturn(InputValue value)
     {
-        Debug.Log("Space");
         if (turnOrderManager == null) //Check if we have a reference to the TurnOrderManager
         {
              turnOrderManager = Manager.GetComponent<TurnOrderManager>();
@@ -275,9 +268,6 @@ public class DragAndShoot : NetworkBehaviour
         {
             turnOrderManager.ChangeTurn();
         }
-        
-        
-       
     }
 
 

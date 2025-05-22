@@ -44,7 +44,7 @@ public class EnemyController : NetworkBehaviour
     [ClientRpc]
     public void RpcSpawnedIn(int BH)
     {
-        Debug.Log(netId);
+        
         //Finding some of the items needed in the hierarchy
         enemyAgent = gameObject.GetComponent<NavMeshAgent>();
         navSurface = GameObject.Find("EnemyNavmesh").GetComponent<NavMeshSurface>();
@@ -53,7 +53,7 @@ public class EnemyController : NetworkBehaviour
         if (BH == 0) //If a big enemy is spawned (see EnemySpawning)
         {
             bigEnemy = true;
-            Debug.Log("hello");
+           
             gameObject.transform.localScale = new Vector3(adjustBig, gameObject.transform.localScale.y, adjustBig); // make the size of the enemy puck bigger
             gameObject.GetComponent<Rigidbody>().mass = gameObject.GetComponent<Rigidbody>().mass * adjustBig;
 
@@ -64,7 +64,7 @@ public class EnemyController : NetworkBehaviour
         else if (BH == 1) //If a small enemy is spawned (see EnemySpawning)
         {
             smallEnemy = true;
-            Debug.Log("hi");
+            
             gameObject.transform.localScale = new Vector3(adjustSmall, gameObject.transform.localScale.y, adjustSmall); // make the size of the enemy smaller
             gameObject.GetComponent<Rigidbody>().mass = gameObject.GetComponent<Rigidbody>().mass * adjustSmall;
 
