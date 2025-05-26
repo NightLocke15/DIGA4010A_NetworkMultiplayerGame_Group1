@@ -272,6 +272,18 @@ public class DragAndShoot : NetworkBehaviour
             turnOrderManager.ChangeTurn();
         }
     }
+    
+    public void OnRightMouse(InputValue value)
+    {
+        if (hit.collider != null)
+        {
+            AimLine aimLine = puckScript.GetComponent<AimLine>();
+            aimLine.StopAimLine();
+            hit = new RaycastHit();
+            rb = null; //Reset rb
+            puckScript = null; //Reset puckScript
+        }
+    }
 
 
 }
