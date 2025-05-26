@@ -12,7 +12,6 @@ public class PuckScript : NetworkBehaviour
     
     [Header("Puck variables")]
     [SerializeField] private Rigidbody rb;
-
     [SerializeField] private Collider coll;
 
     [SerializeField] private GameObject onHitTower;
@@ -56,7 +55,12 @@ public class PuckScript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void ChangePosToStorage(Transform newPos)
     {
-        Debug.Log("change pos to storage");
+        if (gameObject.GetComponent<EnemyController>())
+        {
+            Destroy(gameObject.GetComponent<EnemyController>().TheOrc);
+            Destroy(gameObject.GetComponent<EnemyController>());
+            // puck.tag = "Puck";
+        }
         transform.parent = null;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
