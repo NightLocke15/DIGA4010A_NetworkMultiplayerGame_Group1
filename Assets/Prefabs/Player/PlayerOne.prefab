@@ -920,6 +920,10 @@ MonoBehaviour:
   MaxLength: 150
   rb: {fileID: 0}
   adjustlenght: 10
+  leftMouseDown: 0
+  rightMouseDown: 0
+  radius: 5
+  adjustRadius: 1
   PlayerCamera: {fileID: 8906879992566472264}
   playerInput: {fileID: 1879135372979294372}
   splineDolly: {fileID: 745127820152566111}
@@ -932,7 +936,6 @@ MonoBehaviour:
   storePos: {fileID: 0}
   pucksOnBoardTransform: {fileID: 0}
   inputModule: {fileID: 0}
-  mouseDown: 0
   Turnorder: 1
   Manager: {fileID: 0}
   turnOrderManager: {fileID: 0}
@@ -1286,7 +1289,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  towerHealthSlider: {fileID: 0}
+  towerHealthSlider: {fileID: 8462621190538964655}
   playerText: {fileID: 7787539015184421991}
 --- !u!1 &7012355985501220978
 GameObject:

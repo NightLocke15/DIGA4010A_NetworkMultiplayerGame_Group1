@@ -25,7 +25,17 @@ public class DragAndShoot : NetworkBehaviour
     private RaycastHit hit; //Selects the puck
     [SerializeField] private Rigidbody rb; //Rigidbody of the puck
     [SerializeField] private float adjustlenght = 10f;
+    [FormerlySerializedAs("mouseDown")] [SerializeField]
+    private bool leftMouseDown = false; //checks if the mouse button is being held down on a puck
 
+    [Header("Move Puck Variables")]
+    [SerializeField] private bool rightMouseDown = false;
+    [SerializeField] private float radius = 5f;
+    [SerializeField] private float adjustRadius = 1f;
+    private Vector3 newMousePos;
+    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private Vector3 puckStartPos;
+    
     [Header("Gamepad Settings: Mouse")] //Variables used to create a virtual mouse that the gamepad can use
  
      [SerializeField] private Camera PlayerCamera;
@@ -47,8 +57,7 @@ public class DragAndShoot : NetworkBehaviour
     [Header("Misc")]
     [SerializeField]
     private InputSystemUIInputModule inputModule;
-    [SerializeField]
-    private bool mouseDown = false; //checks if the mouse button is being held down on a puck
+    
 
     [Header("Turn Order Variables")]
     [SerializeField] private int Turnorder;
@@ -101,14 +110,13 @@ public class DragAndShoot : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (mouseDown)
+        if (leftMouseDown)
         {
             if (puckScript != null)
             {
                 AimLine aimLine = puckScript.GetComponent<AimLine>();
                 Vector3 direction = new Vector3();
-                EndPos = Mouse.current.position
-                    .ReadValue(); //Grab the position of the mouse when the button is released
+                EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released /If fuck-up change here
                 direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
                     .normalized; //We get only the direction between the start and end pos
                 float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
@@ -124,8 +132,45 @@ public class DragAndShoot : NetworkBehaviour
                 {
                     aimLine.UpdateAimLine(clampedMag, -direction, mouseForce, StartPos);
                 }
-                
                
+            }
+        }
+
+        
+    }
+
+    void FixedUpdate()
+    {
+        if (rightMouseDown)
+        {
+            if (rb != null)
+            {
+                Debug.Log("Beweeg Bliksem");
+                Vector3 direction = new Vector3();
+                Vector3 puckEndPos = rb.transform.position;
+                EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released /If fuck-up change here
+                direction = new Vector3(newMousePos.x - EndPos.x, puckStartPos.y, newMousePos.y - EndPos.y)
+                    .normalized; //We get only the direction between the start and end pos
+                float mag = new Vector3(newMousePos.x - EndPos.x, puckStartPos.y, newMousePos.y - EndPos.y)
+                    .magnitude; //We get the lenght between start and end pos
+                float restrictMag = new Vector3(puckStartPos.x - puckEndPos.x, 0f, puckStartPos.z - puckEndPos.z).magnitude;
+                float clampedMag = Mathf.Clamp(mag, 0, radius); //We put a max limit on the lenght
+                float clampedRestrictMag = Mathf.Clamp(restrictMag, 0, radius);
+                // clampedMag = clampedMag / adjustRadius;
+                
+                if (isServer) //Checks if this is the host. If not host we have to invert the direction
+                {
+                    Debug.Log("Server bliksem");
+                    Vector3 newPos = new Vector3(rb.position.x + (-direction.x * clampedMag), rb.transform.position.y, rb.position.z+ (-direction.z * clampedMag));
+                    rb.transform.position = Vector3.MoveTowards(rb.transform.position, newPos, moveSpeed * Time.deltaTime);
+                }
+                else  //Inverts the direction
+                {
+                    Debug.Log("Helped");
+                    Vector3 newPos = new Vector3(rb.position.x + (direction.x * clampedMag), rb.transform.position.y, rb.position.z+ (direction.z * clampedMag));
+                    rb.transform.position = Vector3.MoveTowards(rb.transform.position, newPos, moveSpeed * Time.deltaTime);
+                }
+                newMousePos = EndPos;
             }
         }
     }
@@ -139,9 +184,9 @@ public class DragAndShoot : NetworkBehaviour
             turnOrderManager = Manager.GetComponent<TurnOrderManager>();
         }
         
-        if (isLocalPlayer && Turnorder == turnOrderManager.currentTurn && !haveTakenAShot) //Checks if it is local player and if it is their turn
+        if (isLocalPlayer && Turnorder == turnOrderManager.currentTurn && !haveTakenAShot && !rightMouseDown) //Checks if it is local player and if it is their turn
         {
-            if (value.isPressed)  //When the button is pressed
+            if (value.isPressed && !rightMouseDown)  //When the button is pressed
             {
                 Vector2 mousePos = Mouse.current.position.ReadValue();  //Gets Mouse position
                 Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos),
@@ -157,10 +202,10 @@ public class DragAndShoot : NetworkBehaviour
                         aimLine = puck.GetComponent<AimLine>();
                         if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
                         {
-                            StartPos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
+                            StartPos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down/ If fuck-up change here
                             rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
                             aimLine.StartAimLine();
-                            mouseDown = true;
+                            leftMouseDown = true;
                         }
                     }
                 }
@@ -173,13 +218,11 @@ public class DragAndShoot : NetworkBehaviour
                     {
                         puckScript =
                             hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
-
-
+                        
                         if (!puckScript.isStore && puckScript.canDrag && puckScript.transform.parent == placePos) //Checks if the puck is on the board and can be dragged
                         {
                             Vector3 direction = new Vector3();
-                            EndPos = Mouse.current.position
-                                .ReadValue(); //Grab the position of the mouse when the button is released
+                            EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released /If fuck-up change here
                             direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
                                 .normalized; //We get only the direction between the start and end pos
                             float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
@@ -220,6 +263,8 @@ public class DragAndShoot : NetworkBehaviour
                         }
                     }
                 }
+
+                leftMouseDown = false;
             }
         }
     }
@@ -259,7 +304,7 @@ public class DragAndShoot : NetworkBehaviour
         
     }
     
-    
+    [ClientCallback]
     public void OnEndturn(InputValue value)
     {
         if (turnOrderManager == null) //Check if we have a reference to the TurnOrderManager
@@ -273,16 +318,68 @@ public class DragAndShoot : NetworkBehaviour
         }
     }
     
+    [ClientCallback]
     public void OnRightMouse(InputValue value)
     {
-        if (hit.collider != null)
+        if (turnOrderManager == null)  //Checks if we have reference to the turnOrderManager
         {
-            AimLine aimLine = puckScript.GetComponent<AimLine>();
-            aimLine.StopAimLine();
-            hit = new RaycastHit();
-            rb = null; //Reset rb
-            puckScript = null; //Reset puckScript
+            turnOrderManager = Manager.GetComponent<TurnOrderManager>();
         }
+
+        if (Turnorder == turnOrderManager.currentTurn)
+        {
+            if (value.isPressed)
+        {
+            if (hit.collider != null && leftMouseDown)
+            {
+                Debug.Log("cancel");
+                AimLine aimLine = puckScript.GetComponent<AimLine>();
+                aimLine.StopAimLine();
+                hit = new RaycastHit();
+                rb = null; //Reset rb
+                puckScript = null; //Reset puckScript
+                leftMouseDown = false;
+            }
+
+            else if (hit.collider != null && !leftMouseDown)
+            {
+                Debug.Log("Move");
+                Vector2 mousePos = Mouse.current.position.ReadValue(); //Gets Mouse position
+                Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos),
+                    out hit); //Raycast to select objects we want to interact with
+
+                if (hit.collider != null)
+                {
+                    if (hit.collider.tag == "StoredPuck")
+                    {
+                        puckScript =
+                            hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
+                        GameObject puck = hit.collider.gameObject;
+                        if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
+                        {
+                            puckStartPos = hit.collider.transform.position; //Position of puck
+                            newMousePos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
+                            rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                            rightMouseDown = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        else
+        {
+            if (hit.collider != null && rightMouseDown)
+            {
+                Debug.Log("Right finger up");
+                hit = new RaycastHit();
+                rb = null; //Reset rb
+                puckScript = null; //Reset puckScript
+                rightMouseDown = false;
+            }
+        }
+        }
+        
     }
 
 

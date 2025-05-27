@@ -12,7 +12,7 @@ public class PlayerUI : NetworkBehaviour
 
     private void Start()
     {
-        towerHealthSlider = transform.GetChild(1).gameObject.GetComponent<Slider>();
+       // towerHealthSlider = transform.GetChild(0).gameObject.GetComponent<Slider>();
         towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
         turnOrderManager = GameObject.Find("Manager").GetComponent<TurnOrderManager>();
     }

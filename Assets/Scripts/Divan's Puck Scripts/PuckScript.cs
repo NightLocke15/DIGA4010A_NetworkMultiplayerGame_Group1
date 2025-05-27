@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 using Unity.Cinemachine;
 using Mirror.BouncyCastle.Crypto.Digests;
+using Telepathy;
 
 public class PuckScript : NetworkBehaviour
 {
@@ -34,7 +35,6 @@ public class PuckScript : NetworkBehaviour
     public void Drag(float clampedMag, Vector3 direction ,float mouseForce)
     {
         rb.AddForce(clampedMag * direction * mouseForce);
-        Debug.Log("did it");
         canDrag = false;
     }
 
@@ -55,12 +55,7 @@ public class PuckScript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void ChangePosToStorage(Transform newPos)
     {
-        if (gameObject.GetComponent<EnemyController>())
-        {
-            Destroy(gameObject.GetComponent<EnemyController>().TheOrc);
-            Destroy(gameObject.GetComponent<EnemyController>());
-            // puck.tag = "Puck";
-        }
+        
         transform.parent = null;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -82,6 +77,13 @@ public class PuckScript : NetworkBehaviour
     {
         transform.parent = newParent;
         transform.gameObject.tag = "StoredPuck";
+        
+        if (gameObject.GetComponent<EnemyController>())
+        {
+            Destroy(gameObject.GetComponent<EnemyController>().TheOrc);
+            Destroy(gameObject.GetComponent<EnemyController>());
+            // puck.tag = "Puck";
+        }
     }
 
     [Command(requiresAuthority = false)]
@@ -145,7 +147,6 @@ public class PuckScript : NetworkBehaviour
             GameObject system = Instantiate(onHitPuck, pos, onHitTower.transform.rotation);
             NetworkServer.Spawn(system);
         }
-        
     }
 
     
