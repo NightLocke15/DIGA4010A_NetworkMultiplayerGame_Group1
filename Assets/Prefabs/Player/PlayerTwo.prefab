@@ -488,8 +488,11 @@ MonoBehaviour:
   adjustlenght: 10
   leftMouseDown: 0
   rightMouseDown: 0
-  radius: 5
+  radius: 50
   adjustRadius: 1
+  moveSpeed: 15
+  puckStartPos: {x: 0, y: 0, z: 0}
+  inputDirection: {x: 0, y: 0, z: 0}
   PlayerCamera: {fileID: 125481038203992934}
   playerInput: {fileID: 2370121393118372986}
   splineDolly: {fileID: 8765204425894170709}
@@ -876,7 +879,7 @@ Transform:
   m_GameObject: {fileID: 5657860302092783002}
   serializedVersion: 2
   m_LocalRotation: {x: 0.13390763, y: -0.0007024485, z: 0.00009491809, w: 0.99099356}
-  m_LocalPosition: {x: -1.9372551, y: 10.408611, z: -28.975792}
+  m_LocalPosition: {x: -1.9372551, y: 10.408611, z: -28.975788}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1175,7 +1178,7 @@ Transform:
   m_GameObject: {fileID: 5831035573449561090}
   serializedVersion: 2
   m_LocalRotation: {x: 0.13390763, y: -0.0007024485, z: 0.00009491809, w: 0.99099356}
-  m_LocalPosition: {x: -1.9372551, y: 10.408611, z: -28.975792}
+  m_LocalPosition: {x: -1.9372551, y: 10.408611, z: -28.975788}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

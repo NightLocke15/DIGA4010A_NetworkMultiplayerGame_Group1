@@ -34,7 +34,7 @@ public class DragAndShoot : NetworkBehaviour
     [SerializeField] private float adjustRadius = 1f;
     private Vector3 newMousePos;
     [SerializeField] private float moveSpeed = 10f;
-    [SerializeField] private Vector3 puckStartPos;
+    [SerializeField] private Vector3 puckStartPos, inputDirection;
     
     [Header("Gamepad Settings: Mouse")] //Variables used to create a virtual mouse that the gamepad can use
  
@@ -143,36 +143,27 @@ public class DragAndShoot : NetworkBehaviour
     {
         if (rightMouseDown)
         {
-            if (rb != null)
-            {
-                Debug.Log("Beweeg Bliksem");
-                Vector3 direction = new Vector3();
-                Vector3 puckEndPos = rb.transform.position;
-                EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released /If fuck-up change here
-                direction = new Vector3(newMousePos.x - EndPos.x, puckStartPos.y, newMousePos.y - EndPos.y)
-                    .normalized; //We get only the direction between the start and end pos
-                float mag = new Vector3(newMousePos.x - EndPos.x, puckStartPos.y, newMousePos.y - EndPos.y)
-                    .magnitude; //We get the lenght between start and end pos
-                float restrictMag = new Vector3(puckStartPos.x - puckEndPos.x, 0f, puckStartPos.z - puckEndPos.z).magnitude;
-                float clampedMag = Mathf.Clamp(mag, 0, radius); //We put a max limit on the lenght
-                float clampedRestrictMag = Mathf.Clamp(restrictMag, 0, radius);
-                // clampedMag = clampedMag / adjustRadius;
-                
-                if (isServer) //Checks if this is the host. If not host we have to invert the direction
-                {
-                    Debug.Log("Server bliksem");
-                    Vector3 newPos = new Vector3(rb.position.x + (-direction.x * clampedMag), rb.transform.position.y, rb.position.z+ (-direction.z * clampedMag));
-                    rb.transform.position = Vector3.MoveTowards(rb.transform.position, newPos, moveSpeed * Time.deltaTime);
-                }
-                else  //Inverts the direction
-                {
-                    Debug.Log("Helped");
-                    Vector3 newPos = new Vector3(rb.position.x + (direction.x * clampedMag), rb.transform.position.y, rb.position.z+ (direction.z * clampedMag));
-                    rb.transform.position = Vector3.MoveTowards(rb.transform.position, newPos, moveSpeed * Time.deltaTime);
-                }
-                newMousePos = EndPos;
-            }
+            ApplyMovement();
+            
         }
+    }
+
+    [Command(requiresAuthority =  false)]
+    private void ApplyMovement()
+    {
+        Vector3 anchorPos = placePos.position;
+        Vector3 Initial  = puckStartPos;
+        Vector3 direction = new Vector3(inputDirection.x, 0f, inputDirection.z);
+        Vector3 Movement = new Vector3(direction.x * moveSpeed * Time.deltaTime, 0f, direction.z * moveSpeed * Time.deltaTime);
+        
+        Vector3 allowedPos = new Vector3(Initial.x + Movement.x, Initial.y, Initial.z + Movement.z);
+        Vector3 mag = new Vector3(allowedPos.x - anchorPos.x, allowedPos.y, allowedPos.z - anchorPos.z);
+        Vector3 restrictMag = mag.normalized * Mathf.Clamp(mag.magnitude, 0, radius);
+        
+        Vector3 finalPos =new Vector3(restrictMag.x, puckStartPos.y,restrictMag.z);
+        
+        rb.MovePosition(finalPos);
+      //  Debug.Log(allowedPos);
     }
 
     [ClientCallback]
@@ -341,7 +332,7 @@ public class DragAndShoot : NetworkBehaviour
                 leftMouseDown = false;
             }
 
-            else if (hit.collider != null && !leftMouseDown)
+            else if (hit.collider == null && !leftMouseDown)
             {
                 Debug.Log("Move");
                 Vector2 mousePos = Mouse.current.position.ReadValue(); //Gets Mouse position
@@ -358,6 +349,7 @@ public class DragAndShoot : NetworkBehaviour
                         if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
                         {
                             puckStartPos = hit.collider.transform.position; //Position of puck
+                            StartPos = placePos.position;
                             newMousePos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
                             rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
                             rightMouseDown = true;
@@ -369,15 +361,29 @@ public class DragAndShoot : NetworkBehaviour
 
         else
         {
-            if (hit.collider != null && rightMouseDown)
-            {
                 Debug.Log("Right finger up");
                 hit = new RaycastHit();
                 rb = null; //Reset rb
                 puckScript = null; //Reset puckScript
                 rightMouseDown = false;
-            }
+            
         }
+        }
+        
+    }
+
+    public void OnMove(InputValue value)
+    {
+        if (turnOrderManager != null && turnOrderManager.currentTurn == Turnorder && rightMouseDown)
+        {
+                Vector2 PlayerInput = value.Get<Vector2>();
+                inputDirection.x = PlayerInput.x;
+                inputDirection.z = PlayerInput.y;
+            
+        }
+        else
+        {
+            //inputDirection = Vector3.zero;
         }
         
     }

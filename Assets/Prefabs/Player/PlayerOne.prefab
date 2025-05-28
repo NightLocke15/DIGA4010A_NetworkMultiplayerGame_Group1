@@ -922,8 +922,11 @@ MonoBehaviour:
   adjustlenght: 10
   leftMouseDown: 0
   rightMouseDown: 0
-  radius: 5
+  radius: 50
   adjustRadius: 1
+  moveSpeed: 15
+  puckStartPos: {x: 0, y: 0, z: 0}
+  inputDirection: {x: 0, y: 0, z: 0}
   PlayerCamera: {fileID: 8906879992566472264}
   playerInput: {fileID: 1879135372979294372}
   splineDolly: {fileID: 745127820152566111}
