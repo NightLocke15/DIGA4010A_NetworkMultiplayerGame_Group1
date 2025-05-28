@@ -148,22 +148,30 @@ public class DragAndShoot : NetworkBehaviour
         }
     }
 
-    [Command(requiresAuthority =  false)]
+    [ClientCallback]
     private void ApplyMovement()
     {
-        Vector3 anchorPos = placePos.position;
-        Vector3 Initial  = puckStartPos;
-        Vector3 direction = new Vector3(inputDirection.x, 0f, inputDirection.z);
-        Vector3 Movement = new Vector3(direction.x * moveSpeed * Time.deltaTime, 0f, direction.z * moveSpeed * Time.deltaTime);
-        
-        Vector3 allowedPos = new Vector3(Initial.x + Movement.x, Initial.y, Initial.z + Movement.z);
-        Vector3 mag = new Vector3(allowedPos.x - anchorPos.x, allowedPos.y, allowedPos.z - anchorPos.z);
-        Vector3 restrictMag = mag.normalized * Mathf.Clamp(mag.magnitude, 0, radius);
-        
-        Vector3 finalPos =new Vector3(restrictMag.x, puckStartPos.y,restrictMag.z);
-        
-        rb.MovePosition(finalPos);
-      //  Debug.Log(allowedPos);
+        if (isLocalPlayer)
+        {
+            Vector3 anchorPos = placePos.position;
+            Vector3 Initial = placePos.position;
+            Vector3 direction = new Vector3(inputDirection.x, 0f, inputDirection.z);
+            Vector3 Movement = new Vector3(direction.x * moveSpeed * Time.deltaTime, 0f,
+                direction.z * moveSpeed * Time.deltaTime);
+
+            Vector3 allowedPos = new Vector3(Initial.x + Movement.x, Initial.y, Initial.z + Movement.z);
+            Vector3 differnce = new Vector3(allowedPos.x - anchorPos.x, allowedPos.y, allowedPos.z - anchorPos.z);
+            float mag = differnce.magnitude;
+            Vector3 restrictPos = new Vector3();
+            mag = Mathf.Clamp(mag, 0f, radius);
+            restrictPos = differnce.normalized * mag;
+            Debug.Log(mag);
+
+            Vector3 finalPos = new Vector3(rb.transform.position.x + restrictPos.x, rb.transform.position.y, rb.transform.position.z + restrictPos.z);
+
+            rb.MovePosition(finalPos);
+            //  Debug.Log(allowedPos);
+        }
     }
 
     [ClientCallback]
@@ -383,7 +391,7 @@ public class DragAndShoot : NetworkBehaviour
         }
         else
         {
-            //inputDirection = Vector3.zero;
+            inputDirection = Vector3.zero;
         }
         
     }
