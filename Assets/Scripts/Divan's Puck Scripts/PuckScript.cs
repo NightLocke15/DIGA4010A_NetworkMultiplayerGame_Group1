@@ -22,6 +22,7 @@ public class PuckScript : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
       //  ChangePosToStorage(transform.parent);
     }
 
@@ -32,9 +33,27 @@ public class PuckScript : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
-    public void CmdMoveThePuck(Vector3 pos)
+    public void CmdMoveThePuck(Vector3 PlacePos, float Inverse, float moveSpeed, Vector3 inputDirection, float radius)
     {
-        rb.MovePosition(pos);
+        Vector3 anchorPos = Vector3.zero;
+        Vector3 anchorPoint = PlacePos;
+        Vector3 AdjustIP = new Vector3(rb.position.x - anchorPoint.x, rb.position.y - anchorPoint.y, rb.position.z - anchorPoint.z);
+        Vector3 Initial = new Vector3(anchorPos.x + AdjustIP.x, anchorPos.y + AdjustIP.y, anchorPos.z + AdjustIP.z);
+        Vector3 direction = new Vector3(inputDirection.x, 0f, inputDirection.z);
+        Vector3 Movement = new Vector3(direction.x * moveSpeed * Time.deltaTime * Inverse, 0f,
+            direction.z * moveSpeed * Time.deltaTime * Inverse);
+        
+        Vector3 allowedPos = new Vector3(Initial.x + Movement.x, Initial.y + Movement.y, Initial.z + Movement.z);
+        Vector3 differnce = new Vector3(allowedPos.x - anchorPos.x, allowedPos.y - anchorPos.y, allowedPos.z - anchorPos.z);
+        float mag = differnce.magnitude;
+        Vector3 restrictPos = new Vector3();
+        mag = Mathf.Clamp(mag, 0f, radius);
+        restrictPos = differnce.normalized * mag;
+        Debug.Log(mag);
+
+        Vector3 finalPos = new Vector3(anchorPoint.x + restrictPos.x, rb.position.y, anchorPoint.z + restrictPos.z);
+        
+        rb.MovePosition(finalPos);
     }
 
     [Command(requiresAuthority = false)]

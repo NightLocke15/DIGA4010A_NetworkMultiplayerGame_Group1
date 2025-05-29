@@ -146,43 +146,57 @@ public class DragAndShoot : NetworkBehaviour
             ApplyMovement();
             
         }
+        else
+        {
+            inputDirection = Vector3.zero;
+        }
     }
 
-    [ClientCallback]
+  
     private void ApplyMovement()
     {
         if (isLocalPlayer)
         {
-            Vector3 anchorPos = Vector3.zero;
-            Vector3 anchorPoint = placePos.position;
-            Vector3 AdjustIP = new Vector3(rb.position.x - anchorPoint.x, rb.position.y - anchorPoint.y, rb.position.z - anchorPoint.z);
-            Vector3 Initial = new Vector3(anchorPos.x + AdjustIP.x, anchorPos.y + AdjustIP.y, anchorPos.z + AdjustIP.z);
-            Vector3 direction = new Vector3(inputDirection.x, 0f, inputDirection.z);
-            Vector3 Movement = new Vector3();
-
             if (isServer)
             {
-                 Movement = new Vector3(direction.x * moveSpeed * Time.deltaTime, 0f,
-                    direction.z * moveSpeed * Time.deltaTime);
+                puckScript.CmdMoveThePuck(placePos.position, 1, moveSpeed, inputDirection, radius);
             }
+
             else
             {
-                Movement = new Vector3(-direction.x * moveSpeed * Time.deltaTime, 0f,
-                    -direction.z * moveSpeed * Time.deltaTime);
+                puckScript.CmdMoveThePuck(placePos.position, -1, moveSpeed, inputDirection, radius);
             }
+           
+            // Vector3 anchorPos = Vector3.zero;
+            // Vector3 anchorPoint = placePos.position;
+            // Vector3 AdjustIP = new Vector3(rb.position.x - anchorPoint.x, rb.position.y - anchorPoint.y, rb.position.z - anchorPoint.z);
+            // Vector3 Initial = new Vector3(anchorPos.x + AdjustIP.x, anchorPos.y + AdjustIP.y, anchorPos.z + AdjustIP.z);
+            // Vector3 direction = new Vector3(inputDirection.x, 0f, inputDirection.z);
+            // Vector3 Movement = new Vector3();
+            //
+            // if (isServer)
+            // {
+            //      Movement = new Vector3(direction.x * moveSpeed * Time.deltaTime, 0f,
+            //         direction.z * moveSpeed * Time.deltaTime);
+            // }
+            // else
+            // {
+            //     Movement = new Vector3(-direction.x * moveSpeed * Time.deltaTime, 0f,
+            //         -direction.z * moveSpeed * Time.deltaTime);
+            // }
+            //
+            //
+            // Vector3 allowedPos = new Vector3(Initial.x + Movement.x, Initial.y + Movement.y, Initial.z + Movement.z);
+            // Vector3 differnce = new Vector3(allowedPos.x - anchorPos.x, allowedPos.y - anchorPos.y, allowedPos.z - anchorPos.z);
+            // float mag = differnce.magnitude;
+            // Vector3 restrictPos = new Vector3();
+            // mag = Mathf.Clamp(mag, 0f, radius);
+            // restrictPos = differnce.normalized * mag;
+            // Debug.Log(mag);
+            //
+            // Vector3 finalPos = new Vector3(anchorPoint.x + restrictPos.x, rb.position.y, anchorPoint.z + restrictPos.z);
+
             
-
-            Vector3 allowedPos = new Vector3(Initial.x + Movement.x, Initial.y + Movement.y, Initial.z + Movement.z);
-            Vector3 differnce = new Vector3(allowedPos.x - anchorPos.x, allowedPos.y - anchorPos.y, allowedPos.z - anchorPos.z);
-            float mag = differnce.magnitude;
-            Vector3 restrictPos = new Vector3();
-            mag = Mathf.Clamp(mag, 0f, radius);
-            restrictPos = differnce.normalized * mag;
-            Debug.Log(mag);
-
-            Vector3 finalPos = new Vector3(anchorPoint.x + restrictPos.x, rb.position.y, anchorPoint.z + restrictPos.z);
-
-            puckScript.CmdMoveThePuck(finalPos);
             //rb.MovePosition(finalPos);
             //  Debug.Log(allowedPos);
         }

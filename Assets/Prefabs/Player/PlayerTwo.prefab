@@ -490,7 +490,7 @@ MonoBehaviour:
   rightMouseDown: 0
   radius: 3
   adjustRadius: 1
-  moveSpeed: 10
+  moveSpeed: 15
   puckStartPos: {x: 0, y: 0, z: 0}
   inputDirection: {x: 0, y: 0, z: 0}
   PlayerCamera: {fileID: 125481038203992934}
