@@ -32,6 +32,12 @@ public class PuckScript : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
+    public void CmdMoveThePuck(Vector3 pos)
+    {
+        rb.MovePosition(pos);
+    }
+
+    [Command(requiresAuthority = false)]
     public void Drag(float clampedMag, Vector3 direction ,float mouseForce)
     {
         rb.AddForce(clampedMag * direction * mouseForce);
