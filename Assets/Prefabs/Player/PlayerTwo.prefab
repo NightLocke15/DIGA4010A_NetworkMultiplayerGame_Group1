@@ -509,6 +509,7 @@ MonoBehaviour:
   Manager: {fileID: 0}
   turnOrderManager: {fileID: 0}
   haveTakenAShot: 0
+  Ping: {fileID: 4026704172742315653, guid: 754c062a01dd42546958ce1a47ef3a28, type: 3}
 --- !u!114 &7427582974738579511
 MonoBehaviour:
   m_ObjectHideFlags: 0

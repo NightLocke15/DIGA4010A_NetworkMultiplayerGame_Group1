@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Users;
 using Mirror;
+using Telepathy;
 using UnityEngine.Serialization;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
@@ -65,6 +66,8 @@ public class DragAndShoot : NetworkBehaviour
     [SerializeField] private TurnOrderManager turnOrderManager;
     public bool haveTakenAShot = false;
 
+    [Header("Ping System")]
+    [SerializeField] private GameObject Ping;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -423,6 +426,44 @@ public class DragAndShoot : NetworkBehaviour
         }
         
     }
+    
+   [Client]
+    public void OnPing(InputValue value)
+    {
+        if (isLocalPlayer)
+        {
+            Debug.Log("Pong");
+            Debug.Log("CmdPing called");
+            Vector2 mousePos = Mouse.current.position.ReadValue();
+            
+            Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos), out RaycastHit pingHit);
 
+            if (pingHit.collider != null)
+            {
+                Vector3 pingPos = pingHit.point;
+                
+                CmdPing(pingPos);
+            }
+        }
+    }
+    
+    [Server]
+    private void CreateThePing()
+    {
+        if (isServer)
+        {
+          
+        }
+    }
+    
+    [Command(requiresAuthority = false)]
+    private void CmdPing(Vector3 pos)
+    {
+        
+            GameObject pingObj = Instantiate(Ping, pos, Quaternion.identity);
+            NetworkServer.Spawn(pingObj);
+            //  CmdPing(pingObj);
+        
+    }
 
 }
