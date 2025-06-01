@@ -156,7 +156,7 @@ public class DragAndShoot : NetworkBehaviour
     }
 
   
-    private void ApplyMovement()
+    private void ApplyMovement() //Moves the puck
     {
         if (isLocalPlayer)
         {
@@ -169,39 +169,7 @@ public class DragAndShoot : NetworkBehaviour
             {
                 puckScript.CmdMoveThePuck(placePos.position, -1, moveSpeed, inputDirection, radius);
             }
-           
-            // Vector3 anchorPos = Vector3.zero;
-            // Vector3 anchorPoint = placePos.position;
-            // Vector3 AdjustIP = new Vector3(rb.position.x - anchorPoint.x, rb.position.y - anchorPoint.y, rb.position.z - anchorPoint.z);
-            // Vector3 Initial = new Vector3(anchorPos.x + AdjustIP.x, anchorPos.y + AdjustIP.y, anchorPos.z + AdjustIP.z);
-            // Vector3 direction = new Vector3(inputDirection.x, 0f, inputDirection.z);
-            // Vector3 Movement = new Vector3();
-            //
-            // if (isServer)
-            // {
-            //      Movement = new Vector3(direction.x * moveSpeed * Time.deltaTime, 0f,
-            //         direction.z * moveSpeed * Time.deltaTime);
-            // }
-            // else
-            // {
-            //     Movement = new Vector3(-direction.x * moveSpeed * Time.deltaTime, 0f,
-            //         -direction.z * moveSpeed * Time.deltaTime);
-            // }
-            //
-            //
-            // Vector3 allowedPos = new Vector3(Initial.x + Movement.x, Initial.y + Movement.y, Initial.z + Movement.z);
-            // Vector3 differnce = new Vector3(allowedPos.x - anchorPos.x, allowedPos.y - anchorPos.y, allowedPos.z - anchorPos.z);
-            // float mag = differnce.magnitude;
-            // Vector3 restrictPos = new Vector3();
-            // mag = Mathf.Clamp(mag, 0f, radius);
-            // restrictPos = differnce.normalized * mag;
-            // Debug.Log(mag);
-            //
-            // Vector3 finalPos = new Vector3(anchorPoint.x + restrictPos.x, rb.position.y, anchorPoint.z + restrictPos.z);
-
-            
-            //rb.MovePosition(finalPos);
-            //  Debug.Log(allowedPos);
+         
         }
     }
 
@@ -358,71 +326,67 @@ public class DragAndShoot : NetworkBehaviour
 
         if (Turnorder == turnOrderManager.currentTurn)
         {
-            if (value.isPressed)
-        {
-            if (hit.collider != null && leftMouseDown)
+            if (value.isPressed)  //Checks if the right mouse button is being held down
             {
-                Debug.Log("cancel");
-                AimLine aimLine = puckScript.GetComponent<AimLine>();
-                aimLine.StopAimLine();
-                hit = new RaycastHit();
+             if (hit.collider != null && leftMouseDown) //Checks if the player is aiming, if true cancel the aim
+             {
+                AimLine aimLine = puckScript.GetComponent<AimLine>(); //finds the aimline script
+                aimLine.StopAimLine(); //This stops the aimline
+                hit = new RaycastHit(); //reset the raycast-hit.
                 rb = null; //Reset rb
                 puckScript = null; //Reset puckScript
                 leftMouseDown = false;
-            }
+             }
 
-            else if (hit.collider == null && !leftMouseDown)
-            {
-                Debug.Log("Move");
+             else if (hit.collider == null && !leftMouseDown) //if the player isn't aiming, make them move the puck
+             {
                 Vector2 mousePos = Mouse.current.position.ReadValue(); //Gets Mouse position
                 Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos),
                     out hit); //Raycast to select objects we want to interact with
 
                 if (hit.collider != null)
                 {
-                    if (hit.collider.tag == "StoredPuck")
+                    if (hit.collider.tag == "StoredPuck") //Checks if the puck hasn't been shot yet
                     {
                         puckScript =
                             hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
                         GameObject puck = hit.collider.gameObject;
-                        if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
+                        if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos) //Checks if this is the puck the player can shoot
                         {
                             puckStartPos = hit.collider.transform.position; //Position of puck
-                            StartPos = placePos.position;
+                            StartPos = placePos.position; //Grabs the position where the puck is placed on board
                             newMousePos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
                             rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
                             rightMouseDown = true;
                         }
                     }
                 }
+             }
             }
-        }
 
-        else
-        {
-                Debug.Log("Right finger up");
+            else
+            {
                 hit = new RaycastHit();
                 rb = null; //Reset rb
                 puckScript = null; //Reset puckScript
-                rightMouseDown = false;
-            
-        }
+                rightMouseDown = false; //Reset the bool
+            }
         }
         
     }
 
     public void OnMove(InputValue value)
     {
-        if (turnOrderManager != null && turnOrderManager.currentTurn == Turnorder && rightMouseDown)
+        if (turnOrderManager != null && turnOrderManager.currentTurn == Turnorder && rightMouseDown)  //Checks that it is the player's turn and that they are holding down the right mouse button
         {
-                Vector2 PlayerInput = value.Get<Vector2>();
+                Vector2 PlayerInput = value.Get<Vector2>();  //Gets the input and converts it to a Vector3
                 inputDirection.x = PlayerInput.x;
                 inputDirection.z = PlayerInput.y;
             
         }
         else
         {
-            inputDirection = Vector3.zero;
+            inputDirection = Vector3.zero; //Resets the input vector to zero when no input is given
         }
         
     }
@@ -432,37 +396,23 @@ public class DragAndShoot : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            Debug.Log("Pong");
-            Debug.Log("CmdPing called");
-            Vector2 mousePos = Mouse.current.position.ReadValue();
-            
-            Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos), out RaycastHit pingHit);
+            Vector2 mousePos = Mouse.current.position.ReadValue(); //Gets mouse Pos
+            Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos), out RaycastHit pingHit); //creates a raycast from the local player's camera and mouse pos
 
             if (pingHit.collider != null)
             {
-                Vector3 pingPos = pingHit.point;
-                
-                CmdPing(pingPos);
+                Vector3 pingPos = pingHit.point; //Gets the position of the raycast hit
+                CmdPing(pingPos); //calls the command to create the ping
             }
         }
     }
     
-    [Server]
-    private void CreateThePing()
-    {
-        if (isServer)
-        {
-          
-        }
-    }
-    
     [Command(requiresAuthority = false)]
-    private void CmdPing(Vector3 pos)
+    private void CmdPing(Vector3 pos)  //This runs on the server so that the ping exits on all clients.
     {
         
             GameObject pingObj = Instantiate(Ping, pos, Quaternion.identity);
             NetworkServer.Spawn(pingObj);
-            //  CmdPing(pingObj);
         
     }
 
