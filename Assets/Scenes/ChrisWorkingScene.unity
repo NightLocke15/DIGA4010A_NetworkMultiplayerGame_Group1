@@ -4620,6 +4620,8 @@ MonoBehaviour:
   - {fileID: 4285002100531235846, guid: c8f6f353719e10c43a02ace53ec46119, type: 3}
   - {fileID: 4026704172742315653, guid: 754c062a01dd42546958ce1a47ef3a28, type: 3}
   - {fileID: 6963328926172549758, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+  - {fileID: 7549474782548748999, guid: f64ab01a266fa6743828d1108595d29a, type: 3}
+  - {fileID: 3077822724123366440, guid: 77063ba663e6fdc499345fa3d3cc3df2, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -11600,8 +11602,8 @@ MonoBehaviour:
   bigSpawn: 0
   smallSpawn: 0
   spawnList: []
-  bigEnemy: {fileID: 1954547992502422919, guid: eedd1bbc66589814c8c9258c4dd4382f, type: 3}
-  smallEnemy: {fileID: 1954547992502422919, guid: 59d080e66b6c2cc418046bf47f9157d5, type: 3}
+  bigEnemy: {fileID: 7549474782548748999, guid: f64ab01a266fa6743828d1108595d29a, type: 3}
+  smallEnemy: {fileID: 3077822724123366440, guid: 77063ba663e6fdc499345fa3d3cc3df2, type: 3}
   tower: {fileID: 1166196098}
   menuScript: {fileID: 417065761}
   Manager: {fileID: 1718592640}

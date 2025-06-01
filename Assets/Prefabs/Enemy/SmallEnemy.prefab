@@ -174,6 +174,7 @@ MonoBehaviour:
   adjustSmall: 0.7
   adjustBig: 1.5
   target: {fileID: 0}
+  enemyAgent: {fileID: -5780744381360234758}
   moveSound: {fileID: 8300000, guid: bc62e9cb6645a654faf34c814b278026, type: 3}
 --- !u!195 &-5780744381360234758
 NavMeshAgent:
@@ -222,6 +223,8 @@ MonoBehaviour:
   coll: {fileID: 1576153972742020591}
   onHitTower: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
   onHitPuck: {fileID: 6245077197731529761, guid: 779fc96840ca17a40aa95a9a6cfc736b, type: 3}
+  clampX: 5
+  clampZ: 2.5
 --- !u!114 &3848759538889664895
 MonoBehaviour:
   m_ObjectHideFlags: 0

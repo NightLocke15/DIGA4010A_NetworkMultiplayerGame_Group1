@@ -4,6 +4,7 @@ using Mirror;
 using Unity.Cinemachine;
 using Mirror.BouncyCastle.Crypto.Digests;
 using Telepathy;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class PuckScript : NetworkBehaviour
@@ -112,6 +113,7 @@ public class PuckScript : NetworkBehaviour
         {
             Destroy(gameObject.GetComponent<EnemyController>().TheOrc);
             Destroy(gameObject.GetComponent<EnemyController>());
+            gameObject.AddComponent<NavMeshObstacle>();
             // puck.tag = "Puck";
         }
     }

@@ -17,14 +17,15 @@ public class EnemyController : NetworkBehaviour
     #endregion
 
     [Header("Variables")] //Variables needed for movement adn any other actions of the enemies
-    public bool move;
+    public bool move, SetDes = false;
     [SerializeField] private float moveTime;
     [SerializeField] private float adjustSmall = 0.7f, adjustBig = 1.5f;
 
+    [SerializeField] private Rigidbody rb;
 
     [Header("Items")] //Items needed for the enemies to function within the play area
     [SerializeField] private GameObject target;
-    private NavMeshAgent enemyAgent;
+   [SerializeField] private NavMeshAgent enemyAgent;
     private NavMeshSurface navSurface;
     private AudioSource audioSource;
     [SerializeField] private AudioClip moveSound;
@@ -46,10 +47,11 @@ public class EnemyController : NetworkBehaviour
     {
         
         //Finding some of the items needed in the hierarchy
-        enemyAgent = gameObject.GetComponent<NavMeshAgent>();
+       // enemyAgent = gameObject.GetComponent<NavMeshAgent>();
         navSurface = GameObject.Find("EnemyNavmesh").GetComponent<NavMeshSurface>();
         target = GameObject.Find("Tower");
-
+        rb = gameObject.GetComponent<Rigidbody>();
+        
         if (BH == 0) //If a big enemy is spawned (see EnemySpawning)
         {
             bigEnemy = true;
@@ -78,6 +80,11 @@ public class EnemyController : NetworkBehaviour
     {
         if (move == true) //checking if it is the enemy's turn to move
         {
+            if (!SetDes)
+            {
+                enemyAgent.transform.position = transform.position;
+                SetDes = true;
+            }
             moveTime += Time.deltaTime;
             EnemyMove();
             PlayMoveSound();
@@ -105,6 +112,7 @@ public class EnemyController : NetworkBehaviour
         if (enemyAgent.enabled) // Checking if the navmesh agent is enabled
         {
             enemyAgent.SetDestination(target.transform.position); // If it is enabled, move the enemy towards the tower (the target)
+            rb.MovePosition(enemyAgent.transform.position);
         }        
     }
 
@@ -114,6 +122,7 @@ public class EnemyController : NetworkBehaviour
         {
             enemyAgent.SetDestination(transform.position); //When stopping the enemy's movement, setting it's destination to it's current destination
         }            
+        SetDes = false;
         enemyAgent.enabled = false; // Disabling the nav mesh agent, to prevent the enemy sliding around out of turn.
     }
 

@@ -93,24 +93,28 @@ public class EnemySpawning : NetworkBehaviour
             if (bigSpawn <= smallSpawn) 
             {
                 GameObject enemyObject = Instantiate(bigEnemy, enemyPosition, Quaternion.identity);
-                enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
-                enemyObject.GetComponent<EnemyController>().bigEnemy = true; //Determining what type of enemy it will be
-                enemyObject.GetComponent<AudioSource>().enabled = false;
                 NetworkServer.Spawn(enemyObject);
+                //enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
+                enemyObject.GetComponentInChildren<NavMeshAgent>().enabled = false;
+                enemyObject.GetComponentInChildren<EnemyController>().bigEnemy = true; //Determining what type of enemy it will be
+                enemyObject.GetComponentInChildren<AudioSource>().enabled = false;
+                
                 bigSpawn++;
-                spawnList.Add(enemyObject.GetComponent<EnemyController>());
-                enemyObject.GetComponent<EnemyController>().SpawnedIn(0);
+                spawnList.Add(enemyObject.GetComponentInChildren<EnemyController>());
+                enemyObject.GetComponentInChildren<EnemyController>().SpawnedIn(0);
             }
             else if (smallSpawn < bigSpawn)
             {
                 GameObject enemyObject = Instantiate(smallEnemy, enemyPosition, Quaternion.identity);
-                enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
-                enemyObject.GetComponent<EnemyController>().smallEnemy = true; //Determining what type of enemy it will be
-                enemyObject.GetComponent<AudioSource>().enabled = false;
                 NetworkServer.Spawn(enemyObject);
+               // enemyObject.GetComponent<NavMeshAgent>().enabled = false; //Disabling the NavMeshAgent in order to prevent the enemy sliding around out of turn
+                enemyObject.GetComponentInChildren<NavMeshAgent>().enabled = false;
+                enemyObject.GetComponentInChildren<EnemyController>().smallEnemy = true; //Determining what type of enemy it will be
+                enemyObject.GetComponentInChildren<AudioSource>().enabled = false;
+                
                 smallSpawn++;
-                spawnList.Add(enemyObject.GetComponent<EnemyController>());
-                enemyObject.GetComponent<EnemyController>().SpawnedIn(1);
+                spawnList.Add(enemyObject.GetComponentInChildren<EnemyController>());
+                enemyObject.GetComponentInChildren<EnemyController>().SpawnedIn(1);
             }
            // yield return new WaitForSeconds(wait); //Wait a small amount of time before spawing the next enemy
         }
