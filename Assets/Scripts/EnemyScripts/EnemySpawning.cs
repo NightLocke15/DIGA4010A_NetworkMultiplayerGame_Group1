@@ -52,9 +52,6 @@ public class EnemySpawning : NetworkBehaviour
     
     private void Update()
     {
-        
-        
-
         if (Input.GetKeyDown(KeyCode.M))
         {
             for (int i = 0; i < spawnList.Count; i++) 

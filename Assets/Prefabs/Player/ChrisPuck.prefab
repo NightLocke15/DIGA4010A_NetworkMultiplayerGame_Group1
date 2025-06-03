@@ -13,14 +13,15 @@ GameObject:
   - component: {fileID: 7342374711279583694}
   - component: {fileID: 8100768062077169593}
   - component: {fileID: 3786735982948612350}
-  - component: {fileID: 8933910841566263098}
   - component: {fileID: 6999357717785910093}
   - component: {fileID: 5404690865259188929}
   - component: {fileID: -1578910678427383347}
+  - component: {fileID: 8933910841566263098}
   - component: {fileID: 5510505782007248028}
   - component: {fileID: -4370584505178754850}
-  - component: {fileID: 8742045759302994063}
   - component: {fileID: 6372604442020403187}
+  - component: {fileID: 8742045759302994063}
+  - component: {fileID: -962192364865616498}
   m_Layer: 3
   m_Name: ChrisPuck
   m_TagString: StoredPuck
@@ -147,18 +148,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &8933910841566263098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4285002100531235846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeeca1a02fecdc84e994c3b1618d70e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6999357717785910093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,6 +233,18 @@ MonoBehaviour:
   rotationSensitivity: 0.01
   positionPrecision: 0.01
   scalePrecision: 0.01
+--- !u!114 &8933910841566263098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285002100531235846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeeca1a02fecdc84e994c3b1618d70e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5510505782007248028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +270,8 @@ MonoBehaviour:
   coll: {fileID: 3786735982948612350}
   onHitTower: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
   onHitPuck: {fileID: 6245077197731529761, guid: 779fc96840ca17a40aa95a9a6cfc736b, type: 3}
+  clampX: 5
+  clampZ: 2.5
 --- !u!114 &-4370584505178754850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,6 +288,24 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   aimLine: {fileID: 4584452216578455318}
+--- !u!114 &6372604442020403187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285002100531235846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 513997800c049d348bcfcd0c1b82ed7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  pull: {fileID: 8300000, guid: 543276886ae653940b5f32a8ef239fb5, type: 3}
+  slide: {fileID: 8300000, guid: bc62e9cb6645a654faf34c814b278026, type: 3}
+  wallHit: {fileID: 8300000, guid: 17d649f1abe90db4aae0589c344f8bfa, type: 3}
 --- !u!82 &8742045759302994063
 AudioSource:
   m_ObjectHideFlags: 0
@@ -382,24 +403,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6372604442020403187
-MonoBehaviour:
+--- !u!208 &-962192364865616498
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4285002100531235846}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 513997800c049d348bcfcd0c1b82ed7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  pull: {fileID: 8300000, guid: 543276886ae653940b5f32a8ef239fb5, type: 3}
-  slide: {fileID: 8300000, guid: bc62e9cb6645a654faf34c814b278026, type: 3}
-  wallHit: {fileID: 8300000, guid: 17d649f1abe90db4aae0589c344f8bfa, type: 3}
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 2
 --- !u!1 &6412110799630239388
 GameObject:
   m_ObjectHideFlags: 0

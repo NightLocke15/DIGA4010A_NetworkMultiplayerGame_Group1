@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class TurnOrderManager : NetworkBehaviour
 {
     [SerializeField] [SyncVar] public int currentTurn = -1;
+    [SyncVar] public int totalWaves = 0;
     [SerializeField] private EnemySpawning enemySpawning;
     [SerializeField] private GameObject Manager;
     [SerializeField] private GameObject Tower;
@@ -133,6 +134,7 @@ public class TurnOrderManager : NetworkBehaviour
         
             if (currentTurn == 0)
             {
+                totalWaves++;
                 enemySpawning.MoveEnemies(); //Moves the enemies
                 enemiesAreMoving = true;     //Starts timer
                 return;
