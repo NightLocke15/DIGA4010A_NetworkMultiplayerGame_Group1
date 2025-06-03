@@ -3,12 +3,15 @@ using Mirror;
 
 public class ECscript : NetworkBehaviour
 {
+   [Header("The Enemy Info")]
     [SerializeField] private EnemyTypes enemyType;
+    public float moveDistance;
+    
+    [Header("Other Varaibles")]
     [SerializeField] private Transform followAgent;
     [SerializeField] private TurnOrderManager turnOrderManager;
-    [SerializeField] private Rigidbody rb;
-
-    [SerializeField] private int TurnOrder = 0;
+    public Rigidbody rb;
+    public int TurnOrder = 0;
     public enum EnemyTypes
     {
         Goblin,

@@ -28,12 +28,16 @@ public class ESscript : NetworkBehaviour
         
     }
 
+    //Title: How to instantiate objects in a circle formation around a point?
+    //Author: Cornelis-de-Jager
+    //Date: 27 April 2025
+    //Availability: https://discussions.unity.com/t/how-to-instantiate-objects-in-a-circle-formation-around-a-point/226980 
+    //Usage: Figuring our how to calculate a point on a circle so I can spawn something there
     [Server]
     public void SummonTheEnemies()
     {
         if (isServer)
         {
-            
             float theChance = goblinChance + orcChance + ogreChance;
             float goblinTopLimit = goblinChance;
             float orcTopLimit = goblinTopLimit + orcChance;
@@ -81,6 +85,7 @@ public class ESscript : NetworkBehaviour
                 
                 GameObject enemyObject  = Instantiate(spawnEnemy, enemyPosition, Quaternion.identity, enemyParent);
                 NetworkServer.Spawn(enemyObject);
+                enemyObject.GetComponentInChildren<AgentScript>().targetTransform = towerTransform;
             }
 
         }   
