@@ -25,7 +25,7 @@ public class CustomNetworkManager : NetworkManager
         if (numPlayers == 2) //Checks if the second player has joined
         {
             menuCanvas.GetComponent<MenuUI>().startButton.gameObject.SetActive(true);
-            //Manager.GetComponent<TurnOrderManager>().FirstTurn();
+            Manager.GetComponent<TurnOrderManager>().FirstTurn();
             Manager.GetComponent<TurnOrderManager>().AssignParents(numPlayers);
         }
     }

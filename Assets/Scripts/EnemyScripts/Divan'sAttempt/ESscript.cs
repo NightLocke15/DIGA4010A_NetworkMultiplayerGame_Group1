@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.AI;
@@ -16,6 +17,13 @@ public class ESscript : NetworkBehaviour
     [SerializeField] private Transform towerTransform;
 
     [SerializeField] private Transform enemyParent;
+    
+    [SyncVar]
+    [SerializeField] private List<AgentScript> agentScripts;
+
+    [SerializeField] private int increaseSpeed;
+
+    [SerializeField] private int increaseMovement;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -79,15 +87,46 @@ public class ESscript : NetworkBehaviour
                 {
                     if (ogrePrefab != null)
                     {
-                        spawnEnemy = orcPrefab;
+                        spawnEnemy = ogrePrefab;
                     }
                 }
                 
                 GameObject enemyObject  = Instantiate(spawnEnemy, enemyPosition, Quaternion.identity, enemyParent);
                 NetworkServer.Spawn(enemyObject);
+                agentScripts.Add(enemyObject.GetComponentInChildren<AgentScript>());
                 enemyObject.GetComponentInChildren<AgentScript>().targetTransform = towerTransform;
+                enemyObject.GetComponentInChildren<ECscript>().turnOrderManager = turnOrderManager;
             }
 
         }   
+    }
+
+   // [Server]
+    public void MoveTheEnemies()
+    {
+        if (isServer)
+        {
+            int enemyCount = agentScripts.Count;
+
+            if (enemyCount == 0)
+            {
+                SummonTheEnemies();
+                turnOrderManager.IncreaseWaves();
+            }
+            
+            else if (enemyCount == 1)
+            {
+                agentScripts[0].moveSpeed += increaseSpeed;
+                agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
+            }
+            
+            else if (enemyCount > 1)
+            {
+                for (int i = 0; i < agentScripts.Count; i++)
+                {
+                    agentScripts[i].SetPath();
+                }
+            }
+        }
     }
 }

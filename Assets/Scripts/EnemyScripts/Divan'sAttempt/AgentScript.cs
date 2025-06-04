@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
@@ -10,16 +11,20 @@ using Mirror;
 
 public class AgentScript : NetworkBehaviour
 {
-    [Header("The enemy")] [SerializeField] private ECscript connectedEnemy;
+    [Header("The enemy")] public ECscript connectedEnemy;
     
     [Header("NavMesh")]
     public Transform targetTransform;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private LineRenderer moveLine;
     [SerializeField] private LineRenderer totalLine;
-    [SerializeField] private NavMeshPath path;
+    private NavMeshPath path;
     [SerializeField] private List<Vector3> waypoints = new List<Vector3>();
     [SerializeField] private List<Vector3> pebbles = new List<Vector3>();
+
+    
+    [SerializeField] private float updateSpeed = 1000f;
+    public float moveSpeed = 5f;
     
     [Header("Audio")]
     private AudioSource audioSource;
@@ -28,15 +33,25 @@ public class AgentScript : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       
+       agent.speed = moveSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+        if (connectedEnemy.turnOrderManager.currentTurn != connectedEnemy.TurnOrder) //Not enemy turn we move to the other guy very fast
+        {
+            SetSpeed(updateSpeed);
+            MoveAgent(connectedEnemy.transform.position);
+        }
+
     }
 
+    public void SetSpeed(float speed)
+    {
+        agent.speed = speed;
+    }
+    
     public void SetPath() //This checks is a path can be made to the tower
     {
          path = new NavMeshPath();
@@ -58,19 +73,19 @@ public class AgentScript : NetworkBehaviour
          }
     }
 
-    [Server]
+    [Command]
     private void CreateTheReachablePath(NavMeshPath thePath) //This function finds all the waypoints of where to place the linerenders points.
     {
         if (isServer)
         {
            waypoints = new List<Vector3>();
-            float remainingDist = connectedEnemy.moveDistance;
+            float remainingDist = connectedEnemy.moveDistance; //How far the enemy can move
 
             for (int i = 0; i < thePath.corners.Length; i++)
             {
-                if (i != thePath.corners.Length-1)
+                if (i != thePath.corners.Length-1)  //if it is not the last corner
                 {
-                    float dist = Vector3.Distance(thePath.corners[i], thePath.corners[i + 1]);
+                    float dist = Vector3.Distance(thePath.corners[i], thePath.corners[i + 1]); //the distance between two corners
                     
                     if (remainingDist > dist)
                     {
@@ -89,17 +104,18 @@ public class AgentScript : NetworkBehaviour
                     }
                 }
 
-                else
+                else // if it is the last corner
                 {
                     waypoints.Add(thePath.corners[i]);
                     SetMoveLine();
+                    CreateTheTotalPath(thePath, thePath.corners[i], i);
                     return;
                 }
             }
         }
     }
 
-    [Server]
+   // [Command]
     private void SetMoveLine()
     {
         moveLine.positionCount = waypoints.Count;
@@ -109,7 +125,7 @@ public class AgentScript : NetworkBehaviour
         }
     }
 
-    [Server]
+   // [Command]
     private void CreateTheTotalPath(NavMeshPath thePath, Vector3 startPos, int lastIndex)
     {
         if (isServer)
@@ -128,7 +144,7 @@ public class AgentScript : NetworkBehaviour
         }
     }
 
-    [Server]
+   // [Server]
     private void SetTotalLine()
     {
         totalLine.positionCount = pebbles.Count;
@@ -136,6 +152,12 @@ public class AgentScript : NetworkBehaviour
         for (int i = 0; i < pebbles.Count; i++)
         {
             totalLine.SetPosition(i, pebbles[i]);
+        }
+
+        if (connectedEnemy.turnOrderManager.currentTurn == connectedEnemy.TurnOrder)
+        {
+            SetSpeed(moveSpeed);  
+            MoveAgent(waypoints.Last());
         }
     }
 

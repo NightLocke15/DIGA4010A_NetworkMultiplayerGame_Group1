@@ -7,9 +7,14 @@ public class ECscript : NetworkBehaviour
     [SerializeField] private EnemyTypes enemyType;
     public float moveDistance;
     
+    [Header("Delete variables")]
+    [SerializeField] private Transform deleteTransform;
+    [SerializeField] private GameObject deleteModel;
+    [SerializeField] private GameObject deleteAgent;
+    
     [Header("Other Varaibles")]
     [SerializeField] private Transform followAgent;
-    [SerializeField] private TurnOrderManager turnOrderManager;
+    public TurnOrderManager turnOrderManager;
     public Rigidbody rb;
     public int TurnOrder = 0;
     public enum EnemyTypes
@@ -33,16 +38,31 @@ public class ECscript : NetworkBehaviour
             {
                 rb.MovePosition(followAgent.position);
             }
-
-            else
-            {
-                
-            }
         }
 
         else
         {
             turnOrderManager = GameObject.FindWithTag("Manager").GetComponent<TurnOrderManager>();
+        }
+    }
+
+    public void DeleteStuff()
+    {
+        transform.parent = null;
+        Destroy(deleteModel);
+        Destroy(deleteAgent);
+        Destroy(deleteTransform);
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (deleteAgent != null)
+        {
+            if (other.tag == "Floor")
+            {
+                deleteAgent.SetActive(true);
+            }
         }
     }
 }

@@ -108,7 +108,11 @@ public class PuckScript : NetworkBehaviour
     {
         if (gameObject.GetComponentInChildren<ECscript>())
         {
-            
+            gameObject.GetComponentInChildren<ECscript>().DeleteStuff();
+            NavMeshObstacle obstacle = gameObject.AddComponent<NavMeshObstacle>();
+            obstacle.carving = true;
+            obstacle.carveOnlyStationary = true;
+            obstacle.carvingTimeToStationary = 2f;
         }
         
         transform.parent = newParent;

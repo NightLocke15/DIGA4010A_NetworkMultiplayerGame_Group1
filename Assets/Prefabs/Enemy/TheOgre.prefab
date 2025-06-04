@@ -671,6 +671,7 @@ GameObject:
   - component: {fileID: 952485997169622156}
   - component: {fileID: 575308773602882663}
   - component: {fileID: 5424651552707405759}
+  - component: {fileID: 1470881444888047069}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -751,6 +752,31 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1470881444888047069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3867593588766780524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f0a5158a24f13449a046f639217ed46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  connectedEnemy: {fileID: 5998505230088180618}
+  targetTransform: {fileID: 952485997169622156}
+  agent: {fileID: 5424651552707405759}
+  moveLine: {fileID: 7354412490309240177}
+  totalLine: {fileID: 1703091188035121557}
+  waypoints: []
+  pebbles: []
+  updateSpeed: 1000
+  moveSpeed: 5
+  moveSound: {fileID: 0}
 --- !u!1 &7672042966399345297
 GameObject:
   m_ObjectHideFlags: 0
@@ -770,6 +796,7 @@ GameObject:
   - component: {fileID: 2901398010061919424}
   - component: {fileID: 8777841131063532469}
   - component: {fileID: 541679144137373528}
+  - component: {fileID: 5998505230088180618}
   m_Layer: 0
   m_Name: BigEnemy
   m_TagString: Enemy
@@ -1123,6 +1150,30 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5998505230088180618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7672042966399345297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71bb9d01368c1984d8901eb4c132493a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  enemyType: 2
+  moveDistance: 4
+  deleteTransform: {fileID: 6279705417699756938}
+  deleteModel: {fileID: 8352664184196350736}
+  deleteAgent: {fileID: 3867593588766780524}
+  followAgent: {fileID: 952485997169622156}
+  turnOrderManager: {fileID: 0}
+  rb: {fileID: 7512108679741058470}
+  TurnOrder: 0
 --- !u!1 &8352664184196350736
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,7 +1282,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6279705417699756938
 Transform:
   m_ObjectHideFlags: 0
