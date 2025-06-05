@@ -3710,8 +3710,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: EnemySpawning, Assembly-CSharp
+      - m_Target: {fileID: 1718592645}
+        m_TargetAssemblyTypeName: ESscript, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
@@ -10787,6 +10787,7 @@ MonoBehaviour:
   agentScripts: []
   increaseSpeed: 0
   increaseMovement: 0
+  menuScript: {fileID: 417065761}
 --- !u!1 &1719378426
 GameObject:
   m_ObjectHideFlags: 0

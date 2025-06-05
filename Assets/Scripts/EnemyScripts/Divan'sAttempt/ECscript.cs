@@ -61,7 +61,7 @@ public class ECscript : NetworkBehaviour
         {
             if (other.tag == "Floor")
             {
-                deleteAgent.SetActive(true);
+                deleteAgent.GetComponent<AgentScript>().agent.enabled = true;
             }
         }
     }

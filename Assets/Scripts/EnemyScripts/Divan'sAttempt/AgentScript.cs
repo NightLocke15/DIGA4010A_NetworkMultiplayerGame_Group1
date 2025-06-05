@@ -15,7 +15,7 @@ public class AgentScript : NetworkBehaviour
     
     [Header("NavMesh")]
     public Transform targetTransform;
-    [SerializeField] private NavMeshAgent agent;
+    public NavMeshAgent agent;
     [SerializeField] private LineRenderer moveLine;
     [SerializeField] private LineRenderer totalLine;
     private NavMeshPath path;
@@ -41,10 +41,12 @@ public class AgentScript : NetworkBehaviour
     {
         if (connectedEnemy.turnOrderManager.currentTurn != connectedEnemy.TurnOrder) //Not enemy turn we move to the other guy very fast
         {
-            SetSpeed(updateSpeed);
-            MoveAgent(connectedEnemy.transform.position);
+            // if (agent.enabled)
+            // {
+            //     SetSpeed(updateSpeed);
+            //     MoveAgent(connectedEnemy.transform.position);
+            // }
         }
-
     }
 
     public void SetSpeed(float speed)
@@ -54,23 +56,27 @@ public class AgentScript : NetworkBehaviour
     
     public void SetPath() //This checks is a path can be made to the tower
     {
-         path = new NavMeshPath();
-         agent.CalculatePath(targetTransform.position, path);
+        if (agent.enabled)
+        {
+            path = new NavMeshPath();
+            agent.CalculatePath(targetTransform.position, path);
 
-         switch (path.status)
-         {
-             case NavMeshPathStatus.PathComplete: //If the enemy can reach the tower we create the path
-                 CreateTheReachablePath(path);
-                 break;
-             case NavMeshPathStatus.PathPartial:
+            switch (path.status)
+            {
+                case NavMeshPathStatus.PathComplete: //If the enemy can reach the tower we create the path
+                    CreateTheReachablePath(path);
+                    break;
+                case NavMeshPathStatus.PathPartial:
                  
-                 break;
-             case NavMeshPathStatus.PathInvalid:
+                    break;
+                case NavMeshPathStatus.PathInvalid:
                  
-                 break;
-             default:
-                 throw new ArgumentOutOfRangeException();
-         }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+         
     }
 
     [Command]

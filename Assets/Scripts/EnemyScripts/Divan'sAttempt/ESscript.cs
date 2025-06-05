@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
@@ -24,6 +25,8 @@ public class ESscript : NetworkBehaviour
     [SerializeField] private int increaseSpeed;
 
     [SerializeField] private int increaseMovement;
+    
+    [SerializeField] private MenuUI menuScript;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -96,8 +99,8 @@ public class ESscript : NetworkBehaviour
                 agentScripts.Add(enemyObject.GetComponentInChildren<AgentScript>());
                 enemyObject.GetComponentInChildren<AgentScript>().targetTransform = towerTransform;
                 enemyObject.GetComponentInChildren<ECscript>().turnOrderManager = turnOrderManager;
+                enemyObject.GetComponentInChildren<AgentScript>().agent.enabled = false;
             }
-
         }   
     }
 
@@ -128,5 +131,31 @@ public class ESscript : NetworkBehaviour
                 }
             }
         }
+    }
+    
+    [Command(requiresAuthority = false)]
+    public void StartGame()
+    {
+        StartGameFunctions();
+        SummonTheEnemies();
+      
+    }
+
+    [ClientRpc]
+    public void StartGameFunctions()
+    {
+        menuScript.waitingPanel.SetActive(false);
+        if (isServer)
+        {
+            //SpawnEnemies();
+            StartCoroutine(StartFirstTurn());
+        }
+    }
+
+    //https://discussions.unity.com/t/how-to-wait-before-running-a-function-called-in-start/631729/2
+    private IEnumerator StartFirstTurn()
+    {
+        yield return new WaitForSeconds(2.5f);
+        turnOrderManager.FirstTurn();
     }
 }
