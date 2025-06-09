@@ -172,6 +172,7 @@ public class EnemySpawning : NetworkBehaviour
         if (isServer)
         {
             //SpawnEnemies();
+
             StartCoroutine(StartFirstTurn());
         }
     }
