@@ -1,11 +1,13 @@
 using UnityEngine;
 using Mirror;
+using UnityEngine.AI;
 
 public class ECscript : NetworkBehaviour
 {
    [Header("The Enemy Info")]
     [SerializeField] private EnemyTypes enemyType;
     public float moveDistance;
+    [SerializeField] private NavMeshAgent agent;
     
     [Header("Delete variables")]
     [SerializeField] private Transform deleteTransform;
@@ -17,6 +19,7 @@ public class ECscript : NetworkBehaviour
     public TurnOrderManager turnOrderManager;
     public Rigidbody rb;
     public int TurnOrder = 0;
+    public bool canMove = false;
     public enum EnemyTypes
     {
         Goblin,
@@ -34,18 +37,19 @@ public class ECscript : NetworkBehaviour
     {
         if (turnOrderManager != null)
         {
-            if (TurnOrder == 0)
+            if (TurnOrder == 0 && canMove)
             {
                 rb.MovePosition(followAgent.position);
             }
         }
-
+        
         else
         {
             turnOrderManager = GameObject.FindWithTag("Manager").GetComponent<TurnOrderManager>();
         }
     }
 
+    [Command(requiresAuthority = false)]
     public void DeleteStuff()
     {
         transform.parent = null;
@@ -54,15 +58,31 @@ public class ECscript : NetworkBehaviour
         Destroy(deleteTransform);
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (deleteAgent != null)
+        if (agent != null)
         {
-            if (other.tag == "Floor")
+            if (collision.gameObject.tag == "Floor")
             {
-                deleteAgent.GetComponent<AgentScript>().agent.enabled = true;
+                //Debug.Log(deleteAgent.name + "  " + this.name);
+                deleteAgent.transform.localPosition = transform.localPosition;
+                EnableAgentCmd();
             }
         }
+    }
+
+
+    [Command(requiresAuthority = false)]
+    public void EnableAgentCmd()
+    {
+        RpcEnableAgent();
+        //Debug.Log("The agent is enabled");
+    }
+
+    [ClientRpc]
+    private void RpcEnableAgent()
+    {
+        agent.enabled = true;
+        //Debug.Log("End");
     }
 }

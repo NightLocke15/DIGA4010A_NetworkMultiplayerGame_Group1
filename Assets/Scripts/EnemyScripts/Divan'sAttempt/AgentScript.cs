@@ -39,14 +39,10 @@ public class AgentScript : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (connectedEnemy.turnOrderManager.currentTurn != connectedEnemy.TurnOrder) //Not enemy turn we move to the other guy very fast
-        {
-            // if (agent.enabled)
-            // {
-            //     SetSpeed(updateSpeed);
-            //     MoveAgent(connectedEnemy.transform.position);
-            // }
-        }
+        // if (connectedEnemy.turnOrderManager.currentTurn != connectedEnemy.TurnOrder) //Not enemy turn we move to the other guy very fast
+        // {
+        //    // transform.position = Vector3.MoveTowards(transform.position, targetTransform.position, moveSpeed * Time.deltaTime);
+        // }
     }
 
     public void SetSpeed(float speed)
@@ -54,17 +50,20 @@ public class AgentScript : NetworkBehaviour
         agent.speed = speed;
     }
     
+    [Server]
     public void SetPath() //This checks is a path can be made to the tower
     {
+        transform.localPosition = connectedEnemy.transform.localPosition;
         if (agent.enabled)
         {
             path = new NavMeshPath();
             agent.CalculatePath(targetTransform.position, path);
-
+            Debug.Log(path.status + " :The path status");
             switch (path.status)
             {
                 case NavMeshPathStatus.PathComplete: //If the enemy can reach the tower we create the path
-                    CreateTheReachablePath(path);
+                    CreateTheReachablePath();
+                    
                     break;
                 case NavMeshPathStatus.PathPartial:
                  
@@ -79,51 +78,83 @@ public class AgentScript : NetworkBehaviour
          
     }
 
-    [Command]
-    private void CreateTheReachablePath(NavMeshPath thePath) //This function finds all the waypoints of where to place the linerenders points.
+    [Server]
+    private void CreateTheReachablePath() //This function finds all the waypoints of where to place the linerenders points.
     {
         if (isServer)
         {
+            Debug.Log(path.status + " :The  real path status");
+            
+            Debug.Log("Creating the Reachable Path");
+            Debug.Log(path.corners.Length);
+            
            waypoints = new List<Vector3>();
             float remainingDist = connectedEnemy.moveDistance; //How far the enemy can move
 
-            for (int i = 0; i < thePath.corners.Length; i++)
+            for (int i = 0; i < path.corners.Length; i++)
             {
-                if (i != thePath.corners.Length-1)  //if it is not the last corner
+                Debug.Log(i);
+                if (i == 0)
                 {
-                    float dist = Vector3.Distance(thePath.corners[i], thePath.corners[i + 1]); //the distance between two corners
-                    
+                    waypoints.Add(path.corners[i]);
+                }
+                
+                else if (i < path.corners.Length-1)  //if it is not the last corner
+                {
+                    Debug.Log("i is less");
+                    float dist = Vector3.Distance(path.corners[i], path.corners[i+1]); //the distance between two corners
+                    Debug.Log(dist + " remaing"+i);
                     if (remainingDist > dist)
                     {
-                        waypoints.Add(thePath.corners[i]);
+                        Debug.Log("Hy kan nog woema");
+                        waypoints.Add(path.corners[i]);
                         remainingDist -= dist;
                     }
                     
                     else if (remainingDist <= dist)
                     {
-                        Vector3 direction = (thePath.corners[i] - thePath.corners[i + 1]).normalized;
-                        Vector3 pos = thePath.corners[i] + (direction * remainingDist);
+                        Debug.Log("Hy kan nie meer woema nie");
+                        Vector3 direction = (path.corners[i] - path.corners[i+1]).normalized;
+                        Vector3 pos = path.corners[i] + (direction * remainingDist);
                         waypoints.Add(pos);
                         SetMoveLine();
-                        CreateTheTotalPath(thePath, pos, i);
+                        CreateTheTotalPath(pos, i);
                         return;
                     }
                 }
 
                 else // if it is the last corner
                 {
-                    waypoints.Add(thePath.corners[i]);
-                    SetMoveLine();
-                    CreateTheTotalPath(thePath, thePath.corners[i], i);
-                    return;
+                    Debug.Log("Die laaste punt");
+                    float dist = Vector3.Distance(path.corners[i-1], path.corners[i]);
+                    Debug.Log(dist + "dist");
+                    if (dist > remainingDist)
+                    {
+                        Vector3 direction = (path.corners[i] - path.corners[i-1]).normalized;
+                        Vector3 pos = path.corners[i-1] + (direction * remainingDist);
+                        waypoints.Add(pos);
+                        SetMoveLine();
+                        CreateTheTotalPath(pos, i);
+                        return;
+                    }
+
+                    else if (dist <= remainingDist)
+                    {
+                        waypoints.Add(path.corners[i]);
+                        SetMoveLine();
+                        CreateTheTotalPath( path.corners[i], i);
+                        return;
+                    }
+                    
                 }
             }
         }
     }
 
-   // [Command]
+   [Server]
     private void SetMoveLine()
     {
+        Debug.Log("Set move line");
         moveLine.positionCount = waypoints.Count;
         for (int i = 0; i < waypoints.Count; i++)
         {
@@ -131,28 +162,30 @@ public class AgentScript : NetworkBehaviour
         }
     }
 
-   // [Command]
-    private void CreateTheTotalPath(NavMeshPath thePath, Vector3 startPos, int lastIndex)
+   [Server]
+    private void CreateTheTotalPath(Vector3 startPos, int lastIndex)
     {
         if (isServer)
         {
+            Debug.Log("Creating the Total Path");
             pebbles = new List<Vector3>();
-            if (lastIndex != thePath.corners.Length - 1)
+            if (lastIndex != path.corners.Length)
             {
                 pebbles.Add(startPos);
 
-                for (int i = lastIndex; i < thePath.corners.Length; i++)
+                for (int i = lastIndex; i < path.corners.Length; i++)
                 {
-                    pebbles.Add(thePath.corners[i]); 
+                    pebbles.Add(path.corners[i]); 
                 }
                 SetTotalLine();
             }
         }
     }
 
-   // [Server]
+   [Server]
     private void SetTotalLine()
     {
+        Debug.Log("Set total line");
         totalLine.positionCount = pebbles.Count;
 
         for (int i = 0; i < pebbles.Count; i++)
@@ -167,8 +200,17 @@ public class AgentScript : NetworkBehaviour
         }
     }
 
+   [Server]
     public void MoveAgent(Vector3 destination)
     {
+        Debug.Log("Move agent");
+        connectedEnemy.canMove = true;
         agent.destination = destination;
+    }
+
+   [Server]
+    public void StopAgent()
+    {
+        connectedEnemy.canMove = false;
     }
 }

@@ -67,6 +67,7 @@ public class TurnOrderManager : NetworkBehaviour
             shouldChangeOrder = false;
             waitTime = 0;
             ChangeTurn();
+            escript.StopMovement();
             if (isServer)
             {
                 playerOne.haveTakenAShot = false;
@@ -85,6 +86,7 @@ public class TurnOrderManager : NetworkBehaviour
 
         if (moveTime > bufferTime)  //How long the buffer time is
         {
+            
             enemiesAreMoving = false; //Stops counter
             ChangeTurn();  //enmies are moving
             moveTime = 0f; //Resets timer
@@ -129,15 +131,19 @@ public class TurnOrderManager : NetworkBehaviour
             else
             {
                 currentTurn++;   // Changes the turn order
-                escript.MoveTheEnemies();
+                Debug.Log(isServer);
+                
                 if (currentTurn > 2)  //If turnorder is more than two we reset it
                 {
                     currentTurn = 0;
             
                 }
+                
+                escript.MoveTheEnemies();
         
                 if (currentTurn == 0)
                 {
+                    
                     //enemySpawning.MoveEnemies(); //Moves the enemies
                     enemiesAreMoving = true;     //Starts timer
                     return;
@@ -240,6 +246,9 @@ public class TurnOrderManager : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void IncreaseWaves()
     {
-        totalWaves++;
+        if (isServer)
+        {
+            totalWaves++;
+        }
     }
 }

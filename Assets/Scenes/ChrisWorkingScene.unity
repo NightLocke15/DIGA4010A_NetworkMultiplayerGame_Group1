@@ -10708,7 +10708,7 @@ MonoBehaviour:
   shouldChangeOrder: 0
   moveTime: 0
   waitTime: 0
-  bufferTime: 5
+  bufferTime: 2.5
   storeLocPl1: {fileID: 738061776}
   placeLocPl1: {fileID: 1358553762}
   playerOneText: 

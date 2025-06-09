@@ -312,7 +312,7 @@ public class DragAndShoot : NetworkBehaviour
 
         if (isLocalPlayer && Turnorder == turnOrderManager.currentTurn) //Checks if it is the player's turn and that they are the local player.
         {
-          //  turnOrderManager.ChangeTurn();
+            turnOrderManager.ChangeTurn();
         }
     }
     

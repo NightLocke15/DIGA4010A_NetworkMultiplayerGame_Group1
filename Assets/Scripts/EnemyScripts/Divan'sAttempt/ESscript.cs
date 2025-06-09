@@ -47,6 +47,10 @@ public class ESscript : NetworkBehaviour
     [Server]
     public void SummonTheEnemies()
     {
+        if (!isServer)
+        {
+            return;
+        }
         if (isServer)
         {
             float theChance = goblinChance + orcChance + ogreChance;
@@ -95,20 +99,21 @@ public class ESscript : NetworkBehaviour
                 }
                 
                 GameObject enemyObject  = Instantiate(spawnEnemy, enemyPosition, Quaternion.identity, enemyParent);
-                NetworkServer.Spawn(enemyObject);
                 agentScripts.Add(enemyObject.GetComponentInChildren<AgentScript>());
                 enemyObject.GetComponentInChildren<AgentScript>().targetTransform = towerTransform;
                 enemyObject.GetComponentInChildren<ECscript>().turnOrderManager = turnOrderManager;
-                enemyObject.GetComponentInChildren<AgentScript>().agent.enabled = false;
+                enemyObject.GetComponentInChildren<AgentScript>().agent.enabled = false; 
+                NetworkServer.Spawn(enemyObject);
             }
         }   
     }
 
-   // [Server]
+    [Server]
     public void MoveTheEnemies()
     {
         if (isServer)
         {
+            Debug.Log("Moving enemies");
             int enemyCount = agentScripts.Count;
 
             if (enemyCount == 0)
@@ -121,14 +126,18 @@ public class ESscript : NetworkBehaviour
             {
                 agentScripts[0].moveSpeed += increaseSpeed;
                 agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
+                agentScripts[0].SetPath();
+                return;
             }
             
             else if (enemyCount > 1)
             {
                 for (int i = 0; i < agentScripts.Count; i++)
                 {
+                    Debug.Log("Call the path");
                     agentScripts[i].SetPath();
                 }
+                return;
             }
         }
     }
@@ -136,9 +145,11 @@ public class ESscript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void StartGame()
     {
+        if (isServer)
+        {
+            SummonTheEnemies();
+        }
         StartGameFunctions();
-        SummonTheEnemies();
-      
     }
 
     [ClientRpc]
@@ -147,7 +158,7 @@ public class ESscript : NetworkBehaviour
         menuScript.waitingPanel.SetActive(false);
         if (isServer)
         {
-            //SpawnEnemies();
+           
             StartCoroutine(StartFirstTurn());
         }
     }
@@ -157,5 +168,24 @@ public class ESscript : NetworkBehaviour
     {
         yield return new WaitForSeconds(2.5f);
         turnOrderManager.FirstTurn();
+    }
+
+    [Command(requiresAuthority = false)]
+    public void StopMovement()
+    {
+        if (isServer)
+        {
+            StopMovementFunctions();
+        }
+       
+    }
+
+    [ClientRpc]
+    public void StopMovementFunctions()
+    {
+        for (int i = 0; i < agentScripts.Count; i++)
+        {
+            agentScripts[i].StopAgent();
+        }
     }
 }

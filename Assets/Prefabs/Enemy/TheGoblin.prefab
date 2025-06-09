@@ -278,10 +278,10 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.1
+    widthMultiplier: 2
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -300,7 +300,7 @@ LineRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 0.09433961, g: 0.09433961, b: 0.09433961, a: 1}
-      key1: {r: 0.21509439, g: 0.21509439, b: 0.21509439, a: 1}
+      key1: {r: 0, g: 0, b: 0, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -330,12 +330,12 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 1
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
   m_MaskInteraction: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
 --- !u!1 &2380325979248640455
@@ -364,7 +364,7 @@ Transform:
   m_GameObject: {fileID: 2380325979248640455}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -417,10 +417,10 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.1
+    widthMultiplier: 2
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -462,19 +462,19 @@ LineRenderer:
       atime5: 0
       atime6: 0
       atime7: 0
-      m_Mode: 0
+      m_Mode: 1
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 1
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
   m_MaskInteraction: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
 --- !u!1 &3588688548900468856
@@ -751,12 +751,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4241329610395743996}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 1
+  syncDirection: 0
   syncMode: 0
   syncInterval: 0
   target: {fileID: 4331320786233805931}
@@ -770,8 +770,8 @@ MonoBehaviour:
   interpolateScale: 1
   coordinateSpace: 0
   timelineOffset: 1
-  showGizmos: 0
-  showOverlay: 0
+  showGizmos: 1
+  showOverlay: 1
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   onlySyncOnChangeCorrectionMultiplier: 2
   useFixedUpdate: 0
@@ -952,7 +952,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   enemyType: 0
-  moveDistance: 8
+  moveDistance: 4
+  agent: {fileID: 8475726430484210306}
   deleteTransform: {fileID: 732063986996704144}
   deleteModel: {fileID: 8180223901681930461}
   deleteAgent: {fileID: 5205190610625697678}
@@ -960,6 +961,7 @@ MonoBehaviour:
   turnOrderManager: {fileID: 0}
   rb: {fileID: 4099673871289399755}
   TurnOrder: 0
+  canMove: 0
 --- !u!1 &5205190610625697678
 GameObject:
   m_ObjectHideFlags: 0
