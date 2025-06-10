@@ -5,9 +5,10 @@ using UnityEngine.AI;
 public class ECscript : NetworkBehaviour
 {
    [Header("The Enemy Info")]
-    [SerializeField] private EnemyTypes enemyType;
+    public EnemyTypes enemyType;
     public float moveDistance;
     [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private AScript agentScript;
     
     [Header("Delete variables")]
     [SerializeField] private GameObject deleteTransform;
@@ -20,6 +21,8 @@ public class ECscript : NetworkBehaviour
     public Rigidbody rb;
     public int TurnOrder = 0;
     public bool canMove = false;
+    public ESscript es_Script;
+    
     public enum EnemyTypes
     {
         Goblin,
@@ -52,13 +55,16 @@ public class ECscript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void DeleteStuff()
     {
-        transform.parent = null;
-        Destroy(deleteModel);
-        Destroy(deleteAgent);
-        Destroy(deleteTransform);
-        NetworkServer.Destroy(deleteTransform);
-        gameObject.AddComponent<NetworkIdentity>();
+        DestroyYourself();
+       // gameObject.AddComponent<NetworkIdentity>();
         //NetworkServer.Spawn(gameObject);
+    }
+
+    [ClientRpc]
+    private void DestroyYourself()
+    {
+        es_Script.agentScripts.Remove(agentScript);
+        NetworkServer.Destroy(deleteTransform);
     }
 
     private void OnCollisionEnter(Collision collision)

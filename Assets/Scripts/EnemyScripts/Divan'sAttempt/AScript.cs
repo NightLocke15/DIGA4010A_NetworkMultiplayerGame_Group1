@@ -72,7 +72,7 @@ public class AScript : NetworkBehaviour
         {
             path = new NavMeshPath();
             agent.CalculatePath(targetTransform.position, path);
-            Debug.Log(path.status + " :The path status");
+          //  Debug.Log(path.status + " :The path status");
             switch (path.status)
             {
                 case NavMeshPathStatus.PathComplete: //If the enemy can reach the tower we create the path
@@ -112,17 +112,17 @@ public class AScript : NetworkBehaviour
         {
             return;
         }
-            Debug.Log(path.status + " :The  real path status");
+            //Debug.Log(path.status + " :The  real path status");
             
-            Debug.Log("Creating the Reachable Path");
-            Debug.Log(path.corners.Length);
+            //Debug.Log("Creating the Reachable Path");
+           // Debug.Log(path.corners.Length);
             
            waypoints = new List<Vector3>();
             float remainingDist = connectedEnemy.moveDistance; //How far the enemy can move
 
             for (int i = 0; i < path.corners.Length; i++)
             {
-                Debug.Log(i);
+                //Debug.Log(i);
                 if (i == 0)
                 {
                     waypoints.Add(path.corners[i]);
@@ -130,19 +130,19 @@ public class AScript : NetworkBehaviour
                 
                 else if (i < path.corners.Length-1)  //if it is not the last corner
                 {
-                    Debug.Log("i is less");
+                    //Debug.Log("i is less");
                     float dist = Vector3.Distance(path.corners[i], path.corners[i+1]); //the distance between two corners
-                    Debug.Log(dist + " remaing"+i);
+                    //Debug.Log(dist + " remaing"+i);
                     if (remainingDist > dist)
                     {
-                        Debug.Log("Hy kan nog woema");
+                       // Debug.Log("Hy kan nog woema");
                         waypoints.Add(path.corners[i]);
                         remainingDist -= dist;
                     }
                     
                     else if (remainingDist <= dist)
                     {
-                        Debug.Log("Hy kan nie meer woema nie");
+                        //Debug.Log("Hy kan nie meer woema nie");
                         Vector3 direction = (path.corners[i] - path.corners[i+1]).normalized;
                         Vector3 pos = path.corners[i] + (direction * remainingDist);
                         waypoints.Add(pos);
@@ -155,9 +155,9 @@ public class AScript : NetworkBehaviour
 
                 else // if it is the last corner
                 {
-                    Debug.Log("Die laaste punt");
+                    //Debug.Log("Die laaste punt");
                     float dist = Vector3.Distance(path.corners[i-1], path.corners[i]);
-                    Debug.Log(dist + "dist");
+                   // Debug.Log(dist + "dist");
                     if (dist > remainingDist)
                     {
                         Vector3 direction = (path.corners[i] - path.corners[i-1]).normalized;
@@ -194,8 +194,8 @@ public class AScript : NetworkBehaviour
    [ClientRpc]
     private void SetMoveLine(List<Vector3> waypointsList)
     {
-        Debug.Log("Set move line");
-        Debug.Log(waypointsList.Count + " waypoints");
+        //Debug.Log("Set move line");
+        //Debug.Log(waypointsList.Count + " waypoints");
         moveLine.positionCount = waypointsList.Count;
         for (int i = 0; i < waypointsList.Count; i++)
         {
@@ -212,7 +212,7 @@ public class AScript : NetworkBehaviour
             return;
         }
         
-        Debug.Log("Creating the Total Path");
+       // Debug.Log("Creating the Total Path");
         pebbles = new List<Vector3>();
         if (lastIndex != path.corners.Length)
         {
@@ -239,8 +239,8 @@ public class AScript : NetworkBehaviour
     [ClientRpc]
     private void SetTotalLine(List<Vector3> thepebbleList)
     {
-        Debug.Log("Set total line");
-        Debug.Log(thepebbleList.Count + " pebbles");
+       // Debug.Log("Set total line");
+       // Debug.Log(thepebbleList.Count + " pebbles");
         totalLine.positionCount = thepebbleList.Count;
 
         for (int i = 0; i < thepebbleList.Count; i++)
@@ -262,7 +262,7 @@ public class AScript : NetworkBehaviour
         {
             return;
         }
-        Debug.Log("Move agent");
+       // Debug.Log("Move agent");
         connectedEnemy.canMove = true;
         agent.destination = destination;
     }

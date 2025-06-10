@@ -276,9 +276,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 2
@@ -415,9 +413,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 2
@@ -667,7 +663,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4241329610395743996}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: c198e3297c7417f4d901c89d7e73d604, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -919,6 +915,7 @@ MonoBehaviour:
   enemyType: 0
   moveDistance: 4
   agent: {fileID: 8475726430484210306}
+  agentScript: {fileID: 1804861386180104327}
   deleteTransform: {fileID: 618699028185002727}
   deleteModel: {fileID: 8180223901681930461}
   deleteAgent: {fileID: 5205190610625697678}
@@ -927,6 +924,7 @@ MonoBehaviour:
   rb: {fileID: 4099673871289399755}
   TurnOrder: 0
   canMove: 0
+  es_Script: {fileID: 0}
 --- !u!1 &5205190610625697678
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,6 +1037,8 @@ MonoBehaviour:
   agent: {fileID: 8475726430484210306}
   moveLine: {fileID: 332879467276662961}
   totalLine: {fileID: 3085851057807138116}
+  waypoints: []
+  pebbles: []
   updateSpeed: 1000
   moveSpeed: 5
   moveSound: {fileID: 0}

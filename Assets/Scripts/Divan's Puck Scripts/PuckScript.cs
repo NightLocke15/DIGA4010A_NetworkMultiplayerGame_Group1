@@ -106,15 +106,6 @@ public class PuckScript : NetworkBehaviour
     [ClientRpc]
     public void RpcChangePosToStorage(Transform newParent)
     {
-        if (gameObject.GetComponentInChildren<ECscript>())
-        {
-            gameObject.GetComponentInChildren<ECscript>().DeleteStuff();
-            NavMeshObstacle obstacle = gameObject.AddComponent<NavMeshObstacle>();
-            obstacle.carving = true;
-            obstacle.carveOnlyStationary = true;
-            obstacle.carvingTimeToStationary = 2f;
-        }
-        
         transform.parent = newParent;
         transform.gameObject.tag = "StoredPuck";
         
@@ -131,6 +122,7 @@ public class PuckScript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void ChangePosToBoard(Transform newPos)
     {
+       
         
         CanBeDrag();
         transform.parent = newPos;

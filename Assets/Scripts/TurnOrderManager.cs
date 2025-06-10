@@ -132,7 +132,7 @@ public class TurnOrderManager : NetworkBehaviour
             else
             {
                 currentTurn++;   // Changes the turn order
-                Debug.Log(isServer);
+                //Debug.Log(isServer);
                 
                 if (currentTurn > 2)  //If turnorder is more than two we reset it
                 {

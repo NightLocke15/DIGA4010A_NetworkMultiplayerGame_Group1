@@ -474,7 +474,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 738061776}
+  goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
 --- !u!65 &92166093
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2606,7 +2612,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 738061776}
+  goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
 --- !u!65 &457886950
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4367,6 +4379,8 @@ MonoBehaviour:
   - {fileID: 6963328926172549758, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
   - {fileID: 9147738124939488509, guid: e0f5060d48c145145b0da47036563e39, type: 3}
   - {fileID: 618699028185002727, guid: b6f045b8d5090bb4a87cbad97f7af4cc, type: 3}
+  - {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
+  - {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -10184,7 +10198,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 1109907817}
+  goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
 --- !u!65 &1636655849
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12329,7 +12349,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 1109907817}
+  goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
 --- !u!65 &2146113867
 BoxCollider:
   m_ObjectHideFlags: 0

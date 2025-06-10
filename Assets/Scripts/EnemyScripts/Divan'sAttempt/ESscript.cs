@@ -19,7 +19,7 @@ public class ESscript : NetworkBehaviour
 
     [SerializeField] private Transform enemyParent;
     
-    [SerializeField] private List<AScript> agentScripts;
+    public List<AScript> agentScripts;
 
     [SerializeField] private int increaseSpeed;
 
@@ -101,6 +101,7 @@ public class ESscript : NetworkBehaviour
                 agentScripts.Add(enemyObject.GetComponentInChildren<AScript>());
                 enemyObject.GetComponentInChildren<AScript>().targetTransform = towerTransform;
                 enemyObject.GetComponentInChildren<ECscript>().turnOrderManager = turnOrderManager;
+                enemyObject.GetComponentInChildren<ECscript>().es_Script = this;
                 enemyObject.GetComponentInChildren<AScript>().agent.enabled = false; 
                 NetworkServer.Spawn(enemyObject);
             }
@@ -112,7 +113,7 @@ public class ESscript : NetworkBehaviour
     {
         if (isServer)
         {
-            Debug.Log("Moving enemies");
+          //  Debug.Log("Moving enemies");
             int enemyCount = agentScripts.Count;
 
             if (enemyCount == 0)
@@ -133,7 +134,7 @@ public class ESscript : NetworkBehaviour
             {
                 for (int i = 0; i < agentScripts.Count; i++)
                 {
-                    Debug.Log("Call the path");
+                    //Debug.Log("Call the path");
                     agentScripts[i].CMDSetPath();
                 }
                 return;
