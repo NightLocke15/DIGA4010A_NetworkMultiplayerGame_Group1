@@ -10,7 +10,7 @@ public class ECscript : NetworkBehaviour
     [SerializeField] private NavMeshAgent agent;
     
     [Header("Delete variables")]
-    [SerializeField] private Transform deleteTransform;
+    [SerializeField] private GameObject deleteTransform;
     [SerializeField] private GameObject deleteModel;
     [SerializeField] private GameObject deleteAgent;
     

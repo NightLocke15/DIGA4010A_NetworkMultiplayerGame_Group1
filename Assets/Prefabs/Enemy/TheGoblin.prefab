@@ -157,7 +157,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 732063986996704144}
-  - component: {fileID: 638355158456254149}
+  - component: {fileID: 7814171586784729132}
   m_Layer: 0
   m_Name: TheGoblin
   m_TagString: Untagged
@@ -182,7 +182,7 @@ Transform:
   - {fileID: 5455848466721036382}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &638355158456254149
+--- !u!114 &7814171586784729132
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -577,7 +577,6 @@ GameObject:
   - component: {fileID: 3754971211175519892}
   - component: {fileID: 4099673871289399755}
   - component: {fileID: 1007644881349231616}
-  - component: {fileID: 5297076267879619624}
   - component: {fileID: 601626108679762993}
   - component: {fileID: 1884297137832777552}
   - component: {fileID: 811040792443311669}
@@ -738,40 +737,6 @@ MonoBehaviour:
   timelineOffset: 1
   showGizmos: 0
   showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChangeCorrectionMultiplier: 2
-  useFixedUpdate: 0
-  rotationSensitivity: 0.01
-  positionPrecision: 0.01
-  scalePrecision: 0.01
---- !u!114 &5297076267879619624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4241329610395743996}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  target: {fileID: 4331320786233805931}
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  onlySyncOnChange: 1
-  compressRotation: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  coordinateSpace: 0
-  timelineOffset: 1
-  showGizmos: 1
-  showOverlay: 1
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   onlySyncOnChangeCorrectionMultiplier: 2
   useFixedUpdate: 0
@@ -954,7 +919,7 @@ MonoBehaviour:
   enemyType: 0
   moveDistance: 4
   agent: {fileID: 8475726430484210306}
-  deleteTransform: {fileID: 732063986996704144}
+  deleteTransform: {fileID: 618699028185002727}
   deleteModel: {fileID: 8180223901681930461}
   deleteAgent: {fileID: 5205190610625697678}
   followAgent: {fileID: 5455848466721036382}

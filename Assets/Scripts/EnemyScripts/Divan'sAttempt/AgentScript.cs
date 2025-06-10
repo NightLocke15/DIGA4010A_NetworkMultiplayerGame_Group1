@@ -49,8 +49,15 @@ public class AgentScript : NetworkBehaviour
     {
         agent.speed = speed;
     }
+
+    [Command(requiresAuthority = false)]
+    public void CMDSetPath()
+    {
+        SetPath();
+    }
     
-    [Server]
+    
+    [ClientRpc]
     public void SetPath() //This checks is a path can be made to the tower
     {
         transform.localPosition = connectedEnemy.transform.localPosition;
@@ -62,7 +69,8 @@ public class AgentScript : NetworkBehaviour
             switch (path.status)
             {
                 case NavMeshPathStatus.PathComplete: //If the enemy can reach the tower we create the path
-                    CreateTheReachablePath();
+                   CreateTheReachablePath();
+                // CmdReachablePath();
                     
                     break;
                 case NavMeshPathStatus.PathPartial:
@@ -78,11 +86,20 @@ public class AgentScript : NetworkBehaviour
          
     }
 
-    [Server]
-    private void CreateTheReachablePath() //This function finds all the waypoints of where to place the linerenders points.
+    [Command(requiresAuthority = false)]
+    private void CmdReachablePath()
     {
         if (isServer)
         {
+            CreateTheReachablePath();
+        }
+    }
+    
+    
+  //  [ClientRpc]
+    private void CreateTheReachablePath() //This function finds all the waypoints of where to place the linerenders points.
+    {
+        
             Debug.Log(path.status + " :The  real path status");
             
             Debug.Log("Creating the Reachable Path");
@@ -148,10 +165,10 @@ public class AgentScript : NetworkBehaviour
                     
                 }
             }
-        }
+        
     }
 
-   [Server]
+   //[Server]
     private void SetMoveLine()
     {
         Debug.Log("Set move line");
@@ -162,11 +179,10 @@ public class AgentScript : NetworkBehaviour
         }
     }
 
-   [Server]
+  // [Server]
     private void CreateTheTotalPath(Vector3 startPos, int lastIndex)
     {
-        if (isServer)
-        {
+        
             Debug.Log("Creating the Total Path");
             pebbles = new List<Vector3>();
             if (lastIndex != path.corners.Length)
@@ -179,10 +195,10 @@ public class AgentScript : NetworkBehaviour
                 }
                 SetTotalLine();
             }
-        }
+        
     }
 
-   [Server]
+ //  [Server]
     private void SetTotalLine()
     {
         Debug.Log("Set total line");
@@ -200,7 +216,7 @@ public class AgentScript : NetworkBehaviour
         }
     }
 
-   [Server]
+ //  [Server]
     public void MoveAgent(Vector3 destination)
     {
         Debug.Log("Move agent");
@@ -208,7 +224,7 @@ public class AgentScript : NetworkBehaviour
         agent.destination = destination;
     }
 
-   [Server]
+  // [Server]
     public void StopAgent()
     {
         connectedEnemy.canMove = false;

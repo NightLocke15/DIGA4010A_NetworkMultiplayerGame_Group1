@@ -791,7 +791,6 @@ GameObject:
   - component: {fileID: 7512108679741058470}
   - component: {fileID: 7257830946749084409}
   - component: {fileID: 6728227276496851053}
-  - component: {fileID: 2762273051384403325}
   - component: {fileID: 6412509469565689948}
   - component: {fileID: 2901398010061919424}
   - component: {fileID: 8777841131063532469}
@@ -949,40 +948,6 @@ MonoBehaviour:
   interpolateRotation: 1
   interpolateScale: 1
   coordinateSpace: 1
-  timelineOffset: 1
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChangeCorrectionMultiplier: 2
-  useFixedUpdate: 0
-  rotationSensitivity: 0.01
-  positionPrecision: 0.01
-  scalePrecision: 0.01
---- !u!114 &2762273051384403325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7672042966399345297}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb803efbe62c34d7baece46c9ffebad9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  target: {fileID: 7836080762440177670}
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  onlySyncOnChange: 1
-  compressRotation: 1
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 1
-  coordinateSpace: 0
   timelineOffset: 1
   showGizmos: 0
   showOverlay: 0
@@ -1168,7 +1133,7 @@ MonoBehaviour:
   enemyType: 2
   moveDistance: 2
   agent: {fileID: 5424651552707405759}
-  deleteTransform: {fileID: 6279705417699756938}
+  deleteTransform: {fileID: 9147738124939488509}
   deleteModel: {fileID: 8352664184196350736}
   deleteAgent: {fileID: 3867593588766780524}
   followAgent: {fileID: 952485997169622156}
@@ -1277,7 +1242,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6279705417699756938}
-  - component: {fileID: 5423132352017491765}
+  - component: {fileID: 905364985689429348}
   m_Layer: 0
   m_Name: TheOgre
   m_TagString: Untagged
@@ -1302,7 +1267,7 @@ Transform:
   - {fileID: 952485997169622156}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5423132352017491765
+--- !u!114 &905364985689429348
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

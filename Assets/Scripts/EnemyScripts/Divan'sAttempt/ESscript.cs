@@ -98,7 +98,7 @@ public class ESscript : NetworkBehaviour
                     }
                 }
                 
-                GameObject enemyObject  = Instantiate(spawnEnemy, enemyPosition, Quaternion.identity, enemyParent);
+                GameObject enemyObject  = Instantiate(spawnEnemy, enemyPosition, Quaternion.identity);
                 agentScripts.Add(enemyObject.GetComponentInChildren<AgentScript>());
                 enemyObject.GetComponentInChildren<AgentScript>().targetTransform = towerTransform;
                 enemyObject.GetComponentInChildren<ECscript>().turnOrderManager = turnOrderManager;
@@ -126,7 +126,7 @@ public class ESscript : NetworkBehaviour
             {
                 agentScripts[0].moveSpeed += increaseSpeed;
                 agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
-                agentScripts[0].SetPath();
+                agentScripts[0].CMDSetPath();
                 return;
             }
             
@@ -135,7 +135,7 @@ public class ESscript : NetworkBehaviour
                 for (int i = 0; i < agentScripts.Count; i++)
                 {
                     Debug.Log("Call the path");
-                    agentScripts[i].SetPath();
+                    agentScripts[i].CMDSetPath();
                 }
                 return;
             }

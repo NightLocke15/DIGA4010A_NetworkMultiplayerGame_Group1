@@ -89,6 +89,7 @@ public class TurnOrderManager : NetworkBehaviour
             
             enemiesAreMoving = false; //Stops counter
             ChangeTurn();  //enmies are moving
+            escript.StopMovement();
             moveTime = 0f; //Resets timer
         }
 
