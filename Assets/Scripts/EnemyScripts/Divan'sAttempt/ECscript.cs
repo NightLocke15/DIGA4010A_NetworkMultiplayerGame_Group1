@@ -63,8 +63,12 @@ public class ECscript : NetworkBehaviour
     [ClientRpc]
     private void DestroyYourself()
     {
-        es_Script.agentScripts.Remove(agentScript);
-        NetworkServer.Destroy(deleteTransform);
+        if (isServer)
+        {
+            es_Script.agentScripts.Remove(agentScript);
+            NetworkServer.Destroy(deleteTransform);
+        }
+        
     }
 
     private void OnCollisionEnter(Collision collision)

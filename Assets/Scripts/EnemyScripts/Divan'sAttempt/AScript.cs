@@ -253,6 +253,11 @@ public class AScript : NetworkBehaviour
             SetSpeed(moveSpeed);  
             MoveAgent(waypoints.Last());
         }
+        
+        else if (isServer && connectedEnemy.turnOrderManager.currentTurn != connectedEnemy.TurnOrder)
+        {
+            MoveAgent(connectedEnemy.transform.position);
+        }
     }
 
  //  [Server]
@@ -263,8 +268,18 @@ public class AScript : NetworkBehaviour
             return;
         }
        // Debug.Log("Move agent");
-        connectedEnemy.canMove = true;
-        agent.destination = destination;
+
+       if (connectedEnemy.turnOrderManager.currentTurn == connectedEnemy.TurnOrder)
+       {
+           connectedEnemy.canMove = true;
+           agent.destination = destination;
+       }
+
+       else
+       {
+           agent.destination = destination;
+       }
+        
     }
 
   // [Server]

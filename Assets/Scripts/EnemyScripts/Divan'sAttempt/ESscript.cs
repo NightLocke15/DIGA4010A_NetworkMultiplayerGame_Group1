@@ -105,6 +105,11 @@ public class ESscript : NetworkBehaviour
                 enemyObject.GetComponentInChildren<AScript>().agent.enabled = false; 
                 NetworkServer.Spawn(enemyObject);
             }
+            
+            for (int i = 0; i < agentScripts.Count; i++)
+            {
+                agentScripts[i].CMDSetPath();
+            }
         }   
     }
 

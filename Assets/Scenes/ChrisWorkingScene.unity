@@ -10751,7 +10751,7 @@ MonoBehaviour:
   orcPrefab: {fileID: 0}
   ogrePrefab: {fileID: 9147738124939488509, guid: e0f5060d48c145145b0da47036563e39, type: 3}
   baseAmount: 2
-  adjustAmount: 0
+  adjustAmount: 2
   turnOrderManager: {fileID: 1718592641}
   towerTransform: {fileID: 1166196099}
   enemyParent: {fileID: 0}
