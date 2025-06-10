@@ -24,7 +24,7 @@ public class TowerHandler : NetworkBehaviour
         if (collision.collider.tag == "Enemy")
         {
             towerHealth -= 10;
-            DestroyEnemyCmd(collision.gameObject);
+            DestroyEnemyCmd(collision.gameObject.transform.parent.gameObject);
             if (towerHealth <= 0)
             {
                 NetworkServer.Destroy(gameObject);
@@ -34,6 +34,7 @@ public class TowerHandler : NetworkBehaviour
         if (collision.collider.tag == "Puck")
         {
             towerHealth -= 10;
+            DestroyEnemyCmd(collision.gameObject);
             if (towerHealth <= 0)
             {
                 NetworkServer.Destroy(gameObject);
