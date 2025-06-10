@@ -19,8 +19,7 @@ public class ESscript : NetworkBehaviour
 
     [SerializeField] private Transform enemyParent;
     
-    [SyncVar]
-    [SerializeField] private List<AgentScript> agentScripts;
+    [SerializeField] private List<AScript> agentScripts;
 
     [SerializeField] private int increaseSpeed;
 
@@ -99,10 +98,10 @@ public class ESscript : NetworkBehaviour
                 }
                 
                 GameObject enemyObject  = Instantiate(spawnEnemy, enemyPosition, Quaternion.identity);
-                agentScripts.Add(enemyObject.GetComponentInChildren<AgentScript>());
-                enemyObject.GetComponentInChildren<AgentScript>().targetTransform = towerTransform;
+                agentScripts.Add(enemyObject.GetComponentInChildren<AScript>());
+                enemyObject.GetComponentInChildren<AScript>().targetTransform = towerTransform;
                 enemyObject.GetComponentInChildren<ECscript>().turnOrderManager = turnOrderManager;
-                enemyObject.GetComponentInChildren<AgentScript>().agent.enabled = false; 
+                enemyObject.GetComponentInChildren<AScript>().agent.enabled = false; 
                 NetworkServer.Spawn(enemyObject);
             }
         }   

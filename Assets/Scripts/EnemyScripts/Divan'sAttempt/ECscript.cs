@@ -56,6 +56,9 @@ public class ECscript : NetworkBehaviour
         Destroy(deleteModel);
         Destroy(deleteAgent);
         Destroy(deleteTransform);
+        NetworkServer.Destroy(deleteTransform);
+        gameObject.AddComponent<NetworkIdentity>();
+        //NetworkServer.Spawn(gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)

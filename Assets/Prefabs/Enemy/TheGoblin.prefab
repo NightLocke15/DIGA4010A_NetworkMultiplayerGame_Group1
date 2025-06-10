@@ -959,8 +959,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7944027215889248151}
   - {fileID: 6350851584307760783}
+  - {fileID: 7944027215889248151}
   m_Father: {fileID: 732063986996704144}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5562474497379890318
@@ -1039,8 +1039,6 @@ MonoBehaviour:
   agent: {fileID: 8475726430484210306}
   moveLine: {fileID: 332879467276662961}
   totalLine: {fileID: 3085851057807138116}
-  waypoints: []
-  pebbles: []
   updateSpeed: 1000
   moveSpeed: 5
   moveSound: {fileID: 0}

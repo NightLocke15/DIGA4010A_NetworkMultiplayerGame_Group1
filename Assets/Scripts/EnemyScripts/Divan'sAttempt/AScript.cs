@@ -7,9 +7,10 @@ using UnityEngine.AI;
 using Unity.AI.Navigation;
 using UnityEngine.Serialization;
 using Mirror;
+using Unity.VisualScripting;
 
 
-public class AgentScript : NetworkBehaviour
+public class AScript : NetworkBehaviour
 {
     [Header("The enemy")] public ECscript connectedEnemy;
     
@@ -33,7 +34,9 @@ public class AgentScript : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       agent.speed = moveSpeed;
+       // agent.speed = moveSpeed;
+       // NavMeshSurface navSurface = GameObject.Find("EnemyNavmesh").GetComponent<NavMeshSurface>();
+       // navSurface.BuildNavMesh();
     }
 
     // Update is called once per frame
@@ -57,9 +60,13 @@ public class AgentScript : NetworkBehaviour
     }
     
     
-    [ClientRpc]
+    [Server]
     public void SetPath() //This checks is a path can be made to the tower
     {
+        if (!isServer)
+        {
+            return;
+        }
         transform.localPosition = connectedEnemy.transform.localPosition;
         if (agent.enabled)
         {
@@ -97,9 +104,14 @@ public class AgentScript : NetworkBehaviour
     
     
   //  [ClientRpc]
+  [Server]
     private void CreateTheReachablePath() //This function finds all the waypoints of where to place the linerenders points.
     {
         
+        if (!isServer)
+        {
+            return;
+        }
             Debug.Log(path.status + " :The  real path status");
             
             Debug.Log("Creating the Reachable Path");
@@ -134,7 +146,8 @@ public class AgentScript : NetworkBehaviour
                         Vector3 direction = (path.corners[i] - path.corners[i+1]).normalized;
                         Vector3 pos = path.corners[i] + (direction * remainingDist);
                         waypoints.Add(pos);
-                        SetMoveLine();
+                       // SetMoveLine();
+                       CMDSetML(waypoints);
                         CreateTheTotalPath(pos, i);
                         return;
                     }
@@ -150,7 +163,8 @@ public class AgentScript : NetworkBehaviour
                         Vector3 direction = (path.corners[i] - path.corners[i-1]).normalized;
                         Vector3 pos = path.corners[i-1] + (direction * remainingDist);
                         waypoints.Add(pos);
-                        SetMoveLine();
+                        //SetMoveLine();
+                        CMDSetML(waypoints);
                         CreateTheTotalPath(pos, i);
                         return;
                     }
@@ -158,7 +172,8 @@ public class AgentScript : NetworkBehaviour
                     else if (dist <= remainingDist)
                     {
                         waypoints.Add(path.corners[i]);
-                        SetMoveLine();
+                       // SetMoveLine();
+                       CMDSetML(waypoints);
                         CreateTheTotalPath( path.corners[i], i);
                         return;
                     }
@@ -168,48 +183,72 @@ public class AgentScript : NetworkBehaviour
         
     }
 
+    [Command(requiresAuthority = false)]
+    private void CMDSetML(List<Vector3> waypointsL)
+    {
+        SetMoveLine(waypointsL);
+    }
+
    //[Server]
-    private void SetMoveLine()
+   
+   [ClientRpc]
+    private void SetMoveLine(List<Vector3> waypointsList)
     {
         Debug.Log("Set move line");
-        moveLine.positionCount = waypoints.Count;
-        for (int i = 0; i < waypoints.Count; i++)
+        Debug.Log(waypointsList.Count + " waypoints");
+        moveLine.positionCount = waypointsList.Count;
+        for (int i = 0; i < waypointsList.Count; i++)
         {
-            moveLine.SetPosition(i, waypoints[i]);
+            moveLine.SetPosition(i, waypointsList[i]);
         }
     }
 
-  // [Server]
+ 
+    [Server]
     private void CreateTheTotalPath(Vector3 startPos, int lastIndex)
     {
+        if (!isServer)
+        {
+            return;
+        }
         
-            Debug.Log("Creating the Total Path");
-            pebbles = new List<Vector3>();
-            if (lastIndex != path.corners.Length)
-            {
-                pebbles.Add(startPos);
+        Debug.Log("Creating the Total Path");
+        pebbles = new List<Vector3>();
+        if (lastIndex != path.corners.Length)
+        {
+            pebbles.Add(startPos);
 
-                for (int i = lastIndex; i < path.corners.Length; i++)
-                {
-                    pebbles.Add(path.corners[i]); 
-                }
-                SetTotalLine();
+            for (int i = lastIndex; i < path.corners.Length; i++)
+            {
+                pebbles.Add(path.corners[i]); 
             }
+            // SetTotalLine();
+            CMDSetTL(pebbles);
+        }
         
+    }
+ 
+
+    [Command(requiresAuthority = false)]
+    private void CMDSetTL(List<Vector3> Serverpebbles)
+    {
+        SetTotalLine(Serverpebbles);
     }
 
  //  [Server]
-    private void SetTotalLine()
+    [ClientRpc]
+    private void SetTotalLine(List<Vector3> thepebbleList)
     {
         Debug.Log("Set total line");
-        totalLine.positionCount = pebbles.Count;
+        Debug.Log(thepebbleList.Count + " pebbles");
+        totalLine.positionCount = thepebbleList.Count;
 
-        for (int i = 0; i < pebbles.Count; i++)
+        for (int i = 0; i < thepebbleList.Count; i++)
         {
-            totalLine.SetPosition(i, pebbles[i]);
+            totalLine.SetPosition(i, thepebbleList[i]);
         }
 
-        if (connectedEnemy.turnOrderManager.currentTurn == connectedEnemy.TurnOrder)
+        if (isServer && connectedEnemy.turnOrderManager.currentTurn == connectedEnemy.TurnOrder)
         {
             SetSpeed(moveSpeed);  
             MoveAgent(waypoints.Last());
@@ -219,6 +258,10 @@ public class AgentScript : NetworkBehaviour
  //  [Server]
     public void MoveAgent(Vector3 destination)
     {
+        if (!isServer)
+        {
+            return;
+        }
         Debug.Log("Move agent");
         connectedEnemy.canMove = true;
         agent.destination = destination;
