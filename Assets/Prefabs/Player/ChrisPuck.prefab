@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: -4370584505178754850}
   - component: {fileID: 8742045759302994063}
   - component: {fileID: 6372604442020403187}
+  - component: {fileID: -7907217953403370168}
+  - component: {fileID: 2270149550160280082}
   m_Layer: 3
   m_Name: ChrisPuck
   m_TagString: StoredPuck
@@ -41,8 +43,8 @@ Transform:
   m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5303992658873614461}
   - {fileID: 5636864368655660858}
+  - {fileID: 5303992658873614461}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0.545, z: 0}
 --- !u!33 &4199167619245431873
@@ -269,6 +271,8 @@ MonoBehaviour:
   coll: {fileID: 3786735982948612350}
   onHitTower: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
   onHitPuck: {fileID: 6245077197731529761, guid: 779fc96840ca17a40aa95a9a6cfc736b, type: 3}
+  clampX: 5
+  clampZ: 2.5
 --- !u!114 &-4370584505178754850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,6 +404,38 @@ MonoBehaviour:
   pull: {fileID: 8300000, guid: 543276886ae653940b5f32a8ef239fb5, type: 3}
   slide: {fileID: 8300000, guid: bc62e9cb6645a654faf34c814b278026, type: 3}
   wallHit: {fileID: 8300000, guid: 17d649f1abe90db4aae0589c344f8bfa, type: 3}
+--- !u!114 &-7907217953403370168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285002100531235846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 0.84843576, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &2270149550160280082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285002100531235846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f03ca2e236ef745b861d6d794b1aaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outline: {fileID: -7907217953403370168}
+  puckScript: {fileID: 5510505782007248028}
 --- !u!1 &6412110799630239388
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,7 +609,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7835150476546489425}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

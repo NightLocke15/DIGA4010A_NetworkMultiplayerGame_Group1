@@ -3,12 +3,16 @@ using Mirror;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using TMPro;
 
 public class CustomNetworkManager : NetworkManager
 {
     public List<GameObject> playerPrefabs = new List<GameObject>();
     [SerializeField] private GameObject menuCanvas;
     [SerializeField] private GameObject Manager;
+    [SerializeField] private GameObject waitingP1;
+    [SerializeField] private GameObject waitingP2;  
+    [SerializeField] private GameObject ready;
 
     public override void OnServerAddPlayer(NetworkConnectionToClient connection)
     {
@@ -25,8 +29,15 @@ public class CustomNetworkManager : NetworkManager
         if (numPlayers == 2) //Checks if the second player has joined
         {
             menuCanvas.GetComponent<MenuUI>().startButton.gameObject.SetActive(true);
+            ready.SetActive(true);
+            waitingP1.SetActive(false);
             //Manager.GetComponent<TurnOrderManager>().FirstTurn();
             Manager.GetComponent<TurnOrderManager>().AssignParents(numPlayers);
+        }
+        else
+        {
+            waitingP1.SetActive(true);
+            ready.SetActive(false);
         }
     }
     

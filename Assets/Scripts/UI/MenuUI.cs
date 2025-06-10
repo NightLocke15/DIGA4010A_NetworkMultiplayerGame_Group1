@@ -23,6 +23,10 @@ public class MenuUI : MonoBehaviour
     public TMP_InputField ipAddress;
     public TMP_InputField portAddress;
 
+    public GameObject howToPlayPanel;
+    public Vector2 targetLeft;
+    public Vector2 targetRight;
+
     private void Start()
     {
         lobbyPanel.SetActive(false);
@@ -34,7 +38,10 @@ public class MenuUI : MonoBehaviour
 
     private void Update()
     {
-
+        howToPlayPanel.GetComponent<RectTransform>().offsetMin = Vector2.Lerp(howToPlayPanel.GetComponent<RectTransform>().offsetMin, 
+            targetLeft, Time.deltaTime *5);
+        howToPlayPanel.GetComponent<RectTransform>().offsetMax = Vector2.Lerp(howToPlayPanel.GetComponent<RectTransform>().offsetMax,
+            targetRight, Time.deltaTime*5);
     }
 
     public void OnClickPlay()
@@ -101,6 +108,17 @@ public class MenuUI : MonoBehaviour
         waitingPanel.SetActive(true);
     }
 
-    
-    
+    public void ChangePageRight()
+    {
+        RectTransform panel = howToPlayPanel.GetComponent<RectTransform>();
+        targetLeft = new Vector2(panel.offsetMin.x - 800, 0);
+        targetRight = new Vector2(panel.offsetMax.x - 800, 0);
+    }
+
+    public void ChangePageLeft()
+    {
+        RectTransform panel = howToPlayPanel.GetComponent<RectTransform>();
+        targetLeft = new Vector2(panel.offsetMin.x + 800, 0);
+        targetRight = new Vector2(panel.offsetMax.x + 800, 0);
+    }
 }

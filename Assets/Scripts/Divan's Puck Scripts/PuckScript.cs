@@ -22,19 +22,23 @@ public class PuckScript : NetworkBehaviour
 
     [Header("Move Puck variables")]
     [SerializeField] private float clampX = 5f, clampZ = 2.5f;
+    //[SerializeField] private Outline outline;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-      //  ChangePosToStorage(transform.parent);
+        //outline.enabled = false;
+
+        //  ChangePosToStorage(transform.parent);
     }
 
     // Update is called once per frame
+    [ClientCallback]
     void Update()
     {
-       
+        
     }
 
     [Command(requiresAuthority = false)]
@@ -71,6 +75,7 @@ public class PuckScript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CannotBeDrag()
     {
+        //outline.enabled = false;
         canDrag = false;
         isStore = true;
     }
@@ -78,6 +83,7 @@ public class PuckScript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CanBeDrag()
     {
+        //outline.enabled = true;
         canDrag = true;
         isStore = false;
     }

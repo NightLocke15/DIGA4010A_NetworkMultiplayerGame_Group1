@@ -17,7 +17,14 @@ public class TowerHealth : NetworkBehaviour
     {
         if (floored)
         {
-            if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck")
+            if (collision.collider.tag == "Enemy")
+            {
+                towerHandler.towerHealth -= 1;
+                CmdKillEnemy(collision.collider.gameObject);
+                CmdLoseHealth();
+            }
+
+            if (collision.collider.tag == "Puck")
             {
                 towerHandler.towerHealth -= 1;
                 CmdLoseHealth();
@@ -46,5 +53,20 @@ public class TowerHealth : NetworkBehaviour
     public void RpcLoseHealth()
     {
         NetworkServer.Destroy(gameObject);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdKillEnemy(GameObject enemy)
+    {
+        if (isServer)
+        {
+            RpcKillEnemy(enemy);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcKillEnemy(GameObject enemy)
+    {
+        NetworkServer.Destroy(enemy);
     }
 }
