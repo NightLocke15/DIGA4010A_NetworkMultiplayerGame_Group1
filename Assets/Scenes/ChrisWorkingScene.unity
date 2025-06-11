@@ -10757,7 +10757,7 @@ MonoBehaviour:
   enemyParent: {fileID: 0}
   agentScripts: []
   increaseSpeed: 0
-  increaseMovement: 0
+  increaseMovement: 2
   menuScript: {fileID: 417065761}
 --- !u!1 &1719378426
 GameObject:

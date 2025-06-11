@@ -123,15 +123,21 @@ public class ESscript : NetworkBehaviour
 
             if (enemyCount == 0)
             {
-                SummonTheEnemies();
+                if (turnOrderManager.currentTurn == 0)
+                {
+                    SummonTheEnemies();
+                }
                 turnOrderManager.IncreaseWaves();
             }
             
             else if (enemyCount == 1)
             {
-                agentScripts[0].moveSpeed += increaseSpeed;
-                agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
                 agentScripts[0].CMDSetPath();
+                if (turnOrderManager.currentTurn == 0)
+                {
+                   // agentScripts[0].moveSpeed += increaseSpeed;
+                    agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
+                }
                 return;
             }
             
