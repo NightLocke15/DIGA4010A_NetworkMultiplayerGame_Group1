@@ -58,6 +58,7 @@ public class DragAndShoot : NetworkBehaviour
     [Header("Misc")]
     [SerializeField]
     private InputSystemUIInputModule inputModule;
+    private PauseMenu pauseMenu;
     
 
     [Header("Turn Order Variables")]
@@ -73,6 +74,7 @@ public class DragAndShoot : NetworkBehaviour
     {
         Manager = GameObject.Find("Manager");
         turnOrderManager = GameObject.Find("Manager").GetComponent<TurnOrderManager>();
+        pauseMenu = GameObject.Find("PauseManager").GetComponent<PauseMenu>();
        
         if (isLocalPlayer) //Checks if this is the playerPrefab connected to the device
         {
@@ -117,29 +119,29 @@ public class DragAndShoot : NetworkBehaviour
         {
             if (puckScript != null)
             {
-                AimLine aimLine = puckScript.GetComponent<AimLine>();
-                Vector3 direction = new Vector3();
-                EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released /If fuck-up change here
-                direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
-                    .normalized; //We get only the direction between the start and end pos
-                float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
-                    .magnitude; //We get the lenght between start and end pos
-                float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
-                clampedMag = clampedMag / adjustlenght;
-                
-                if (isServer) //Checks if this is the host. If not host we have to invert the direction
+                if (!pauseMenu.isPaused)
                 {
-                    aimLine.UpdateAimLine(clampedMag, direction, mouseForce, StartPos);
-                }
-                else  //Inverts the direction
-                {
-                    aimLine.UpdateAimLine(clampedMag, -direction, mouseForce, StartPos);
-                }
-               
-            }
-        }
+                    AimLine aimLine = puckScript.GetComponent<AimLine>();
+                    Vector3 direction = new Vector3();
+                    EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released /If fuck-up change here
+                    direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
+                        .normalized; //We get only the direction between the start and end pos
+                    float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
+                        .magnitude; //We get the lenght between start and end pos
+                    float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
+                    clampedMag = clampedMag / adjustlenght;
 
-        
+                    if (isServer) //Checks if this is the host. If not host we have to invert the direction
+                    {
+                        aimLine.UpdateAimLine(clampedMag, direction, mouseForce, StartPos);
+                    }
+                    else  //Inverts the direction
+                    {
+                        aimLine.UpdateAimLine(clampedMag, -direction, mouseForce, StartPos);
+                    }
+                }              
+            }
+        }        
     }
 
     void FixedUpdate()
@@ -160,16 +162,18 @@ public class DragAndShoot : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            if (isServer)
+            if (!pauseMenu.isPaused)
             {
-                puckScript.CmdMoveThePuck(placePos.position, 1, moveSpeed, inputDirection, radius);
-            }
+                if (isServer)
+                {
+                    puckScript.CmdMoveThePuck(placePos.position, 1, moveSpeed, inputDirection, radius);
+                }
 
-            else
-            {
-                puckScript.CmdMoveThePuck(placePos.position, -1, moveSpeed, inputDirection, radius);
-            }
-         
+                else
+                {
+                    puckScript.CmdMoveThePuck(placePos.position, -1, moveSpeed, inputDirection, radius);
+                }
+            }        
         }
     }
 
@@ -184,86 +188,90 @@ public class DragAndShoot : NetworkBehaviour
         
         if (isLocalPlayer && Turnorder == turnOrderManager.currentTurn && !haveTakenAShot && !rightMouseDown) //Checks if it is local player and if it is their turn
         {
-            if (value.isPressed && !rightMouseDown)  //When the button is pressed
+            if (!pauseMenu.isPaused)
             {
-                Vector2 mousePos = Mouse.current.position.ReadValue();  //Gets Mouse position
-                Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos),
-                    out hit); //Raycast to select objects we want to interact with
-                if (hit.collider != null) // Checks if we hit something
+                if (value.isPressed && !rightMouseDown)  //When the button is pressed
                 {
-                    if (hit.collider.tag == "StoredPuck") //Checks if we hit a puck
+                    Vector2 mousePos = Mouse.current.position.ReadValue();  //Gets Mouse position
+                    Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos),
+                        out hit); //Raycast to select objects we want to interact with
+                    if (hit.collider != null) // Checks if we hit something
                     {
-                       
-                        puckScript =
-                            hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
-                        GameObject puck = hit.collider.gameObject;
-                        aimLine = puck.GetComponent<AimLine>();
-                        if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
+                        if (hit.collider.tag == "StoredPuck") //Checks if we hit a puck
                         {
-                            StartPos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down/ If fuck-up change here
-                            rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
-                            aimLine.StartAimLine();
-                            leftMouseDown = true;
-                        }
-                    }
-                }
-            }
-            else //Is called when the button is released
-            {
-                if (hit.collider != null) // Checks if we hit something
-                {
-                    if (hit.collider.tag == "StoredPuck")
-                    {
-                        puckScript =
-                            hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
-                        
-                        if (!puckScript.isStore && puckScript.canDrag && puckScript.transform.parent == placePos) //Checks if the puck is on the board and can be dragged
-                        {
-                            Vector3 direction = new Vector3();
-                            EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released /If fuck-up change here
-                            direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
-                                .normalized; //We get only the direction between the start and end pos
-                            float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
-                                .magnitude; //We get the lenght between start and end pos
-                            float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
-                            if (isServer) //Checks if this is the host. If not host we have to invert the direction
-                            {
-                                puckScript.Drag(clampedMag, direction, mouseForce); 
-                            }
-                            else  //Inverts the direction
-                            {
-                                puckScript.Drag(clampedMag, -direction, mouseForce);
-                            }
-                            aimLine = puckScript.GetComponent<AimLine>();
-                            aimLine.StopAimLine();
-                            hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
-                            hit = new RaycastHit(); //Reset hit
-                            cmdNewParent(pucksOnBoardTransform, puckScript);
-                            rb = null; //Reset rb
-                            puckScript = null; //Reset puckScript
-                            haveTakenAShot = true;
-                            turnOrderManager.WaitBeforeChangeTurn();
-                            
-                        }
 
-                        else if (puckScript.isStore && puckScript.transform.parent == storePos) //checks if the puck is stored
-                        {
-                            if (placePos.childCount == 0) //If the puck is stored and the player has no other puck, place selcted puck on board.
+                            puckScript =
+                                hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
+                            GameObject puck = hit.collider.gameObject;
+                            aimLine = puck.GetComponent<AimLine>();
+                            if (puckScript != null && puckScript.canDrag && puckScript.transform.parent == placePos)
                             {
-                                puckScript.ChangePosToBoard(placePos);
-                            }
-                            else if (placePos.childCount == 1) //If there is a puck on board, remove it then add the new puck.
-                            {
-                                PuckScript swicthPuck = placePos.GetChild(0).GetComponent<PuckScript>();
-                                swicthPuck.ChangePosToStorage(storePos);
-                                puckScript.ChangePosToBoard(placePos);
+                                StartPos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down/ If fuck-up change here
+                                rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                                aimLine.StartAimLine();
+                                leftMouseDown = true;
                             }
                         }
                     }
                 }
+                else //Is called when the button is released
+                {
+                    if (hit.collider != null) // Checks if we hit something
+                    {
+                        if (hit.collider.tag == "StoredPuck")
+                        {
+                            puckScript =
+                                hit.collider.gameObject.GetComponent<PuckScript>(); //Grabs the puckScript on the puck
 
-                leftMouseDown = false;
+                            if (!puckScript.isStore && puckScript.canDrag && puckScript.transform.parent == placePos) //Checks if the puck is on the board and can be dragged
+                            {
+                                Vector3 direction = new Vector3();
+                                EndPos = Mouse.current.position.ReadValue(); //Grab the position of the mouse when the button is released /If fuck-up change here
+                                direction = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
+                                    .normalized; //We get only the direction between the start and end pos
+                                float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
+                                    .magnitude; //We get the lenght between start and end pos
+                                float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
+                                if (isServer) //Checks if this is the host. If not host we have to invert the direction
+                                {
+                                    puckScript.Drag(clampedMag, direction, mouseForce);
+                                }
+                                else  //Inverts the direction
+                                {
+                                    puckScript.Drag(clampedMag, -direction, mouseForce);
+                                }
+                                aimLine = puckScript.GetComponent<AimLine>();
+                                aimLine.StopAimLine();
+                                hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
+                                hit = new RaycastHit(); //Reset hit
+                                cmdNewParent(pucksOnBoardTransform, puckScript);
+                                rb = null; //Reset rb
+                                puckScript = null; //Reset puckScript
+                                haveTakenAShot = true;
+                                turnOrderManager.WaitBeforeChangeTurn();
+
+                            }
+
+                            else if (puckScript.isStore && puckScript.transform.parent == storePos) //checks if the puck is stored
+                            {
+                                if (placePos.childCount == 0) //If the puck is stored and the player has no other puck, place selcted puck on board.
+                                {
+                                    puckScript.ChangePosToBoard(placePos);
+                                }
+                                else if (placePos.childCount == 1) //If there is a puck on board, remove it then add the new puck.
+                                {
+                                    PuckScript swicthPuck = placePos.GetChild(0).GetComponent<PuckScript>();
+                                    swicthPuck.ChangePosToStorage(storePos);
+                                    puckScript.ChangePosToBoard(placePos);
+                                }
+                            }
+                        }
+                    }
+
+                    leftMouseDown = false;
+                }
             }
+                
         }
     }
 
@@ -292,12 +300,16 @@ public class DragAndShoot : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            Vector2 dir = value.Get<Vector2>(); //Checks if scroll wheel goes up or down
-            float change = dir.y * scrollSpeed; //Controls how fast the camera changes position
-            targetDollyPos += change;
-            targetDollyPos = Mathf.Clamp(targetDollyPos, -1.5f, 1.5f); //Improves scroll function. If the values are higher/lower it influences how much the player must scroll before a change happens
-            splineDolly.CameraPosition = Mathf.Lerp(splineDolly.CameraPosition, targetDollyPos, 
-                Time.deltaTime * dollySpeed); //Moves the camera
+            if (!pauseMenu.isPaused)
+            {
+                Vector2 dir = value.Get<Vector2>(); //Checks if scroll wheel goes up or down
+                float change = dir.y * scrollSpeed; //Controls how fast the camera changes position
+                targetDollyPos += change;
+                targetDollyPos = Mathf.Clamp(targetDollyPos, -1.5f, 1.5f); //Improves scroll function. If the values are higher/lower it influences how much the player must scroll before a change happens
+                splineDolly.CameraPosition = Mathf.Lerp(splineDolly.CameraPosition, targetDollyPos,
+                    Time.deltaTime * dollySpeed); //Moves the camera
+            }
+                
         }
         
     }
@@ -396,14 +408,18 @@ public class DragAndShoot : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            Vector2 mousePos = Mouse.current.position.ReadValue(); //Gets mouse Pos
-            Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos), out RaycastHit pingHit); //creates a raycast from the local player's camera and mouse pos
-
-            if (pingHit.collider != null)
+            if (!pauseMenu.isPaused)
             {
-                Vector3 pingPos = pingHit.point; //Gets the position of the raycast hit
-                CmdPing(pingPos); //calls the command to create the ping
+                Vector2 mousePos = Mouse.current.position.ReadValue(); //Gets mouse Pos
+                Physics.Raycast(PlayerCamera.ScreenPointToRay(mousePos), out RaycastHit pingHit); //creates a raycast from the local player's camera and mouse pos
+
+                if (pingHit.collider != null)
+                {
+                    Vector3 pingPos = pingHit.point; //Gets the position of the raycast hit
+                    CmdPing(pingPos); //calls the command to create the ping
+                }
             }
+                
         }
     }
     

@@ -100,7 +100,7 @@ public class TurnOrderManager : NetworkBehaviour
         
         else if (currentTurn == 2)
         {
-            playerOneText = "Player Two Turn.";
+            playerOneText = "Player Two Turn";
             playerTwoText = "Your Turn!";
         }
     }
