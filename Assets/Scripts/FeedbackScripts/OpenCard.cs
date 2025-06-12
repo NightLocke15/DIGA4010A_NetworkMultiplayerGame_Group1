@@ -16,8 +16,19 @@ public class OpenCard : NetworkBehaviour
         transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * 5);
     }
 
-    [ClientCallback]
     public void OnMouseDown()
+    {
+        CmdOpenCard();
+    }
+
+    [Command (requiresAuthority = false)]
+    public void CmdOpenCard()
+    {
+        RpcOpenCard();
+    }
+
+    [ClientRpc]
+    public void RpcOpenCard()
     {
         if (open)
         {
