@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class CustomNetworkManager : NetworkManager
 {
@@ -13,6 +14,7 @@ public class CustomNetworkManager : NetworkManager
     [SerializeField] private GameObject waitingP1;
     [SerializeField] private GameObject waitingP2;  
     [SerializeField] private GameObject ready;
+    [SerializeField] private GameObject menuPanel;
 
     public override void OnServerAddPlayer(NetworkConnectionToClient connection)
     {
@@ -40,7 +42,21 @@ public class CustomNetworkManager : NetworkManager
             ready.SetActive(false);
         }
     }
-    
+
+    public override void OnClientDisconnect()
+    {
+        base.OnClientDisconnect();
+
+        SceneManager.LoadScene(0);
+    }
+
+    public override void OnServerDisconnect(NetworkConnectionToClient conn)
+    {
+        base.OnServerDisconnect(conn);
+
+        SceneManager.LoadScene(0);
+    }
+
     public void OnConnectedToServer()
     {
         Debug.Log("OnConnectedToServer"+ name);

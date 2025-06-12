@@ -15,6 +15,7 @@ public class MenuUI : MonoBehaviour
     public GameObject waitingPanel;
     public GameObject startButton;
     public GameObject endScreenPanel;
+    public GameObject pauseManager;
     public EnemySpawning enemySpawningScript;
 
     public NetworkManager networkManager;
@@ -34,6 +35,7 @@ public class MenuUI : MonoBehaviour
         waitingPanel.SetActive(false);
         startButton.SetActive(false);
         endScreenPanel.SetActive(false);
+        pauseManager.SetActive(true);
     }
 
     private void Update()
