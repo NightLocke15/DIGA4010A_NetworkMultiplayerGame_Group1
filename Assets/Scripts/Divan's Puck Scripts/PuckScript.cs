@@ -4,6 +4,7 @@ using Mirror;
 using Unity.Cinemachine;
 using Mirror.BouncyCastle.Crypto.Digests;
 using Telepathy;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class PuckScript : NetworkBehaviour
@@ -114,17 +115,20 @@ public class PuckScript : NetworkBehaviour
         transform.parent = newParent;
         transform.gameObject.tag = "StoredPuck";
         
-        if (gameObject.GetComponent<EnemyController>())
-        {
-            Destroy(gameObject.GetComponent<EnemyController>().TheOrc);
-            Destroy(gameObject.GetComponent<EnemyController>());
-            // puck.tag = "Puck";
-        }
+        // if (gameObject.GetComponent<EnemyController>())
+        // {
+        //     Destroy(gameObject.GetComponent<EnemyController>().TheOrc);
+        //     Destroy(gameObject.GetComponent<EnemyController>());
+        //     gameObject.AddComponent<NetworkRigidbodyReliable>();
+        //     gameObject.AddComponent<NavMeshObstacle>();
+        //   // puck.tag = "Puck";
+        // }
     }
 
     [Command(requiresAuthority = false)]
     public void ChangePosToBoard(Transform newPos)
     {
+       
         
         CanBeDrag();
         transform.parent = newPos;
