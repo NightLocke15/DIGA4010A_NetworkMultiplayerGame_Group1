@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class TurnOrderManager : NetworkBehaviour
 {
     [SerializeField] [SyncVar] public int currentTurn = -1;
-    [SyncVar] public int totalWaves = 0;
     [SerializeField] private EnemySpawning enemySpawning;
     [SerializeField] private GameObject Manager;
     [SerializeField] private GameObject Tower;
@@ -45,13 +44,10 @@ public class TurnOrderManager : NetworkBehaviour
    
    [Header("Camera TagetPos")]
    public Transform targetPL1, targetPL2;
-   
-   [SerializeField]
-   private ESscript escript;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //enemySpawning = gameObject.GetComponent<EnemySpawning>();
+        enemySpawning = gameObject.GetComponent<EnemySpawning>();
     }
 
     // Update is called once per frame
@@ -67,7 +63,6 @@ public class TurnOrderManager : NetworkBehaviour
             shouldChangeOrder = false;
             waitTime = 0;
             ChangeTurn();
-            escript.StopMovement();
             if (isServer)
             {
                 playerOne.haveTakenAShot = false;
@@ -84,12 +79,10 @@ public class TurnOrderManager : NetworkBehaviour
             moveTime += Time.deltaTime; //Buffer time. Gives enemies time to move. 
         }
 
-        if (moveTime > bufferTime)  //How long the buffer time is
+        if (moveTime >= 1f)  //How long the buffer time is
         {
-            
             enemiesAreMoving = false; //Stops counter
             ChangeTurn();  //enmies are moving
-            escript.StopMovement();
             moveTime = 0f; //Resets timer
         }
 
@@ -115,62 +108,59 @@ public class TurnOrderManager : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void ChangeTurn()  //Changes the turnOrder
     {
-        if (isServer)
+
+        int placeCountPl1 = placeLocPl1.childCount;
+        int placeCountPl2 = placeLocPl2.childCount;
+        int storeCountPl1 = storeLocPl1.childCount;
+        int storeCountPl2 = storeLocPl2.childCount;
+
+        if ((placeCountPl1 == 0 && storeCountPl1 == 0) && (placeCountPl2 == 0 && storeCountPl2 == 0) || Tower.GetComponent<TowerHandler>().towerHealth <= 0)
         {
-            int placeCountPl1 = placeLocPl1.childCount;
-            int placeCountPl2 = placeLocPl2.childCount;
-            int storeCountPl1 = storeLocPl1.childCount;
-            int storeCountPl2 = storeLocPl2.childCount;
-
-            if ((placeCountPl1 == 0 && storeCountPl1 == 0) && (placeCountPl2 == 0 && storeCountPl2 == 0) || Tower.GetComponent<TowerHandler>().towerHealth <= 0)
-            {
-                //Defeat function
-                
-                CmdEndScreen();
-            }
-
-            else
-            {
-                currentTurn++;   // Changes the turn order
-                //Debug.Log(isServer);
-                
-                if (currentTurn > 2)  //If turnorder is more than two we reset it
-                {
-                    currentTurn = 0;
+            //Defeat function
+            Debug.Log("Yes");
+            CmdEndScreen();
             
-                }
-                
-                escript.MoveTheEnemies();
+        }
+
+        else
+        {
+            currentTurn++;   // Changes the turn order
+            if (currentTurn > 2)  //If turnorder is more than two we reset it
+            {
+                currentTurn = 0;
+            
+            }
         
-                if (currentTurn == 0)
+            if (currentTurn == 0)
+            {
+                enemySpawning.MoveEnemies(); //Moves the enemies
+                enemiesAreMoving = true;     //Starts timer
+                return;
+            }
+        
+            else if (currentTurn == 1)
+            {
+                if (placeCountPl1 == 0 && storeCountPl1 == 0)
                 {
-                    
-                    //enemySpawning.MoveEnemies(); //Moves the enemies
-                    enemiesAreMoving = true;     //Starts timer
+                    WaitBeforeChangeTurn();
                     return;
                 }
-        
-                else if (currentTurn == 1)
-                {
-                    if (placeCountPl1 == 0 && storeCountPl1 == 0)
-                    {
-                        WaitBeforeChangeTurn();
-                        return;
-                    }
-         
-                }
-        
-                else if (currentTurn == 2)
-                {
-                    if (placeCountPl2 == 0 && storeCountPl2 == 0)
-                    {
-                        WaitBeforeChangeTurn();
-                        return;
-                    }
+              
             
+         
+            }
+        
+            else if (currentTurn == 2)
+            {
+                if (placeCountPl2 == 0 && storeCountPl2 == 0)
+                {
+                    WaitBeforeChangeTurn();
+                    return;
                 }
+            
             }
         }
+        
     }
 
     public void WaitBeforeChangeTurn() //A buffer before the turn order is changed, so that pucks can finish moving before the turn ends
@@ -201,11 +191,13 @@ public class TurnOrderManager : NetworkBehaviour
             {
                 if (i == 0)
                 {
+                    Debug.Log("0");
                     GameObject boardPuck = Instantiate(PuckPrefab,placeLocPl1.position, Quaternion.identity);
                     NetworkServer.Spawn(boardPuck);
                     boardPuck.GetComponent<PuckScript>().ChangePosToBoard(placeLocPl1);
                     for (int j = 0; j < PucksAmountStorage; j++)
                     {
+                        Debug.Log("j0");
                         Vector3 pos = new Vector3(storeLocPl1.position.x, storeLocPl1.position.y + 2, storeLocPl1.position.z);
                         GameObject storagePuck = Instantiate(PuckPrefab, pos, Quaternion.identity);
                         NetworkServer.Spawn(storagePuck);
@@ -214,11 +206,13 @@ public class TurnOrderManager : NetworkBehaviour
                 }
                 else if (i == 1)
                 {
+                    Debug.Log("1");
                     GameObject boardPuck = Instantiate(PuckPrefab,placeLocPl2.position, Quaternion.identity);
                     NetworkServer.Spawn(boardPuck);
                     boardPuck.GetComponent<PuckScript>().ChangePosToBoard(placeLocPl2);
                     for (int j = 0; j < PucksAmountStorage; j++)
                     {
+                        Debug.Log("j1");
                         Vector3 pos = new Vector3(storeLocPl2.position.x, storeLocPl2.position.y + 2, storeLocPl2.position.z);
                         GameObject storagePuck = Instantiate(PuckPrefab,pos, Quaternion.identity);
                         NetworkServer.Spawn(storagePuck);
@@ -228,6 +222,13 @@ public class TurnOrderManager : NetworkBehaviour
             }
         }
        
+        
+        
+        // pl1BP.ChangePosToBoard(placeLocPl1);
+        // pl2BP.ChangePosToBoard(placeLocPl2);
+        //
+        // pl1SP.ChangePosToStorage(storeLocPl2);
+        // pl2SP.ChangePosToStorage(storeLocPl2);
     }
 
     [Command(requiresAuthority = false)] 
@@ -240,16 +241,7 @@ public class TurnOrderManager : NetworkBehaviour
     public void EndScreen()
     {
         Debug.Log("And Yes");
-      //  Manager.GetComponent<EnemySpawning>().enabled = false;
+        Manager.GetComponent<EnemySpawning>().enabled = false;
         endScreen.SetActive(true);
-    }
-
-    [Command(requiresAuthority = false)]
-    public void IncreaseWaves()
-    {
-        if (isServer)
-        {
-            totalWaves++;
-        }
     }
 }
