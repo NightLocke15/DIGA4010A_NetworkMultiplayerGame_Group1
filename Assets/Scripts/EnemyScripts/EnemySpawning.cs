@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using Unity.VisualScripting;
 using Mirror;
+using Telepathy;
 
 public class EnemySpawning : NetworkBehaviour
 {
@@ -52,9 +53,6 @@ public class EnemySpawning : NetworkBehaviour
     
     private void Update()
     {
-        
-        
-
         if (Input.GetKeyDown(KeyCode.M))
         {
             for (int i = 0; i < spawnList.Count; i++) 
@@ -180,7 +178,11 @@ public class EnemySpawning : NetworkBehaviour
     //https://discussions.unity.com/t/how-to-wait-before-running-a-function-called-in-start/631729/2
     private IEnumerator StartFirstTurn()
     {
-        yield return new WaitForSeconds(2f);
-        Manager.GetComponent<TurnOrderManager>().FirstTurn();
+        if (isServer)
+        {
+            yield return new WaitForSeconds(2f);
+            Manager.GetComponent<TurnOrderManager>().FirstTurn(); 
+        }
+        
     }
 }
