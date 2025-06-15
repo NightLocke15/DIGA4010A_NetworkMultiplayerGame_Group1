@@ -6,6 +6,7 @@ using Mirror.BouncyCastle.Crypto.Digests;
 using Telepathy;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 public class PuckScript : NetworkBehaviour
 {
@@ -24,12 +25,15 @@ public class PuckScript : NetworkBehaviour
     [Header("Move Puck variables")]
     [SerializeField] private float clampX = 5f, clampZ = 2.5f;
     //[SerializeField] private Outline outline;
-    
+    private CustomNetworkManager networkManager;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        networkManager = GameObject.Find("NetworkManager").GetComponent<CustomNetworkManager>();
         //outline.enabled = false;
 
         //  ChangePosToStorage(transform.parent);
@@ -191,15 +195,5 @@ public class PuckScript : NetworkBehaviour
             GameObject system = Instantiate(onHitPuck, pos, onHitTower.transform.rotation);
             NetworkServer.Spawn(system);
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        
     }
 }

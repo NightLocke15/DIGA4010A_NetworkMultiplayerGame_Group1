@@ -4,12 +4,19 @@ using UnityEngine;
 public class TowerHealth : NetworkBehaviour
 {
     private TowerHandler towerHandler;
+    private CustomNetworkManager networkManager;
     [SyncVar]
     public bool floored;
 
     private void Start()
     {
         towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
+        networkManager = GameObject.Find("NetworkManager").GetComponent<CustomNetworkManager>();
+    }
+
+    private void Update()
+    {
+       
     }
 
     [ClientCallback]
