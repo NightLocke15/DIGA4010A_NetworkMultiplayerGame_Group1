@@ -9,6 +9,7 @@ public class TowerHandler : NetworkBehaviour
     [SerializeField] private ParticleSystem onHitTower;
     [SerializeField] private GameObject towerHealthDisc;
     private float height = 1;
+    [SerializeField] private TurnOrderManager turnOrderManager;
 
     public void Start()
     {
@@ -53,8 +54,6 @@ public class TowerHandler : NetworkBehaviour
 
         if (towerHealth <= 0)
         {
-            TurnOrderManager turnOrderManager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TurnOrderManager>();
-            
             turnOrderManager.CmdEndScreen();
         }
     }

@@ -128,9 +128,12 @@ public class ESscript : NetworkBehaviour
     {
         if (pucksOnTheboard.childCount > 0)
         {
-            for (int i = 0; i < pucksOnTheboard.childCount; i++)
+            Debug.Log(pucksOnTheboard.childCount);
+            for (int i = pucksOnTheboard.childCount-1; i >= 0; i--)
             {
-                GameObject puck = pucksOnTheboard.GetChild(0).gameObject;
+                Debug.Log("i: "+ i);
+                GameObject puck = pucksOnTheboard.GetChild(i).gameObject;
+                Debug.Log(puck.GetComponent<NetworkIdentity>().netId);
                 NetworkServer.Destroy(puck);
             }
         }
