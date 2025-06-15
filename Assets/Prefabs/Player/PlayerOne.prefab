@@ -459,7 +459,7 @@ MonoBehaviour:
     - Position:
         x: 3.5
         y: 26.31
-        z: -70.6
+        z: -68
       TangentIn:
         x: 0
         y: 0
@@ -824,6 +824,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   adjustlenght: 10
   leftMouseDown: 0
+  bufferLenght: 1
   rightMouseDown: 0
   radius: 3
   adjustRadius: 1

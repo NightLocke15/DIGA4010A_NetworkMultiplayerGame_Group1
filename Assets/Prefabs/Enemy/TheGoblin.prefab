@@ -573,7 +573,6 @@ GameObject:
   - component: {fileID: 3754971211175519892}
   - component: {fileID: 4099673871289399755}
   - component: {fileID: 1007644881349231616}
-  - component: {fileID: 601626108679762993}
   - component: {fileID: 1884297137832777552}
   - component: {fileID: 811040792443311669}
   - component: {fileID: 8453025254833903159}
@@ -739,33 +738,6 @@ MonoBehaviour:
   rotationSensitivity: 0.01
   positionPrecision: 0.01
   scalePrecision: 0.01
---- !u!114 &601626108679762993
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4241329610395743996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce560aab642eefd41a9df9c9dd1097aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  canDrag: 0
-  isStore: 1
-  minX: -10
-  maxX: 10
-  minZ: -0.75
-  maxZ: 0.75
-  rb: {fileID: 4099673871289399755}
-  coll: {fileID: 3754971211175519892}
-  onHitTower: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
-  onHitPuck: {fileID: 6245077197731529761, guid: 779fc96840ca17a40aa95a9a6cfc736b, type: 3}
-  clampX: 5
-  clampZ: 2.5
 --- !u!114 &1884297137832777552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -913,7 +885,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   enemyType: 0
-  moveDistance: 4
+  moveDistance: 3
   agent: {fileID: 8475726430484210306}
   agentScript: {fileID: 1804861386180104327}
   deleteTransform: {fileID: 618699028185002727}
@@ -925,6 +897,7 @@ MonoBehaviour:
   TurnOrder: 0
   canMove: 0
   es_Script: {fileID: 0}
+  onTowerHit: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
 --- !u!1 &5205190610625697678
 GameObject:
   m_ObjectHideFlags: 0

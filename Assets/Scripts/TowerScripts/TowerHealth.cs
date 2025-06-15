@@ -5,7 +5,7 @@ public class TowerHealth : NetworkBehaviour
 {
     private TowerHandler towerHandler;
     [SyncVar]
-    private bool floored;
+    public bool floored;
 
     private void Start()
     {
@@ -15,21 +15,36 @@ public class TowerHealth : NetworkBehaviour
     [ClientCallback]
     private void OnCollisionEnter(Collision collision)
     {
-        if (floored)
+        if (collision.gameObject.tag == "Floor")
         {
-            if (collision.collider.tag == "Enemy")
-            {
-                towerHandler.towerHealth -= 1;
-                CmdKillEnemy(collision.collider.gameObject);
-                CmdLoseHealth();
-            }
+            floored = true;
+        }
+        
+        // if (floored)
+        // {
+        //     if (collision.collider.tag == "Enemy")
+        //     {
+        //         towerHandler.LoseHealth();
+        //         CmdKillEnemy(collision.collider.gameObject);
+        //         CmdLoseHealth();
+        //     }
+        //     
+        //     if (collision.collider.tag == "Puck")
+        //     {
+        //         towerHandler.LoseHealth();
+        //         CmdKillEnemy(collision.collider.gameObject);
+        //         CmdLoseHealth();
+        //     }
+        // }        
+    }
 
-            if (collision.collider.tag == "Puck")
-            {
-                towerHandler.towerHealth -= 1;
-                CmdLoseHealth();
-            }
-        }        
+    public void TheTowerWasHit(GameObject deletePuck)
+    {
+        towerHandler.LoseHealth();
+       // CmdKillEnemy(deletePuck);
+       DestroyCollPuck(deletePuck);
+        //CmdLoseHealth();
+        DestroyYourself();
     }
 
     private void OnCollisionStay(Collision collision)
@@ -40,6 +55,18 @@ public class TowerHealth : NetworkBehaviour
         }
     }
 
+    [Command(requiresAuthority = false)]
+    private void DestroyYourself()
+    {
+        NetworkServer.Destroy(gameObject);
+    }
+
+    [Command(requiresAuthority = false)]
+    private void DestroyCollPuck(GameObject deletePuck)
+    {
+        NetworkServer.Destroy(deletePuck);
+    }
+    
     [Command(requiresAuthority = false)]
     public void CmdLoseHealth()
     {

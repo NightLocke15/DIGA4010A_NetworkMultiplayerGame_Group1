@@ -12,15 +12,20 @@ public class TowerHandler : NetworkBehaviour
 
     public void Start()
     {
-        for (int i = 0; i < towerHealth; i++)
-        {
-            CmdSpawnTower();
-        }
+       
     }
 
     private void Update()
     {
         
+    }
+
+    public void CallStart()
+    {
+        for (int i = 0; i < towerHealth; i++)
+        {
+            CmdSpawnTower();
+        }
     }
 
     [Command (requiresAuthority = false)]
@@ -41,6 +46,18 @@ public class TowerHandler : NetworkBehaviour
             
     }
 
+    [Server]
+    public void LoseHealth()
+    {
+        towerHealth -= 1;
+
+        if (towerHealth <= 0)
+        {
+            TurnOrderManager turnOrderManager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TurnOrderManager>();
+            
+            turnOrderManager.CmdEndScreen();
+        }
+    }
     //[ClientCallback]
     //private void OnCollisionEnter(Collision collision)
     //{

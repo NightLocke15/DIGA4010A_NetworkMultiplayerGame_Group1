@@ -22,7 +22,9 @@ public class ECscript : NetworkBehaviour
     public int TurnOrder = 0;
     public bool canMove = false;
     public ESscript es_Script;
-    
+
+    [Header("Collision Variables")] [SerializeField]
+    private GameObject onTowerHit;
     public enum EnemyTypes
     {
         Goblin,
@@ -71,8 +73,27 @@ public class ECscript : NetworkBehaviour
         
     }
 
+    [Server]
+    private void RemoveFromList()
+    {
+        es_Script.agentScripts.Remove(agentScript);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == "Tower")
+        {
+            TowerEcHit(collision.contacts[0].point);
+            if (collision.gameObject.GetComponent<TowerHealth>())
+            {
+                if (collision.gameObject.GetComponent<TowerHealth>().floored)
+                {
+                    RemoveFromList();
+                    collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject.transform.parent.gameObject);
+                }
+            }
+        }
+        
         if (agent != null)
         {
             if (collision.gameObject.tag == "Floor")
@@ -84,6 +105,22 @@ public class ECscript : NetworkBehaviour
         }
     }
 
+    [Command(requiresAuthority = false)]
+    private void TowerEcHit(Vector3 pos)
+    {
+        TowerHitEcRpc(pos);
+    }
+
+    [Server]
+    private void TowerHitEcRpc(Vector3 pos)
+    {
+        if (isServer)
+        {
+            GameObject system = Instantiate(onTowerHit, pos, onTowerHit.transform.rotation);
+            NetworkServer.Spawn(system);
+        }
+        
+    }
 
     [Command(requiresAuthority = false)]
     public void EnableAgentCmd()

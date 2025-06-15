@@ -28,6 +28,7 @@ public class DragAndShoot : NetworkBehaviour
     [SerializeField] private float adjustlenght = 10f;
     [FormerlySerializedAs("mouseDown")] [SerializeField]
     private bool leftMouseDown = false; //checks if the mouse button is being held down on a puck
+    [SerializeField] private float bufferLenght = 1f;
 
     [Header("Move Puck Variables")]
     [SerializeField] private bool rightMouseDown = false;
@@ -232,23 +233,36 @@ public class DragAndShoot : NetworkBehaviour
                                 float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
                                     .magnitude; //We get the lenght between start and end pos
                                 float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
-                                if (isServer) //Checks if this is the host. If not host we have to invert the direction
+
+                                if (clampedMag > bufferLenght)
                                 {
-                                    puckScript.Drag(clampedMag, direction, mouseForce);
+                                    if (isServer) //Checks if this is the host. If not host we have to invert the direction
+                                    {
+                                        puckScript.Drag(clampedMag, direction, mouseForce);
+                                    }
+                                    else  //Inverts the direction
+                                    {
+                                        puckScript.Drag(clampedMag, -direction, mouseForce);
+                                    }
+                                    aimLine = puckScript.GetComponent<AimLine>();
+                                    aimLine.StopAimLine();
+                                    hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
+                                    hit = new RaycastHit(); //Reset hit
+                                    cmdNewParent(pucksOnBoardTransform, puckScript);
+                                    rb = null; //Reset rb
+                                    puckScript = null; //Reset puckScript
+                                    haveTakenAShot = true;
+                                    turnOrderManager.WaitBeforeChangeTurn();
                                 }
-                                else  //Inverts the direction
+
+                                else
                                 {
-                                    puckScript.Drag(clampedMag, -direction, mouseForce);
+                                    aimLine = puckScript.GetComponent<AimLine>();
+                                    aimLine.StopAimLine();
+                                    hit = new RaycastHit(); //Reset hit
+                                    rb = null; //Reset rb
+                                    puckScript = null; //Reset puckScript
                                 }
-                                aimLine = puckScript.GetComponent<AimLine>();
-                                aimLine.StopAimLine();
-                                hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
-                                hit = new RaycastHit(); //Reset hit
-                                cmdNewParent(pucksOnBoardTransform, puckScript);
-                                rb = null; //Reset rb
-                                puckScript = null; //Reset puckScript
-                                haveTakenAShot = true;
-                                turnOrderManager.WaitBeforeChangeTurn();
 
                             }
 

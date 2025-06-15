@@ -26,6 +26,11 @@ public class ESscript : NetworkBehaviour
     [SerializeField] private int increaseMovement;
     
     [SerializeField] private MenuUI menuScript;
+
+    [SerializeField] private bool destroyPucks = false;
+
+    [SerializeField] private Transform pucksOnTheboard;
+    [SerializeField] private TowerHandler tower;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -52,6 +57,11 @@ public class ESscript : NetworkBehaviour
         }
         if (isServer)
         {
+            if (destroyPucks)
+            {
+                DestroyPucksOnBoard();
+            }
+            
             float theChance = goblinChance + orcChance + ogreChance;
             float goblinTopLimit = goblinChance;
             float orcTopLimit = goblinTopLimit + orcChance;
@@ -114,6 +124,19 @@ public class ESscript : NetworkBehaviour
     }
 
     [Server]
+    private void DestroyPucksOnBoard()
+    {
+        if (pucksOnTheboard.childCount > 0)
+        {
+            for (int i = 0; i < pucksOnTheboard.childCount; i++)
+            {
+                GameObject puck = pucksOnTheboard.GetChild(0).gameObject;
+                NetworkServer.Destroy(puck);
+            }
+        }
+    }
+
+    [Server]
     public void MoveTheEnemies()
     {
         if (isServer)
@@ -158,7 +181,11 @@ public class ESscript : NetworkBehaviour
     {
         if (isServer)
         {
-            SummonTheEnemies();
+           // SummonTheEnemies();
+           if (tower != null)
+           {
+               tower.CallStart();
+           }
         }
         StartGameFunctions();
     }

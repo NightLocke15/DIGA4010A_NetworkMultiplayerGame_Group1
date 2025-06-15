@@ -144,6 +144,14 @@ public class PuckScript : NetworkBehaviour
         if (collision.collider.tag == "Tower")
         {
             TowerHit(collision.contacts[0].point);
+
+            if (collision.gameObject.GetComponent<TowerHealth>())
+            {
+                if (collision.gameObject.GetComponent<TowerHealth>().floored)
+                {
+                    collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject);
+                }
+            }
         }
         
         if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck")

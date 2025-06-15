@@ -10024,7 +10024,7 @@ MonoBehaviour:
   shouldChangeOrder: 0
   moveTime: 0
   waitTime: 0
-  bufferTime: 2.5
+  bufferTime: 3
   storeLocPl1: {fileID: 738061776}
   placeLocPl1: {fileID: 1358553762}
   playerOneText: 
@@ -10116,8 +10116,8 @@ MonoBehaviour:
   goblinPrefab: {fileID: 618699028185002727, guid: b6f045b8d5090bb4a87cbad97f7af4cc, type: 3}
   orcPrefab: {fileID: 0}
   ogrePrefab: {fileID: 9147738124939488509, guid: e0f5060d48c145145b0da47036563e39, type: 3}
-  baseAmount: 2
-  adjustAmount: 2
+  baseAmount: 1
+  adjustAmount: 1
   turnOrderManager: {fileID: 1718592641}
   towerTransform: {fileID: 1166196099}
   enemyParent: {fileID: 0}
@@ -10125,6 +10125,9 @@ MonoBehaviour:
   increaseSpeed: 0
   increaseMovement: 2
   menuScript: {fileID: 417065761}
+  destroyPucks: 1
+  pucksOnTheboard: {fileID: 590838838}
+  tower: {fileID: 1166196100}
 --- !u!1 &1719378426
 GameObject:
   m_ObjectHideFlags: 0
