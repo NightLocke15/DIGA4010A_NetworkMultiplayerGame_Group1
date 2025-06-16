@@ -8,10 +8,12 @@ public class TowerHealth : NetworkBehaviour
     [SyncVar]
     public bool floored;
 
+    [ClientCallback]
     private void Start()
     {
         towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
         networkManager = GameObject.Find("NetworkManager").GetComponent<CustomNetworkManager>();
+        transform.GetComponent<AudioSource>().Play();
     }
 
     private void Update()
@@ -25,6 +27,7 @@ public class TowerHealth : NetworkBehaviour
         if (collision.gameObject.tag == "Floor")
         {
             floored = true;
+            
         }
         
         // if (floored)
@@ -103,4 +106,6 @@ public class TowerHealth : NetworkBehaviour
     {
         NetworkServer.Destroy(enemy);
     }
+
+    
 }

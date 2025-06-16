@@ -5,10 +5,12 @@ public class OpenCard : NetworkBehaviour
 {
     private Vector3 target;
     private bool open = false;
+    private AudioSource audioSource;
 
     private void Start()
     {
         target = transform.position;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -34,11 +36,13 @@ public class OpenCard : NetworkBehaviour
         {
             target = new Vector3(transform.position.x, -3.9f, transform.position.z);
             open = false;
+            audioSource.Play();
         }
         else
         {
             target = new Vector3(transform.position.x, 3f, transform.position.z);
             open = true;
+            audioSource.Play();
         }
     }
 }

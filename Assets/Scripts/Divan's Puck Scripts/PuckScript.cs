@@ -19,13 +19,14 @@ public class PuckScript : NetworkBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Collider coll;
 
-    [SerializeField] private GameObject onHitTower;
+    [SerializeField] private GameObject onHitWall;
     [SerializeField] private GameObject onHitPuck;
 
     [Header("Move Puck variables")]
     [SerializeField] private float clampX = 5f, clampZ = 2.5f;
     //[SerializeField] private Outline outline;
     private CustomNetworkManager networkManager;
+    private TowerHandler towerHandler;
 
 
 
@@ -34,6 +35,7 @@ public class PuckScript : NetworkBehaviour
     {
         rb = GetComponent<Rigidbody>();
         networkManager = GameObject.Find("NetworkManager").GetComponent<CustomNetworkManager>();
+        towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
         //outline.enabled = false;
 
         //  ChangePosToStorage(transform.parent);
@@ -142,12 +144,12 @@ public class PuckScript : NetworkBehaviour
         RpcChangePosToStorage(newPos);
     }
 
-    
+    [ClientCallback]
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == "Tower")
         {
-            TowerHit(collision.contacts[0].point);
+            towerHandler.TowerHit(collision.contacts[0].point);
 
             if (collision.gameObject.GetComponent<TowerHealth>())
             {
@@ -157,27 +159,17 @@ public class PuckScript : NetworkBehaviour
                 }
             }
         }
-        
+
+        if (collision.collider.tag == "Wall")
+        {
+            WallHit(collision.contacts[0].point);
+        }
+
         if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck")
         {
             PuckHit(collision.contacts[0].point);
         }
-    }
 
-    [Command(requiresAuthority = false)]
-    public void TowerHit(Vector3 pos)
-    {
-        TowerHitRpc(pos);
-    }
-
-    [Server]
-    public void TowerHitRpc(Vector3 pos)
-    {
-        if (isServer)
-        {
-            GameObject system = Instantiate(onHitTower, pos, onHitTower.transform.rotation);
-            NetworkServer.Spawn(system);
-        }
         
     }
 
@@ -187,13 +179,26 @@ public class PuckScript : NetworkBehaviour
         PuckHitRpc(pos);
     }
 
-    [Server]
+    [Command(requiresAuthority = false)]
+    public void WallHit(Vector3 pos)
+    {
+        WallHitRpc(pos);
+    }
+
+    [ClientRpc]
     public void PuckHitRpc(Vector3 pos)
     {
         if (isServer)
         {
-            GameObject system = Instantiate(onHitPuck, pos, onHitTower.transform.rotation);
+            GameObject system = Instantiate(onHitPuck, pos, onHitPuck.transform.rotation);
             NetworkServer.Spawn(system);
         }
+    }    
+
+    [ClientRpc]
+    public void WallHitRpc(Vector3 pos)
+    {
+        GameObject system = Instantiate(onHitWall, pos, onHitWall.transform.rotation);
+        NetworkServer.Spawn(system);
     }
 }

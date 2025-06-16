@@ -25,6 +25,8 @@ public class ECscript : NetworkBehaviour
 
     [Header("Collision Variables")] [SerializeField]
     private GameObject onTowerHit;
+    private TowerHandler towerHandler;
+
     public enum EnemyTypes
     {
         Goblin,
@@ -34,7 +36,7 @@ public class ECscript : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
     }
 
     // Update is called once per frame
@@ -79,11 +81,12 @@ public class ECscript : NetworkBehaviour
         es_Script.agentScripts.Remove(agentScript);
     }
 
+    [ClientCallback]
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Tower")
         {
-            TowerEcHit(collision.contacts[0].point);
+            towerHandler.TowerHit(collision.contacts[0].point);
             if (collision.gameObject.GetComponent<TowerHealth>())
             {
                 if (collision.gameObject.GetComponent<TowerHealth>().floored)

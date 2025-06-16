@@ -1,9 +1,11 @@
 using Mirror;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : NetworkBehaviour
 {
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject menuPanel;
     public bool isPaused;
 
     private void Start()
@@ -47,7 +49,7 @@ public class PauseMenu : NetworkBehaviour
     [ClientRpc]
     public void RpcMenu()
     {
-        NetworkManager.singleton.StopHost();
+        NetworkManager.singleton.StopServer();
         NetworkManager.singleton.StopClient();
     }
 }

@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5072042682575216942}
+  - component: {fileID: 8130323807428055597}
+  - component: {fileID: -8850678414043243675}
+  - component: {fileID: -2917223212559860161}
   m_Layer: 0
   m_Name: SystemOnHitWall
   m_TagString: Untagged
@@ -32,6 +35,72 @@ Transform:
   - {fileID: 8291611857691837527}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8130323807428055597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7938673590062367663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76f6cacdb26edd5409ce69f190ef24d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &-8850678414043243675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7938673590062367663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 3407395007
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
+--- !u!114 &-2917223212559860161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7938673590062367663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 5072042682575216942}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 1
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1001 &8685641871081945594
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42,15 +111,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 835453253028855213, guid: 7c3edb636773b334d93512fce3bd91aa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.6099815
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 835453253028855213, guid: 7c3edb636773b334d93512fce3bd91aa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.327671
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 835453253028855213, guid: 7c3edb636773b334d93512fce3bd91aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -19.79773
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 835453253028855213, guid: 7c3edb636773b334d93512fce3bd91aa, type: 3}
       propertyPath: m_LocalRotation.w

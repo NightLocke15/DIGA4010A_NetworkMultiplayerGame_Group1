@@ -6,13 +6,16 @@ public class TowerHandler : NetworkBehaviour
 {
     [SyncVar]
     public int towerHealth = 10;
-    [SerializeField] private ParticleSystem onHitTower;
+    //[SerializeField] private ParticleSystem onHitTower;
     [SerializeField] private GameObject towerHealthDisc;
     private float height = 1;
+    [SerializeField] private GameObject onHitTower;
+    private AudioSource audioSource;
+    private GameObject healthItem;
 
     public void Start()
     {
-       
+       audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -22,28 +25,21 @@ public class TowerHandler : NetworkBehaviour
 
     public void CallStart()
     {
-        for (int i = 0; i < towerHealth; i++)
-        {
-            CmdSpawnTower();
-        }
+        CmdSpawnTower();
+        
     }
 
     [Command (requiresAuthority = false)]
     public void CmdSpawnTower()
     {
         RpcSpawnTower();
+        
     }
 
     [ClientRpc]
     public void RpcSpawnTower()
     {
-        if (isServer)
-        {
-            GameObject health = Instantiate(towerHealthDisc, new Vector3(4.26f, 10f + height, -61.93f), Quaternion.identity);
-            NetworkServer.Spawn(health);
-            height += 1;
-        }
-            
+        StartCoroutine(Spawning());
     }
 
     [Server]
@@ -58,6 +54,40 @@ public class TowerHandler : NetworkBehaviour
             turnOrderManager.CmdEndScreen();
         }
     }
+
+    private IEnumerator Spawning()
+    {
+        for (int i = 0; i < towerHealth; i++)
+        {            
+            if (isServer)
+            {
+                healthItem = Instantiate(towerHealthDisc, new Vector3(4.26f, 10f + height, -61.93f), Quaternion.identity);
+                NetworkServer.Spawn(healthItem);
+            }
+            
+            //healthItem.GetComponent<AudioSource>().Play();
+            yield return new WaitForSeconds(0.3f);
+        }       
+    }
+
+    [Command(requiresAuthority = false)]
+    public void TowerHit(Vector3 pos)
+    {
+        TowerHitRpc(pos);
+    }
+
+    [ClientRpc]
+    public void TowerHitRpc(Vector3 pos)
+    {
+        if (isServer)
+        {
+            GameObject system = Instantiate(onHitTower, pos, onHitTower.transform.rotation);
+            NetworkServer.Spawn(system);            
+        }
+        audioSource.Play();
+
+    }
+
     //[ClientCallback]
     //private void OnCollisionEnter(Collision collision)
     //{
@@ -94,6 +124,6 @@ public class TowerHandler : NetworkBehaviour
     //    {
     //        NetworkServer.Destroy(gameObject); //Destroy the enemy when it hit's the tower
     //    }
-        
+
     //}
 }

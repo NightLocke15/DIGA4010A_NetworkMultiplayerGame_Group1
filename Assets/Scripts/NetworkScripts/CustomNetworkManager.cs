@@ -16,12 +16,9 @@ public class CustomNetworkManager : NetworkManager
     [SerializeField] private GameObject waitingP2;  
     [SerializeField] private GameObject ready;
     [SerializeField] private GameObject menuPanel;
-    [SerializeField] private GameObject connectionPanel;
-    [SerializeField] private TextMeshProUGUI connectionStatus;
     public bool disconnected;
     private float time;
-    [SerializeField] private GameObject playerOne;
-    [SerializeField] private GameObject playerTwo;
+    [SerializeField] private GameObject disconnectedPanel;
 
     public override void OnServerAddPlayer(NetworkConnectionToClient connection)
     {
@@ -42,8 +39,6 @@ public class CustomNetworkManager : NetworkManager
             waitingP1.SetActive(false);
             //Manager.GetComponent<TurnOrderManager>().FirstTurn();
             Manager.GetComponent<TurnOrderManager>().AssignParents(numPlayers);
-            playerOne = GameObject.Find("PlayerOne(Clone)");
-            playerTwo = GameObject.Find("PlayerTwo(Clone)");
         }
         else
         {
@@ -51,21 +46,6 @@ public class CustomNetworkManager : NetworkManager
             ready.SetActive(false);
         }
 
-    }
-
-    private void Update()
-    {
-        if (disconnected)
-        {
-            time += Time.deltaTime;
-        }
-
-        if (time > 1f)
-        {
-            disconnected = false;
-            connectionPanel.SetActive(false);
-            time = 0;            
-        }
     }
 
     //public override void OnStopHost()
@@ -100,25 +80,37 @@ public class CustomNetworkManager : NetworkManager
 
     public override void OnClientDisconnect()
     {
-        connectionPanel.SetActive(true);
-        connectionStatus.text = "Player Disconnected";
-        disconnected = true;
-        SceneManager.LoadScene(0);
+        if (NetworkClient.active)
+        {
+            StopClient();
+        }
+        
+        disconnectedPanel.SetActive(true);
+        Debug.Log("Client Gone");
         base.OnClientDisconnect();
 
     }
 
     public override void OnServerDisconnect(NetworkConnectionToClient conn)
     {
-        connectionPanel.SetActive(true);
-        connectionStatus.text = "Player Disconnected";
-        disconnected = true;
-        SceneManager.LoadScene(0);
+        if (NetworkServer.active)
+        {
+            StopServer();
+            StopClient();
+        }
+        disconnectedPanel.SetActive(true);
+        Debug.Log("Server Gone");
         base.OnServerDisconnect(conn);
     }
 
     public void OnConnectedToServer()
     {
         Debug.Log("OnConnectedToServer"+ name);
+    }
+
+    public void MenuDisconnect()
+    {
+        menuPanel.SetActive(true);
+        disconnectedPanel.SetActive(false);
     }
 }
