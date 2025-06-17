@@ -198,7 +198,10 @@ public class PuckScript : NetworkBehaviour
     [ClientRpc]
     public void WallHitRpc(Vector3 pos)
     {
-        GameObject system = Instantiate(onHitWall, pos, onHitWall.transform.rotation);
-        NetworkServer.Spawn(system);
+        if (isServer)
+        {
+            GameObject system = Instantiate(onHitWall, pos, onHitWall.transform.rotation);
+            NetworkServer.Spawn(system);
+        }            
     }
 }
