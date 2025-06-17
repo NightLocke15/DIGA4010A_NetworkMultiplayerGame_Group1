@@ -317,7 +317,7 @@ MonoBehaviour:
   maxZ: 0.75
   rb: {fileID: 6771805570371029866}
   coll: {fileID: 2115751836027178256}
-  onHitTower: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
+  onHitWall: {fileID: 7938673590062367663, guid: 5b50c65e61f31a44b9caf597abd5f91d, type: 3}
   onHitPuck: {fileID: 6245077197731529761, guid: 779fc96840ca17a40aa95a9a6cfc736b, type: 3}
   clampX: 5
   clampZ: 2.5

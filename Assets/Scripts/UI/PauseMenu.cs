@@ -49,7 +49,9 @@ public class PauseMenu : NetworkBehaviour
     [ClientRpc]
     public void RpcMenu()
     {
-        NetworkManager.singleton.StopServer();
-        NetworkManager.singleton.StopClient();
+        SceneManager.LoadScene(0);
+        NetworkClient.Disconnect();
+        NetworkServer.DisconnectAll();
+        
     }
 }

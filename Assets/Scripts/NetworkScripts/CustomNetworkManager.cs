@@ -80,26 +80,28 @@ public class CustomNetworkManager : NetworkManager
 
     public override void OnClientDisconnect()
     {
-        if (NetworkClient.active)
-        {
-            StopClient();
-        }
+        //if (NetworkClient.active)
+        //{
+        //    StopClient();
+        //}
         
-        disconnectedPanel.SetActive(true);
+        //disconnectedPanel.SetActive(true);
         Debug.Log("Client Gone");
+
         base.OnClientDisconnect();
 
     }
 
     public override void OnServerDisconnect(NetworkConnectionToClient conn)
     {
-        if (NetworkServer.active)
-        {
-            StopServer();
-            StopClient();
-        }
-        disconnectedPanel.SetActive(true);
+        //if (NetworkServer.active)
+        //{
+        //    StopServer();
+        //    StopClient();
+        //}
+        //disconnectedPanel.SetActive(true);
         Debug.Log("Server Gone");
+        
         base.OnServerDisconnect(conn);
     }
 
