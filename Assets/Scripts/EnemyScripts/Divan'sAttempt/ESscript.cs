@@ -131,9 +131,7 @@ public class ESscript : NetworkBehaviour
             Debug.Log(pucksOnTheboard.childCount);
             for (int i = pucksOnTheboard.childCount-1; i >= 0; i--)
             {
-                Debug.Log("i: "+ i);
                 GameObject puck = pucksOnTheboard.GetChild(i).gameObject;
-                Debug.Log(puck.GetComponent<NetworkIdentity>().netId);
                 NetworkServer.Destroy(puck);
             }
         }
@@ -152,8 +150,9 @@ public class ESscript : NetworkBehaviour
                 if (turnOrderManager.currentTurn == 0)
                 {
                     SummonTheEnemies();
+                    turnOrderManager.IncreaseWaves();
                 }
-                turnOrderManager.IncreaseWaves();
+                
             }
             
             else if (enemyCount == 1)
