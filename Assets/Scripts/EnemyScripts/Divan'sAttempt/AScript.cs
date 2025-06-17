@@ -273,6 +273,12 @@ public class AScript : NetworkBehaviour
        {
            connectedEnemy.canMove = true;
            agent.destination = destination;
+
+           if (connectedEnemy.lastEnemy)
+           {
+               connectedEnemy.moveDistance += connectedEnemy.increaseMoveDistance;
+               connectedEnemy.lastEnemy = false;
+           }
        }
 
        else

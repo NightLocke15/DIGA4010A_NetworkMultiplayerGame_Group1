@@ -9,6 +9,8 @@ public class ECscript : NetworkBehaviour
     public float moveDistance;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private AScript agentScript;
+    public bool lastEnemy = false;
+    public float increaseMoveDistance = 2f;
     
     [Header("Delete variables")]
     [SerializeField] private GameObject deleteTransform;

@@ -21,9 +21,9 @@ public class ESscript : NetworkBehaviour
     
     public List<AScript> agentScripts;
 
-    [SerializeField] private int increaseSpeed;
+    //[SerializeField] private int increaseSpeed;
 
-    [SerializeField] private int increaseMovement;
+   // [SerializeField] private int increaseMovement;
     
     [SerializeField] private MenuUI menuScript;
 
@@ -158,12 +158,13 @@ public class ESscript : NetworkBehaviour
             
             else if (enemyCount == 1)
             {
-                agentScripts[0].CMDSetPath();
                 if (turnOrderManager.currentTurn == 0)
                 {
-                   // agentScripts[0].moveSpeed += increaseSpeed;
-                    agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
+                    // agentScripts[0].moveSpeed += increaseSpeed;
+                   // agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
+                   agentScripts[0].connectedEnemy.lastEnemy = true;
                 }
+                agentScripts[0].CMDSetPath();
                 return;
             }
             
