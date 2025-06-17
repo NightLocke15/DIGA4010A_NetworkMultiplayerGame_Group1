@@ -177,7 +177,7 @@ public class DragAndShoot : NetworkBehaviour
 
                     Vector3 blCorner = new Vector3(placePos.position.x - x, placePos.transform.position.y, placePos.position.z - z);
                     lineRenderer.SetPosition(0, blCorner);
-                    lineRenderer.SetPosition(4, blCorner);
+                   // lineRenderer.SetPosition(4, blCorner);
         
                     Vector3 tlCorner = new Vector3(placePos.position.x + x, placePos.transform.position.y, placePos.position.z - z);
                     lineRenderer.SetPosition(1, tlCorner);
@@ -200,7 +200,7 @@ public class DragAndShoot : NetworkBehaviour
 
                     Vector3 blCorner = new Vector3(placePos.position.x + x,  placePos.transform.position.y, placePos.position.z + z);
                     lineRenderer.SetPosition(0, blCorner);
-                    lineRenderer.SetPosition(4, blCorner);
+                    //lineRenderer.SetPosition(4, blCorner);
         
                     Vector3 tlCorner = new Vector3(placePos.position.x - x,  placePos.transform.position.y, placePos.position.z + z);
                     lineRenderer.SetPosition(1, tlCorner);
