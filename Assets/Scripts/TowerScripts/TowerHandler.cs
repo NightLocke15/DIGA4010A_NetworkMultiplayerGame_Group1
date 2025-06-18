@@ -12,6 +12,7 @@ public class TowerHandler : NetworkBehaviour
     [SerializeField] private GameObject onHitTower;
     private AudioSource audioSource;
     private GameObject healthItem;
+    [SerializeField] private TurnOrderManager turnOrderManager;
 
     public void Start()
     {
@@ -49,8 +50,6 @@ public class TowerHandler : NetworkBehaviour
 
         if (towerHealth <= 0)
         {
-            TurnOrderManager turnOrderManager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<TurnOrderManager>();
-            
             turnOrderManager.CmdEndScreen();
         }
     }

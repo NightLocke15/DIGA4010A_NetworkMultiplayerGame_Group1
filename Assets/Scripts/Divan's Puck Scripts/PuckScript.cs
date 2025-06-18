@@ -23,7 +23,7 @@ public class PuckScript : NetworkBehaviour
     [SerializeField] private GameObject onHitPuck;
 
     [Header("Move Puck variables")]
-    [SerializeField] private float clampX = 5f, clampZ = 2.5f;
+    [SerializeField] public float clampX = 5f, clampZ = 2.5f;
     //[SerializeField] private Outline outline;
     private CustomNetworkManager networkManager;
     private TowerHandler towerHandler;
@@ -64,6 +64,7 @@ public class PuckScript : NetworkBehaviour
         // mag = Mathf.Clamp(mag, 0f, radius); //Clamp the magnitude, if restricting to a circle
         difference.x = Mathf.Clamp(difference.x, -clampX, clampX); //Clamps to a rectangle
         difference.z = Mathf.Clamp(difference.z, -clampZ, clampZ); //clamps to a rectangle
+        
         Vector3 restrictPos = new Vector3();
         restrictPos = difference.normalized * difference.magnitude; //We used the clamped magnitude and it to the difference direction.
 

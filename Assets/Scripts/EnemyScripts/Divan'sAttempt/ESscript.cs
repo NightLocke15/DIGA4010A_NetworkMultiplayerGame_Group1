@@ -21,9 +21,9 @@ public class ESscript : NetworkBehaviour
     
     public List<AScript> agentScripts;
 
-    [SerializeField] private int increaseSpeed;
+    //[SerializeField] private int increaseSpeed;
 
-    [SerializeField] private int increaseMovement;
+   // [SerializeField] private int increaseMovement;
     
     [SerializeField] private MenuUI menuScript;
 
@@ -128,9 +128,10 @@ public class ESscript : NetworkBehaviour
     {
         if (pucksOnTheboard.childCount > 0)
         {
-            for (int i = 0; i < pucksOnTheboard.childCount; i++)
+            Debug.Log(pucksOnTheboard.childCount);
+            for (int i = pucksOnTheboard.childCount-1; i >= 0; i--)
             {
-                GameObject puck = pucksOnTheboard.GetChild(0).gameObject;
+                GameObject puck = pucksOnTheboard.GetChild(i).gameObject;
                 NetworkServer.Destroy(puck);
             }
         }
@@ -149,18 +150,20 @@ public class ESscript : NetworkBehaviour
                 if (turnOrderManager.currentTurn == 0)
                 {
                     SummonTheEnemies();
+                    turnOrderManager.IncreaseWaves();
                 }
-                turnOrderManager.IncreaseWaves();
+                
             }
             
             else if (enemyCount == 1)
             {
-                agentScripts[0].CMDSetPath();
                 if (turnOrderManager.currentTurn == 0)
                 {
-                   // agentScripts[0].moveSpeed += increaseSpeed;
-                    agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
+                    // agentScripts[0].moveSpeed += increaseSpeed;
+                   // agentScripts[0].connectedEnemy.moveDistance += increaseMovement;
+                   agentScripts[0].connectedEnemy.lastEnemy = true;
                 }
+                agentScripts[0].CMDSetPath();
                 return;
             }
             

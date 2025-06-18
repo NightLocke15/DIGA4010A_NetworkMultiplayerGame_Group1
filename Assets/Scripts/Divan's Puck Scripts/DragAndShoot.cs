@@ -37,6 +37,8 @@ public class DragAndShoot : NetworkBehaviour
     private Vector3 newMousePos;
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private Vector3 puckStartPos, inputDirection;
+    [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private GameObject gOLR;
     
     [Header("Gamepad Settings: Mouse")] //Variables used to create a virtual mouse that the gamepad can use
  
@@ -86,6 +88,7 @@ public class DragAndShoot : NetworkBehaviour
             targetDollyPos = splineDolly.CameraPosition;
             inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
             gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
+            lineRenderer.enabled = false;
             if (Turnorder == 1) //Checks if this is player one
             {
                 target = turnOrderManager.targetPL1;
@@ -167,11 +170,51 @@ public class DragAndShoot : NetworkBehaviour
             {
                 if (isServer)
                 {
+                    lineRenderer.enabled = true;
+                    
+                    float x = puckScript.clampX;
+                    float z = puckScript.clampZ;
+
+                    Vector3 blCorner = new Vector3(placePos.position.x - x, placePos.transform.position.y, placePos.position.z - z);
+                    lineRenderer.SetPosition(0, blCorner);
+                   // lineRenderer.SetPosition(4, blCorner);
+        
+                    Vector3 tlCorner = new Vector3(placePos.position.x + x, placePos.transform.position.y, placePos.position.z - z);
+                    lineRenderer.SetPosition(1, tlCorner);
+        
+                    Vector3 trCorner = new Vector3(placePos.position.x + x, placePos.transform.position.y, placePos.position.z + z);
+                    lineRenderer.SetPosition(2, trCorner);
+        
+                    Vector3 brCorner = new Vector3(placePos.position.x - x, placePos.transform.position.y, placePos.position.z + z);
+                    lineRenderer.SetPosition(3, brCorner);
+                    
                     puckScript.CmdMoveThePuck(placePos.position, 1, moveSpeed, inputDirection, radius);
                 }
 
                 else
                 {
+                    lineRenderer.enabled = true;
+                    
+                    float x = puckScript.clampX;
+                    float z = puckScript.clampZ;
+
+                    Vector3 blCorner = new Vector3(placePos.position.x + x,  placePos.transform.position.y, placePos.position.z + z);
+                    lineRenderer.SetPosition(0, blCorner);
+                    //lineRenderer.SetPosition(4, blCorner);
+        
+                    Vector3 tlCorner = new Vector3(placePos.position.x - x,  placePos.transform.position.y, placePos.position.z + z);
+                    lineRenderer.SetPosition(1, tlCorner);
+        
+                    Vector3 trCorner = new Vector3(placePos.position.x - x,  placePos.transform.position.y, placePos.position.z - z);
+                    lineRenderer.SetPosition(2, trCorner);
+        
+                    Vector3 brCorner = new Vector3(placePos.position.x + x,  placePos.transform.position.y, placePos.position.z - z);
+                    lineRenderer.SetPosition(3, brCorner);
+                    Debug.DrawLine(blCorner, tlCorner, Color.red);
+                    Debug.DrawLine(tlCorner, trCorner, Color.green);
+                    Debug.DrawLine(trCorner, brCorner, Color.blue);
+                    Debug.DrawLine(brCorner, blCorner, Color.magenta);
+                    
                     puckScript.CmdMoveThePuck(placePos.position, -1, moveSpeed, inputDirection, radius);
                 }
             }        
@@ -383,6 +426,7 @@ public class DragAndShoot : NetworkBehaviour
                             StartPos = placePos.position; //Grabs the position where the puck is placed on board
                             newMousePos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
                             rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                            lineRenderer.enabled = true;
                             rightMouseDown = true;
                         }
                     }
@@ -392,6 +436,7 @@ public class DragAndShoot : NetworkBehaviour
 
             else
             {
+                lineRenderer.enabled = false;
                 hit = new RaycastHit();
                 rb = null; //Reset rb
                 puckScript = null; //Reset puckScript
