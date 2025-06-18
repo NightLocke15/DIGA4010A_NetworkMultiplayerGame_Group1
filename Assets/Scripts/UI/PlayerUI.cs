@@ -11,6 +11,7 @@ public class PlayerUI : NetworkBehaviour
     [SerializeField] private GameObject playerTwoTurnImg;
     [SerializeField] private GameObject enemyTurnImg;
     [SerializeField] private GameObject yourTurnImg;
+    [SerializeField] private TextMeshProUGUI wave;
 
     private void Start()
     {
@@ -74,5 +75,7 @@ public class PlayerUI : NetworkBehaviour
                 playerTwoTurnImg.SetActive(false);
             }
         }
+
+        wave.text = turnOrderManager.totalWaves.ToString();
     }
 }

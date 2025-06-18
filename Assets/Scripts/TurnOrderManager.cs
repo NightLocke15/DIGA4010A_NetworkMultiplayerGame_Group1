@@ -3,6 +3,7 @@ using Mirror;
 using UnityEngine.Serialization;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Mirror.BouncyCastle.Bcpg;
 
 public class TurnOrderManager : NetworkBehaviour
 {
@@ -42,8 +43,9 @@ public class TurnOrderManager : NetworkBehaviour
 
     public GameObject endScreen;
     public GameObject canvasObject;
-   
-   [Header("Camera TagetPos")]
+    public TextMeshProUGUI endScreenWaves;
+
+    [Header("Camera TagetPos")]
    public Transform targetPL1, targetPL2;
    
    [SerializeField]
@@ -57,6 +59,8 @@ public class TurnOrderManager : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        endScreenWaves.text = totalWaves.ToString();
+
         if (shouldChangeOrder)
         {
             waitTime += Time.deltaTime;
@@ -110,6 +114,7 @@ public class TurnOrderManager : NetworkBehaviour
             playerOneText = "Player Two Turn";
             playerTwoText = "Your Turn!";
         }
+
     }
 
     [Command(requiresAuthority = false)]
