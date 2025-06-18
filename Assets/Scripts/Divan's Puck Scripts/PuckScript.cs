@@ -35,7 +35,7 @@ public class PuckScript : NetworkBehaviour
     {
         rb = GetComponent<Rigidbody>();
         networkManager = GameObject.Find("NetworkManager").GetComponent<CustomNetworkManager>();
-        towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
+        towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
         //outline.enabled = false;
 
         //  ChangePosToStorage(transform.parent);
@@ -156,7 +156,7 @@ public class PuckScript : NetworkBehaviour
             {
                 if (collision.gameObject.GetComponent<TowerHealth>().floored)
                 {
-                    collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject);
+                    collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject, gameObject.name);
                 }
             }
         }

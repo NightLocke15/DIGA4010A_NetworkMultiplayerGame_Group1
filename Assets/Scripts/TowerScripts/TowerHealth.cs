@@ -4,15 +4,13 @@ using UnityEngine;
 public class TowerHealth : NetworkBehaviour
 {
     private TowerHandler towerHandler;
-    private CustomNetworkManager networkManager;
     [SyncVar]
     public bool floored;
 
     [ClientCallback]
     private void Start()
     {
-        towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
-        networkManager = GameObject.Find("NetworkManager").GetComponent<CustomNetworkManager>();
+        towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
         transform.GetComponent<AudioSource>().Play();
     }
 
@@ -48,13 +46,14 @@ public class TowerHealth : NetworkBehaviour
         // }        
     }
 
-    public void TheTowerWasHit(GameObject deletePuck)
+    public void TheTowerWasHit(GameObject deletePuck, string puckName)
     {
         towerHandler.LoseHealth();
-       // CmdKillEnemy(deletePuck);
-       DestroyCollPuck(deletePuck);
+        towerHandler.CmdDeleteHealth(puckName);
+        // CmdKillEnemy(deletePuck);
+        DestroyCollPuck(deletePuck);
         //CmdLoseHealth();
-        DestroyYourself();
+        //DestroyYourself();
     }
 
     private void OnCollisionStay(Collision collision)

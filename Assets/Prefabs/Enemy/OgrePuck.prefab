@@ -168,6 +168,8 @@ GameObject:
   - component: {fileID: 4017882560929819750}
   - component: {fileID: 284680909077653421}
   - component: {fileID: 4931335416245376295}
+  - component: {fileID: 3660921590026993735}
+  - component: {fileID: 1478195919025313316}
   m_Layer: 0
   m_Name: OgrePuck
   m_TagString: Enemy
@@ -519,6 +521,38 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 2
+--- !u!114 &3660921590026993735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3717427588004688641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1478195919025313316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3717427588004688641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f03ca2e236ef745b861d6d794b1aaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outline: {fileID: 3660921590026993735}
+  puckScript: {fileID: 2281440918056932440}
 --- !u!1 &8005475322326511293
 GameObject:
   m_ObjectHideFlags: 0

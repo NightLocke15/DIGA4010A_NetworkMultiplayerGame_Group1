@@ -38,7 +38,7 @@ public class ECscript : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
+        towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
     }
 
     // Update is called once per frame
@@ -94,7 +94,7 @@ public class ECscript : NetworkBehaviour
                 if (collision.gameObject.GetComponent<TowerHealth>().floored)
                 {
                     RemoveFromList();
-                    collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject.transform.parent.gameObject);
+                    collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject.transform.parent.gameObject, gameObject.name);
                 }
             }
         }

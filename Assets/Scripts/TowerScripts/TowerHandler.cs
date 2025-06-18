@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 
@@ -10,13 +11,15 @@ public class TowerHandler : NetworkBehaviour
     [SerializeField] private GameObject towerHealthDisc;
     private float height = 1;
     [SerializeField] private GameObject onHitTower;
-    private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSource;
     private GameObject healthItem;
     [SerializeField] private TurnOrderManager turnOrderManager;
 
+    public List<GameObject> towerHealthList = new List<GameObject>();
+
     public void Start()
     {
-       audioSource = GetComponent<AudioSource>();
+       
     }
 
     private void Update()
@@ -46,11 +49,83 @@ public class TowerHandler : NetworkBehaviour
     [Server]
     public void LoseHealth()
     {
-        towerHealth -= 1;
+        //towerHealth -= 1;
+
+        
 
         if (towerHealth <= 0)
         {
             turnOrderManager.CmdEndScreen();
+        }
+    }
+
+    [Command (requiresAuthority = false)]
+    public void CmdDeleteHealth(string health)
+    {
+        RpcDeleteHealth(health);
+    }
+
+    [ClientRpc]
+    public void RpcDeleteHealth(string name)
+    {
+
+        Debug.Log("hit");
+        if (isServer)
+        {
+            
+            if (name == "ChrisPuck(Clone)" || name == "OrcPuck(Clone)" || name == "MediumEnemy(Clone)")
+            {
+                if (towerHealth >= 2)
+                {
+                    
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    towerHealth -= 2;
+                }
+                else
+                {
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    towerHealth -= 1;
+                }
+                
+            }
+            else if (name == "GoblinPuck(Clone)" || name == "SmallEnemy")
+            {
+                NetworkServer.Destroy(towerHealthList[0]);
+                towerHealthList.RemoveAt(0);
+                towerHealth -= 1;
+            }
+            else if (name == "OgrePuck(Clone)" || name == "BigEnemy")
+            {
+                if (towerHealth >= 3)
+                {
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    towerHealth -= 3;
+                }
+                else if (towerHealth == 2)
+                {
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    towerHealth -= 2;
+                }
+                else
+                {
+                    NetworkServer.Destroy(towerHealthList[0]);
+                    towerHealthList.RemoveAt(0);
+                    towerHealth -= 1;
+                }
+                
+            }
         }
     }
 
@@ -62,6 +137,7 @@ public class TowerHandler : NetworkBehaviour
             {
                 healthItem = Instantiate(towerHealthDisc, new Vector3(4.26f, 10f + height, -61.93f), Quaternion.identity);
                 NetworkServer.Spawn(healthItem);
+                towerHealthList.Add(healthItem);
             }
             
             //healthItem.GetComponent<AudioSource>().Play();
@@ -83,7 +159,7 @@ public class TowerHandler : NetworkBehaviour
             GameObject system = Instantiate(onHitTower, pos, onHitTower.transform.rotation);
             NetworkServer.Spawn(system);            
         }
-        audioSource.Play();
+       // audioSource.Play();
 
     }
 

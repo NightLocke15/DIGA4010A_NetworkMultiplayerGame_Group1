@@ -16,7 +16,7 @@ public class PlayerUI : NetworkBehaviour
     private void Start()
     {
        // towerHealthSlider = transform.GetChild(0).gameObject.GetComponent<Slider>();
-        towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
+        towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
         turnOrderManager = GameObject.Find("Manager").GetComponent<TurnOrderManager>();
         playerOneTurnImg.SetActive(false);
         playerTwoTurnImg.SetActive(false);
