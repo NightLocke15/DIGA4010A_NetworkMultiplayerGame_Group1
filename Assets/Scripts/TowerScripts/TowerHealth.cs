@@ -71,7 +71,7 @@ public class TowerHealth : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
-    private void DestroyCollPuck(GameObject deletePuck)
+    public void DestroyCollPuck(GameObject deletePuck)
     {
         NetworkServer.Destroy(deletePuck);
     }

@@ -145,6 +145,16 @@ public class TowerHandler : NetworkBehaviour
         }       
     }
 
+    public void SpawnHealth()
+    {
+        if (isServer)
+        {
+            healthItem = Instantiate(towerHealthDisc, new Vector3(4.26f, 10f + height, -61.93f), Quaternion.identity);
+            NetworkServer.Spawn(healthItem);
+            towerHealthList.Add(healthItem);
+        }        
+    }
+
     [Command(requiresAuthority = false)]
     public void TowerHit(Vector3 pos)
     {

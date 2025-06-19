@@ -31,6 +31,7 @@ public class PuckScript : NetworkBehaviour
 
     [Header("Special Pucks")] 
     public puckVariants variant;
+    public bool healerAdd;
 
     public PortalPuck portalPuck;
     public enum puckVariants
@@ -169,7 +170,16 @@ public class PuckScript : NetworkBehaviour
             {
                 if (collision.gameObject.GetComponent<TowerHealth>().floored)
                 {
-                    collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject, gameObject.name);
+                    if (variant == puckVariants.Healer && healerAdd == false)
+                    {
+                        towerHandler.towerHealth += 1;
+                        towerHandler.SpawnHealth();
+                        collision.gameObject.GetComponent<TowerHealth>().DestroyCollPuck(gameObject);
+                    }
+                    else
+                    {
+                        collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject, gameObject.name);
+                    }                       
                 }
             }
         }
@@ -203,6 +213,7 @@ public class PuckScript : NetworkBehaviour
                 portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
                 break;
             case puckVariants.Healer:
+                healerAdd = true;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -229,6 +240,7 @@ public class PuckScript : NetworkBehaviour
                 }
                 break;
             case puckVariants.Healer:
+                healerAdd = true;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

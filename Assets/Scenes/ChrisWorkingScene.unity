@@ -1144,7 +1144,7 @@ MonoBehaviour:
   syncInterval: 0
   storelocation: {fileID: 738061776}
   goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
-  orcPuck: {fileID: 0}
+  orcPuck: {fileID: 2553680312261272050, guid: 41dd7e5866b594f4b8ae140c7c9008e2, type: 3}
   ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
 --- !u!65 &92166093
 BoxCollider:
@@ -3363,7 +3363,7 @@ MonoBehaviour:
   syncInterval: 0
   storelocation: {fileID: 738061776}
   goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
-  orcPuck: {fileID: 0}
+  orcPuck: {fileID: 2553680312261272050, guid: 41dd7e5866b594f4b8ae140c7c9008e2, type: 3}
   ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
 --- !u!65 &457886950
 BoxCollider:
@@ -5581,6 +5581,8 @@ MonoBehaviour:
   - {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
   - {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
   - {fileID: 7938673590062367663, guid: 5b50c65e61f31a44b9caf597abd5f91d, type: 3}
+  - {fileID: 9147738124939488509, guid: 387d85e4e8a13a8459e12dabddcdc164, type: 3}
+  - {fileID: 2553680312261272050, guid: 41dd7e5866b594f4b8ae140c7c9008e2, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -13920,7 +13922,7 @@ MonoBehaviour:
   syncInterval: 0
   storelocation: {fileID: 1109907817}
   goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
-  orcPuck: {fileID: 0}
+  orcPuck: {fileID: 2553680312261272050, guid: 41dd7e5866b594f4b8ae140c7c9008e2, type: 3}
   ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
 --- !u!65 &1636655849
 BoxCollider:
@@ -14536,6 +14538,7 @@ GameObject:
   - component: {fileID: 1718592646}
   - component: {fileID: 1718592647}
   - component: {fileID: 1718592648}
+  - component: {fileID: 1718592649}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Manager
@@ -14653,12 +14656,12 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  goblinChance: 50
-  orcChance: 0
-  ogreChance: 50
+  goblinChance: 0
+  orcChance: 50
+  ogreChance: 0
   spawnAmount: 0
   goblinPrefab: {fileID: 618699028185002727, guid: b6f045b8d5090bb4a87cbad97f7af4cc, type: 3}
-  orcPrefab: {fileID: 0}
+  orcPrefab: {fileID: 9147738124939488509, guid: 387d85e4e8a13a8459e12dabddcdc164, type: 3}
   ogrePrefab: {fileID: 9147738124939488509, guid: e0f5060d48c145145b0da47036563e39, type: 3}
   baseAmount: 1
   adjustAmount: 1
@@ -14703,9 +14706,106 @@ MonoBehaviour:
   towerHealth: 10
   towerHealthDisc: {fileID: 5034481018591791539, guid: 0ae493be2c6ce404cbae2ed84a3f7da3, type: 3}
   onHitTower: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 1718592649}
   turnOrderManager: {fileID: 1718592641}
   towerHealthList: []
+--- !u!82 &1718592649
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718592640}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: a1936bebc6f36a14d87404a62ee5bfe1, type: 3}
+  m_Resource: {fileID: 8300000, guid: a1936bebc6f36a14d87404a62ee5bfe1, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1719378426
 GameObject:
   m_ObjectHideFlags: 0
@@ -17970,7 +18070,7 @@ MonoBehaviour:
   syncInterval: 0
   storelocation: {fileID: 1109907817}
   goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
-  orcPuck: {fileID: 0}
+  orcPuck: {fileID: 2553680312261272050, guid: 41dd7e5866b594f4b8ae140c7c9008e2, type: 3}
   ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
 --- !u!65 &2146113867
 BoxCollider:
