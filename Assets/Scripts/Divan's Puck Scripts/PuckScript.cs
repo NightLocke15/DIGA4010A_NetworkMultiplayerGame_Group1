@@ -199,8 +199,12 @@ public class PuckScript : NetworkBehaviour
             case puckVariants.Magnet:
                 break;
             case puckVariants.Portal:
-                Debug.Log("Wall Coll");
-                portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+//                Debug.Log("Wall Coll");
+                if (portalPuck.canCreatePortal)
+                {
+                    portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                    portalPuck.DestroyObject();
+                }
                 break;
             case puckVariants.Healer:
                 break;
@@ -220,13 +224,23 @@ public class PuckScript : NetworkBehaviour
              //   portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
                 break;
             case puckVariants.Portal:
-                Debug.Log("Puck Coll");
-                portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
-                if (other.GetComponent<ECscript>() != null)
-                {
-                   portalPuck.StoreTheEnemyPuck(other.GetComponent<ECscript>()); //Stores enemy puck
-                   other.GetComponent<ECscript>().DeleteStuff();
-                }
+               // Debug.Log("Puck Coll");
+               if (portalPuck.canCreatePortal)
+               {
+                   portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                   
+                   if (other.GetComponent<ECscript>() != null)
+                   {
+                       portalPuck.StoreTheEnemyPuck(other.GetComponent<ECscript>()); //Stores enemy puck
+                       other.GetComponent<ECscript>().DeleteStuff();
+                   }
+                   else
+                   {
+                       portalPuck.StoreTheOtherPuck(other.gameObject.GetComponent<PuckScript>());
+                       portalPuck.DestroyObject();
+                   }
+                   
+               }
                 break;
             case puckVariants.Healer:
                 break;

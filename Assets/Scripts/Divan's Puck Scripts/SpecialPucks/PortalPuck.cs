@@ -14,7 +14,7 @@ public class PortalPuck : NetworkBehaviour
     [SerializeField] private Transform storeLocation;
 
     [SerializeField] private bool usePuckVersion = true;
-    [SerializeField] private bool canCreatePortal = false;
+    public bool canCreatePortal = false;
 
     [SerializeField] private int portalCount = 3;
 
@@ -24,7 +24,7 @@ public class PortalPuck : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Cmd_PortalBoolFalse();
     }
 
     // Update is called once per frame
@@ -42,7 +42,7 @@ public class PortalPuck : NetworkBehaviour
     [ClientRpc]
     private void RPC_ReleasedInWild(Transform plStorePos)
     {
-        Debug.Log("we did this command");
+       // Debug.Log("we did this command");
         canCreatePortal = true;
         storeLocation = plStorePos;
     }
@@ -56,12 +56,12 @@ public class PortalPuck : NetworkBehaviour
     [Server]
     private void RPC_SpawnPortalPuck(Transform spawnPoint)
     {
-        Debug.Log("Spawn before bool check");
+        //Debug.Log("Spawn before bool check");
         if (canCreatePortal)
         {
             GameObject porContainer = new GameObject();
             PortalController portalController = new PortalController();
-            Debug.Log("Spawn after bool check");
+          //  Debug.Log("Spawn after bool check");
            
             porContainer = Instantiate(portalParent, spawnPoint.position, Quaternion.identity);
             portalController = porContainer.GetComponent<PortalController>();
@@ -76,32 +76,30 @@ public class PortalPuck : NetworkBehaviour
                 // SetMaterialOnPP(portal);
                 portalController.AddPuckToList(portal, i);
             }
-            
-
-            Debug.Log("End Spawn");
-            DestroyObject();
+            //  Debug.Log("End Spawn");
+            //DestroyObject();
             //NetworkServer.Destroy(gameObject);
         }
     }
     
 
-    [ClientRpc]
-    private void SetMaterialOnPP(GameObject portal)
-    {
-        Debug.Log(storeLocation.name);
-        if (isServer)
-        {
-            portal.GetComponent<MeshRenderer>().material = player1Material;
-        }
-
-        else
-        {
-            portal.GetComponent<MeshRenderer>().material = player2Material;
-        }
-    }
+    // [ClientRpc]
+    // private void SetMaterialOnPP(GameObject portal)
+    // {
+    //     Debug.Log(storeLocation.name);
+    //     if (isServer)
+    //     {
+    //         portal.GetComponent<MeshRenderer>().material = player1Material;
+    //     }
+    //
+    //     else
+    //     {
+    //         portal.GetComponent<MeshRenderer>().material = player2Material;
+    //     }
+    // }
 
     [Command(requiresAuthority = false)]
-    private void DestroyObject()
+    public void DestroyObject()
     {
         NetworkServer.Destroy(gameObject);
     }
@@ -117,7 +115,7 @@ public class PortalPuck : NetworkBehaviour
     [Server]
     public void StoreTheEnemyPuck(ECscript ecscript)
     {
-        Debug.Log("Store enemy start");
+       // Debug.Log("Store enemy start");
         ECscript.EnemyTypes type = ecscript.enemyType;
         GameObject puck = new GameObject();
         GameObject instantiatedPuck = new GameObject();
@@ -128,49 +126,94 @@ public class PortalPuck : NetworkBehaviour
                 instantiatedPuck = Instantiate(puck);
                 break;
             case ECscript.EnemyTypes.Orc:
-                instantiatedPuck = Instantiate(puck);
                 puck = orcPuck;
+                instantiatedPuck = Instantiate(puck);
                 break;
             case ECscript.EnemyTypes.Ogre:
+                Cmd_PortalBoolFalse();
                 instantiatedPuck = gameObject;
                 puck = ogrePrefab;
-                NetworkServer.Destroy(gameObject);
+              //  NetworkServer.Destroy(gameObject);
                 break;
             default:
                break;
         }
-
        // GameObject instantiatedPuck = new GameObject();
      //   instantiatedPuck = Instantiate(puck);
         if (ecscript.isLeader == true)
         {
-            switch (type)
-            {
-                case ECscript.EnemyTypes.Goblin:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
-                    break;
-                case ECscript.EnemyTypes.Orc:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;
-                    break;
-                case ECscript.EnemyTypes.Ogre:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
-                    break;
-                default:
-                    break;
-            }
+            Cmd_SetLeaderVariant(instantiatedPuck, ecscript);
         }
 
         else
         {
-            instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+            Cmd_PortalBoolFalse();
+            Cmd_NormalVariant(instantiatedPuck);
         }
 
         if (instantiatedPuck != null)
         {
             NetworkServer.Spawn(instantiatedPuck);
             instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
+            if (instantiatedPuck != gameObject)
+            {
+                DestroyObject();
+            }
         }
         
-        Debug.Log("Store enemy end");
+        //Debug.Log("Store enemy end");
+    }
+
+    [Command(requiresAuthority = false)]
+    private void Cmd_SetLeaderVariant(GameObject instantiatedPuck, ECscript ecscript)
+    {
+       Rpc_SetLeaderVariant(instantiatedPuck, ecscript);
+    }
+
+    [ClientRpc]
+    private void Rpc_SetLeaderVariant(GameObject instantiatedPuck, ECscript ecscript)
+    {
+        ECscript.EnemyTypes type = ecscript.enemyType;
+        switch (type)
+        {
+            case ECscript.EnemyTypes.Goblin:
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
+               // DestroyObject();
+                break;
+            case ECscript.EnemyTypes.Orc:
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;
+               // DestroyObject();
+                break;
+            case ECscript.EnemyTypes.Ogre:
+                Cmd_PortalBoolFalse();
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
+                break;
+            default:
+                break;
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void Cmd_NormalVariant(GameObject instantiatedPuck)
+    {
+        RPC_NormalVariant(instantiatedPuck);
+    }
+
+    [ClientRpc]
+    private void RPC_NormalVariant(GameObject instantiatedPuck)
+    {
+        
+    }
+    
+    [Command(requiresAuthority = false)]
+    public void Cmd_PortalBoolFalse()
+    {
+     Rpc_PortalBoolFalse();   
+    }
+
+    [ClientRpc]
+    private void Rpc_PortalBoolFalse()
+    {
+        canCreatePortal = false;
     }
 }

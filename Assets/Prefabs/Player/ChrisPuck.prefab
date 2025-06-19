@@ -273,6 +273,8 @@ MonoBehaviour:
   onHitPuck: {fileID: 6245077197731529761, guid: 779fc96840ca17a40aa95a9a6cfc736b, type: 3}
   clampX: 5
   clampZ: 2.5
+  variant: 0
+  portalPuck: {fileID: 0}
 --- !u!114 &-4370584505178754850
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class PortalController : NetworkBehaviour
 {
-    [FormerlySerializedAs("storeLoc")] [SerializeField] private Transform storeLocation;
+    public Transform storeLocation;
     public List<GameObject> portalPucks = new List<GameObject>();
 
     [SerializeField] private GameObject goblinPuck, orcPuck, ogrePuck;
@@ -56,7 +56,7 @@ public class PortalController : NetworkBehaviour
     [Server]
     public void AddPuckToList(GameObject puck, int index)
     {
-        Debug.Log("Added to list");
+//        Debug.Log("Added to list");
         RPC_AddPuckToList(puck, index);
         portalPucks.Add(puck);
      //   AddPuckAsChild(index);
@@ -98,25 +98,29 @@ public class PortalController : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Puck")
-        {
-            StoreThePuck(collision.gameObject.GetComponent<PuckScript>());
-            RemovePuckFromList();
-        }
-        
-        else if (collision.gameObject.tag == "Enemy")
-        {
-            ECscript eCscript = collision.gameObject.GetComponent<ECscript>();
-            StoreTheEnemyPuck(eCscript);
-            eCscript.DeleteStuff();
-            RemovePuckFromList();
-        }
+        // Debug.Log(collision.gameObject.name);
+        // if (collision.gameObject.tag == "Puck")
+        // {
+        //     Debug.Log(collision.gameObject.name);
+        //     //StoreThePuck(collision.gameObject.GetComponent<PuckScript>());
+        //     collision.gameObject.GetComponentInChildren<PuckScript>().ChangePosToStorage(storeLocation);
+        //     RemovePuckFromList();
+        // }
+        //
+        // else if (collision.gameObject.tag == "Enemy")
+        // {
+        //     ECscript eCscript = collision.gameObject.GetComponent<ECscript>();
+        //     StoreTheEnemyPuck(eCscript);
+        //     eCscript.DeleteStuff();
+        //     RemovePuckFromList();
+        // }
     }
 
     [Server]
-    private void RemovePuckFromList()
+    public void RemovePuckFromList()
     {
         NetworkServer.Destroy(portalPucks[0]);
+        portalPucks.Remove(portalPucks[0]);
 
         if (portalPucks.Count < 1)
         {
@@ -130,7 +134,7 @@ public class PortalController : NetworkBehaviour
         script.ChangePosToStorage(storeLocation);
     }
 
-    [Server]
+    [Command(requiresAuthority = false)]
     public void StoreTheEnemyPuck(ECscript ecscript)
     {
         ECscript.EnemyTypes type = ecscript.enemyType;
@@ -151,32 +155,47 @@ public class PortalController : NetworkBehaviour
         }
         
         GameObject instantiatedPuck = Instantiate(puck);
+        NetworkServer.Spawn(instantiatedPuck);
+        
         if (ecscript.isLeader == true)
         {
-            switch (type)
-            {
-                case ECscript.EnemyTypes.Goblin:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
-                    break;
-                case ECscript.EnemyTypes.Orc:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;
-                    break;
-                case ECscript.EnemyTypes.Ogre:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
-                    break;
-                default:
-                    break;
-            }
+           RpcPortalSetVariant(instantiatedPuck, ecscript);
         }
 
         else
         {
-            instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+            SetNormalH(instantiatedPuck, ecscript);
         }
         
-        NetworkServer.Spawn(instantiatedPuck);
+        
         instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);;
             
         
+    }
+    
+    [ClientRpc]
+    private void SetNormalH(GameObject instantiatedPuck, ECscript ecscript)
+    {
+        instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+    }
+
+    [ClientRpc]
+    private void RpcPortalSetVariant(GameObject instantiatedPuck, ECscript ecscript)
+    {
+        ECscript.EnemyTypes type = ecscript.enemyType;
+        switch (type)
+        {
+            case ECscript.EnemyTypes.Goblin:
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
+                break;
+            case ECscript.EnemyTypes.Orc:
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;
+                break;
+            case ECscript.EnemyTypes.Ogre:
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -37,6 +37,7 @@ public class HoleScript : NetworkBehaviour
        
        if (puck.GetComponent<PuckScript>() != null)
        {
+           //Set puck to normal
            puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation);
        }
     }
@@ -71,7 +72,7 @@ public class HoleScript : NetworkBehaviour
 
         else
         {
-            instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+            SetNormalH(instantiatedPuck, ecscript);
         }
         
         
@@ -96,5 +97,11 @@ public class HoleScript : NetworkBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    [ClientRpc]
+    private void SetNormalH(GameObject instantiatedPuck, ECscript ecscript)
+    {
+        instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
     }
 }
