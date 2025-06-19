@@ -29,6 +29,17 @@ public class PuckScript : NetworkBehaviour
     private TowerHandler towerHandler;
 
 
+    [Header("Special Pucks")] 
+    public puckVariants variant;
+
+    public PortalPuck portalPuck;
+    public enum puckVariants
+    {
+        Normal,
+        Magnet,
+        Portal,
+        Healer
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -36,6 +47,10 @@ public class PuckScript : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
         networkManager = GameObject.Find("NetworkManager").GetComponent<CustomNetworkManager>();
         towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
+        if (gameObject.GetComponent<PortalPuck>() != null)
+        {
+            portalPuck = gameObject.GetComponent<PortalPuck>();
+        }
         //outline.enabled = false;
 
         //  ChangePosToStorage(transform.parent);
@@ -135,8 +150,6 @@ public class PuckScript : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void ChangePosToBoard(Transform newPos)
     {
-       
-        
         CanBeDrag();
         transform.parent = newPos;
         rb.linearVelocity = Vector3.zero;
@@ -161,17 +174,65 @@ public class PuckScript : NetworkBehaviour
             }
         }
 
-        if (collision.collider.tag == "Wall")
+        if (collision.collider.tag == "Wall") //Checks if we hit a wall
         {
-            WallHit(collision.contacts[0].point);
+            WallHit(collision.contacts[0].point); //Spawns VFX
+
+            WallColl(); //Checks if a special collision should happen
         }
 
-        if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck")
+        if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck") //Checks if we hit a puck
         {
-            PuckHit(collision.contacts[0].point);
+            PuckHit(collision.contacts[0].point); //Spawns VFX
+            PuckColl(collision.gameObject); //Checks if a special collision should happen
         }
 
         
+    }
+
+    private void WallColl() //Calls special puck functions on wall collisions
+    {
+        switch (variant)
+        {
+            case puckVariants.Normal:
+                break;
+            case puckVariants.Magnet:
+                break;
+            case puckVariants.Portal:
+                Debug.Log("Wall Coll");
+                portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                break;
+            case puckVariants.Healer:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private void PuckColl(GameObject other) //Calls special wall collisions on puck collisons
+    {
+        switch (variant)
+        {
+            case puckVariants.Normal:
+                portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                break;
+            case puckVariants.Magnet:
+                portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                break;
+            case puckVariants.Portal:
+                Debug.Log("Puck Coll");
+                portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                if (other.GetComponent<ECscript>() != null)
+                {
+                   portalPuck.StoreTheEnemyPuck(other.GetComponent<ECscript>()); //Stores enemy puck
+                   other.GetComponent<ECscript>().DeleteStuff();
+                }
+                break;
+            case puckVariants.Healer:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
     [Command(requiresAuthority = false)]
