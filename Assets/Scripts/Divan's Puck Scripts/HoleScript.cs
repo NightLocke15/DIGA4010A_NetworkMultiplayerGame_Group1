@@ -66,20 +66,7 @@ public class HoleScript : NetworkBehaviour
         NetworkServer.Spawn(instantiatedPuck);
         if (ecscript.isLeader == true)
         {
-            switch (type)
-            {
-                case ECscript.EnemyTypes.Goblin:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
-                    break;
-                case ECscript.EnemyTypes.Orc:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;
-                    break;
-                case ECscript.EnemyTypes.Ogre:
-                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+           SetVarient(instantiatedPuck, ecscript);
         }
 
         else
@@ -89,5 +76,25 @@ public class HoleScript : NetworkBehaviour
         
         
         instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storelocation);
+    }
+
+    [ClientRpc]
+    private void SetVarient(GameObject instantiatedPuck, ECscript ecscript)
+    {
+        ECscript.EnemyTypes type = ecscript.enemyType;
+        switch (type)
+        {
+            case ECscript.EnemyTypes.Goblin:
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
+                break;
+            case ECscript.EnemyTypes.Orc:
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;
+                break;
+            case ECscript.EnemyTypes.Ogre:
+                instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }
