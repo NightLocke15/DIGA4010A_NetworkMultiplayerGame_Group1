@@ -214,10 +214,10 @@ public class PuckScript : NetworkBehaviour
         switch (variant)
         {
             case puckVariants.Normal:
-                portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+              //  portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
                 break;
             case puckVariants.Magnet:
-                portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+             //   portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
                 break;
             case puckVariants.Portal:
                 Debug.Log("Puck Coll");

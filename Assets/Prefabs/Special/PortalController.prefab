@@ -54,6 +54,8 @@ MonoBehaviour:
   goblinPuck: {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
   orcPuck: {fileID: 0}
   ogrePuck: {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
+  player1Material: {fileID: 2100000, guid: 3af8caeca874fed4bb2cf77613f0210b, type: 2}
+  player2Material: {fileID: 2100000, guid: bc176c4c6a31d384da381189acfddc12, type: 2}
 --- !u!114 &7325396175406360265
 MonoBehaviour:
   m_ObjectHideFlags: 0

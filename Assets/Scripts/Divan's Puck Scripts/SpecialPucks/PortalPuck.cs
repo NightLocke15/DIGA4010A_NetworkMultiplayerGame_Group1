@@ -59,43 +59,37 @@ public class PortalPuck : NetworkBehaviour
         Debug.Log("Spawn before bool check");
         if (canCreatePortal)
         {
+            GameObject porContainer = new GameObject();
+            PortalController portalController = new PortalController();
             Debug.Log("Spawn after bool check");
-            GameObject porContainer = Instantiate(portalParent, spawnPoint.position, Quaternion.identity);
-            PortalController portalController = porContainer.GetComponent<PortalController>();
+           
+            porContainer = Instantiate(portalParent, spawnPoint.position, Quaternion.identity);
+            portalController = porContainer.GetComponent<PortalController>();
             NetworkServer.Spawn(porContainer);
             portalController.SetStoreLoc(storeLocation);
+            
             for (int i = 0; i < portalCount; i++)
             {
-                Vector3 spawnPointPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + 5f, spawnPoint.position.z);
+                Vector3 spawnPointPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + 2f, spawnPoint.position.z);
                 GameObject portal = Instantiate(portalPrefab, spawnPointPos, Quaternion.identity, porContainer.transform);
-
-                bool isPlayer1 = false;
-                if (storeLocation.name == "PL1_storage")
-                {
-                    isPlayer1 = true;
-                    SetMaterialOnPP(isPlayer1, portal);
-                }
-                else
-                {
-                    isPlayer1 = false;
-                    SetMaterialOnPP(!isPlayer1, portal);
-                   // portal.GetComponent<MeshRenderer>().material = player2Material;
-                }
-                portalController.AddPuckToList(portal);
                 NetworkServer.Spawn(portal);
+                // SetMaterialOnPP(portal);
+                portalController.AddPuckToList(portal, i);
             }
             
-            
+
             Debug.Log("End Spawn");
             DestroyObject();
             //NetworkServer.Destroy(gameObject);
         }
     }
+    
 
     [ClientRpc]
-    private void SetMaterialOnPP(bool isPlayer1, GameObject portal)
+    private void SetMaterialOnPP(GameObject portal)
     {
-        if (isPlayer1)
+        Debug.Log(storeLocation.name);
+        if (isServer)
         {
             portal.GetComponent<MeshRenderer>().material = player1Material;
         }
