@@ -1,0 +1,164 @@
+using UnityEngine;
+using Mirror;
+using UnityEngine.Serialization;
+
+public class PortalPuck : NetworkBehaviour
+{
+    [Header("Portal")] [SerializeField]
+    private GameObject portalPrefab, portalParent;
+
+    [SerializeField] private GameObject goblinPuck;
+     [SerializeField] private GameObject ogrePrefab;
+    [SerializeField] private GameObject orcPuck;
+
+    [SerializeField] private Transform storeLocation;
+
+    [SerializeField] private bool usePuckVersion = true;
+    [SerializeField] private bool canCreatePortal = false;
+
+    [SerializeField] private int portalCount = 3;
+
+    [SerializeField] private float adjustHeight = 2f;
+    
+    [SerializeField]private Material player1Material, player2Material;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    [Command(requiresAuthority = false)]
+    public void ReleasedInWild(Transform plStorePos)
+    {
+        RPC_ReleasedInWild(plStorePos);
+    }
+
+    [ClientRpc]
+    private void RPC_ReleasedInWild(Transform plStorePos)
+    {
+        Debug.Log("we did this command");
+        canCreatePortal = true;
+        storeLocation = plStorePos;
+    }
+
+    [Command(requiresAuthority = false)]
+    public void SpawnThePortalPucks(Transform spawnPoint)
+    {
+        RPC_SpawnPortalPuck(spawnPoint);
+    }
+
+    [ClientRpc]
+    private void RPC_SpawnPortalPuck(Transform spawnPoint)
+    {
+        Debug.Log("Spawn before bool check");
+        if (canCreatePortal)
+        {
+            Debug.Log("Spawn after bool check");
+            GameObject porContainer = Instantiate(portalParent, spawnPoint.position, Quaternion.identity);
+            PortalController portalController = porContainer.GetComponent<PortalController>();
+            NetworkServer.Spawn(porContainer);
+            portalController.SetStoreLoc(storeLocation);
+            for (int i = 0; i < portalCount; i++)
+            {
+                Vector3 spawnPointPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + 5f, spawnPoint.position.z);
+                GameObject portal = Instantiate(portalPrefab, spawnPointPos, Quaternion.identity, porContainer.transform);
+                
+                if (storeLocation.name == "PL1_storage")
+                {
+                    portal.GetComponent<MeshRenderer>().material = player1Material;
+                }
+                else
+                {
+                    portal.GetComponent<MeshRenderer>().material = player2Material;
+                }
+                portalController.AddPuckToList(portal);
+                NetworkServer.Spawn(portal);
+            }
+            
+            
+            Debug.Log("End Spawn");
+            DestroyObject();
+            //NetworkServer.Destroy(gameObject);
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    private void DestroyObject()
+    {
+        NetworkServer.Destroy(gameObject);
+    }
+
+  
+
+    [Server]
+    public void StoreTheOtherPuck(PuckScript script)
+    {
+        script.ChangePosToStorage(storeLocation);
+    }
+
+    [Server]
+    public void StoreTheEnemyPuck(ECscript ecscript)
+    {
+        Debug.Log("Store enemy start");
+        ECscript.EnemyTypes type = ecscript.enemyType;
+        GameObject puck = new GameObject();
+        GameObject instantiatedPuck = new GameObject();
+        switch (type)
+        {
+            case ECscript.EnemyTypes.Goblin:
+                puck = goblinPuck;
+                instantiatedPuck = Instantiate(puck);
+                break;
+            case ECscript.EnemyTypes.Orc:
+                instantiatedPuck = Instantiate(puck);
+                puck = orcPuck;
+                break;
+            case ECscript.EnemyTypes.Ogre:
+                instantiatedPuck = gameObject;
+                puck = ogrePrefab;
+                NetworkServer.Destroy(gameObject);
+                break;
+            default:
+               break;
+        }
+
+       // GameObject instantiatedPuck = new GameObject();
+     //   instantiatedPuck = Instantiate(puck);
+        if (ecscript.isLeader == true)
+        {
+            switch (type)
+            {
+                case ECscript.EnemyTypes.Goblin:
+                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
+                    break;
+                case ECscript.EnemyTypes.Orc:
+                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;
+                    break;
+                case ECscript.EnemyTypes.Ogre:
+                    instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        else
+        {
+            instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+        }
+
+        if (instantiatedPuck != null)
+        {
+            NetworkServer.Spawn(instantiatedPuck);
+            instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
+        }
+        
+        Debug.Log("Store enemy end");
+    }
+}

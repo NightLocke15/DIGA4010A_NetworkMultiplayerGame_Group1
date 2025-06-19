@@ -4828,6 +4828,9 @@ MonoBehaviour:
   - {fileID: 618699028185002727, guid: b6f045b8d5090bb4a87cbad97f7af4cc, type: 3}
   - {fileID: 2553680312261272050, guid: e180e77b77a33244abf0b85d3115f9d9, type: 3}
   - {fileID: 3717427588004688641, guid: 5458f40223bf63d4e92670567a728d65, type: 3}
+  - {fileID: 7001828546882617282, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+  - {fileID: 7705023387640981969, guid: 511fcb9f2a77f98409de2be31ccf582e, type: 3}
+  - {fileID: 7938673590062367663, guid: 5b50c65e61f31a44b9caf597abd5f91d, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -9716,6 +9719,7 @@ MonoBehaviour:
   towerHealth: 10
   towerHealthDisc: {fileID: 5034481018591791539, guid: 0ae493be2c6ce404cbae2ed84a3f7da3, type: 3}
   onHitTower: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
+  turnOrderManager: {fileID: 0}
 --- !u!23 &1166196102
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12726,7 +12730,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  goblinChance: 50
+  goblinChance: 0
   orcChance: 0
   ogreChance: 50
   spawnAmount: 0
@@ -12739,8 +12743,6 @@ MonoBehaviour:
   towerTransform: {fileID: 1166196099}
   enemyParent: {fileID: 0}
   agentScripts: []
-  increaseSpeed: 0
-  increaseMovement: 2
   menuScript: {fileID: 417065761}
   destroyPucks: 0
   pucksOnTheboard: {fileID: 590838838}
@@ -15563,6 +15565,67 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2146113864}
   m_Mesh: {fileID: 0}
+--- !u!1001 &7238436187568956684
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -66.86024
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1669300599456387809, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001828546882617282, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: m_Name
+      value: PortalController
+      objectReference: {fileID: 0}
+    - target: {fileID: 7325396175406360265, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+      propertyPath: sceneId
+      value: 1258149871
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -15584,3 +15647,4 @@ SceneRoots:
   - {fileID: 1268144593}
   - {fileID: 11625376}
   - {fileID: 1892779870}
+  - {fileID: 7238436187568956684}

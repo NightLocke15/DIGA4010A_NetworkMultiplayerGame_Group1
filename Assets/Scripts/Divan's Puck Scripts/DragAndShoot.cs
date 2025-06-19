@@ -210,11 +210,10 @@ public class DragAndShoot : NetworkBehaviour
         
                     Vector3 brCorner = new Vector3(placePos.position.x + x,  placePos.transform.position.y, placePos.position.z - z);
                     lineRenderer.SetPosition(3, brCorner);
-                    Debug.DrawLine(blCorner, tlCorner, Color.red);
-                    Debug.DrawLine(tlCorner, trCorner, Color.green);
-                    Debug.DrawLine(trCorner, brCorner, Color.blue);
-                    Debug.DrawLine(brCorner, blCorner, Color.magenta);
-                    
+                    // Debug.DrawLine(blCorner, tlCorner, Color.red);
+                    // Debug.DrawLine(tlCorner, trCorner, Color.green);
+                    // Debug.DrawLine(trCorner, brCorner, Color.blue);
+                    // Debug.DrawLine(brCorner, blCorner, Color.magenta);
                     puckScript.CmdMoveThePuck(placePos.position, -1, moveSpeed, inputDirection, radius);
                 }
             }        
@@ -276,6 +275,22 @@ public class DragAndShoot : NetworkBehaviour
                                 float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
                                     .magnitude; //We get the lenght between start and end pos
                                 float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
+
+                                switch (puckScript.variant)
+                                {
+                                    case PuckScript.puckVariants.Normal:
+                                        break;
+                                    case PuckScript.puckVariants.Magnet:
+                                        break;
+                                    case PuckScript.puckVariants.Portal:
+                                        Debug.Log("Callrelease");
+                                        puckScript.portalPuck.ReleasedInWild(storePos);
+                                        break;
+                                    case PuckScript.puckVariants.Healer:
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
 
                                 if (clampedMag > bufferLenght)
                                 {

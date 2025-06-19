@@ -112,7 +112,13 @@ public class ESscript : NetworkBehaviour
                 enemyObject.GetComponentInChildren<AScript>().targetTransform = towerTransform;
                 enemyObject.GetComponentInChildren<ECscript>().turnOrderManager = turnOrderManager;
                 enemyObject.GetComponentInChildren<ECscript>().es_Script = this;
-                enemyObject.GetComponentInChildren<AScript>().agent.enabled = false; 
+                enemyObject.GetComponentInChildren<AScript>().agent.enabled = false;
+
+                if (i + 1 == spawnAmount)
+                {
+                    enemyObject.GetComponentInChildren<ECscript>().isLeader = true;
+                }
+                
                 NetworkServer.Spawn(enemyObject);
             }
             

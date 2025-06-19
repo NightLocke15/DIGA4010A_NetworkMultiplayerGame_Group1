@@ -28,6 +28,9 @@ public class ECscript : NetworkBehaviour
     [Header("Collision Variables")] [SerializeField]
     private GameObject onTowerHit;
     private TowerHandler towerHandler;
+    
+    [Header("Leader Variables")]
+    public bool isLeader = false;
 
     public enum EnemyTypes
     {

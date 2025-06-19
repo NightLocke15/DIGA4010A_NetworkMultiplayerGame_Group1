@@ -1,15 +1,14 @@
-using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Mirror;
 using Unity.VisualScripting;
-using UnityEngine;
-using Random = UnityEngine.Random;
 
-public class HoleScript : NetworkBehaviour
+public class PortalController : NetworkBehaviour
 {
-    [Header("Variables")] [SerializeField] private Transform storelocation;
+    [SerializeField] private Transform storeLoc;
+    public List<GameObject> portalPucks = new List<GameObject>();
 
     [SerializeField] private GameObject goblinPuck, orcPuck, ogrePuck;
-    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,49 +20,75 @@ public class HoleScript : NetworkBehaviour
     {
         
     }
-    
-    private void OnTriggerEnter(Collider other)
-    {
-       GameObject puck = other.gameObject;
 
-       if (puck.GetComponent<ECscript>())
-       {
-           //ECscript.EnemyTypes enemyType = puck.GetComponent<ECscript>().enemyType;
-           CmdSpawn(puck.GetComponent<ECscript>());
-           puck.GetComponent<ECscript>().DeleteStuff();
-           return;
-       }
-       
-       
-       if (puck.GetComponent<PuckScript>() != null)
-       {
-           puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation);
-       }
+    [Server]
+    public void SetStoreLoc(Transform storeLoc)
+    {
+        this.storeLoc = storeLoc;
     }
 
-    [Command(requiresAuthority = false)]
-    private void CmdSpawn(ECscript ecscript)
+    [Server]
+    public void AddPuckToList(GameObject puck)
     {
-      //  Debug.Log(ecscript.gameObject.name);
+        portalPucks.Add(puck);
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Puck")
+        {
+            StoreThePuck(collision.gameObject.GetComponent<PuckScript>());
+            RemovePuckFromList();
+        }
+        
+        else if (collision.gameObject.tag == "Enemy")
+        {
+            ECscript eCscript = collision.gameObject.GetComponent<ECscript>();
+            StoreTheEnemyPuck(eCscript);
+            eCscript.DeleteStuff();
+            RemovePuckFromList();
+        }
+    }
+
+    [Server]
+    private void RemovePuckFromList()
+    {
+        NetworkServer.Destroy(portalPucks[0]);
+
+        if (portalPucks.Count < 1)
+        {
+            NetworkServer.Destroy(gameObject);
+        }
+    }
+    
+    [Server]
+    public void StoreThePuck(PuckScript script)
+    {
+        script.ChangePosToStorage(storeLoc);
+    }
+
+    [Server]
+    public void StoreTheEnemyPuck(ECscript ecscript)
+    {
         ECscript.EnemyTypes type = ecscript.enemyType;
         GameObject puck = new GameObject();
         switch (type)
         {
             case ECscript.EnemyTypes.Goblin:
-               puck = goblinPuck;
+                puck = goblinPuck;
                 break;
             case ECscript.EnemyTypes.Orc:
                 puck = orcPuck;
                 break;
             case ECscript.EnemyTypes.Ogre:
-               puck = ogrePuck;
+                puck = ogrePuck;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                break;
         }
         
         GameObject instantiatedPuck = Instantiate(puck);
-        NetworkServer.Spawn(instantiatedPuck);
         if (ecscript.isLeader == true)
         {
             switch (type)
@@ -78,7 +103,7 @@ public class HoleScript : NetworkBehaviour
                     instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
         }
 
@@ -87,7 +112,9 @@ public class HoleScript : NetworkBehaviour
             instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
         }
         
+        NetworkServer.Spawn(instantiatedPuck);
+        instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLoc);;
+            
         
-        instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storelocation);
     }
 }
