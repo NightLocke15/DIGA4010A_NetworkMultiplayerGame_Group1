@@ -32,6 +32,7 @@ public class PuckScript : NetworkBehaviour
     [Header("Special Pucks")] 
     public puckVariants variant;
     public bool healerAdd;
+    public GameObject leaderCircle;
 
     public PortalPuck portalPuck;
     public enum puckVariants

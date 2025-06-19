@@ -31,6 +31,7 @@ public class ECscript : NetworkBehaviour
     
     [Header("Leader Variables")]
     public bool isLeader = false;
+    public GameObject particles;
 
     public enum EnemyTypes
     {

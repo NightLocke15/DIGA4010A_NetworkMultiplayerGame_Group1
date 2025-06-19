@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 327107399808254293, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+      propertyPath: m_UseCustomVertexStreams
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 547728284452969169, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
       propertyPath: m_Mesh
       value: 
