@@ -53,7 +53,7 @@ public class PortalPuck : NetworkBehaviour
         RPC_SpawnPortalPuck(spawnPoint);
     }
 
-    [ClientRpc]
+    [Server]
     private void RPC_SpawnPortalPuck(Transform spawnPoint)
     {
         Debug.Log("Spawn before bool check");
@@ -68,14 +68,18 @@ public class PortalPuck : NetworkBehaviour
             {
                 Vector3 spawnPointPos = new Vector3(spawnPoint.position.x, spawnPoint.position.y + 5f, spawnPoint.position.z);
                 GameObject portal = Instantiate(portalPrefab, spawnPointPos, Quaternion.identity, porContainer.transform);
-                
+
+                bool isPlayer1 = false;
                 if (storeLocation.name == "PL1_storage")
                 {
-                    portal.GetComponent<MeshRenderer>().material = player1Material;
+                    isPlayer1 = true;
+                    SetMaterialOnPP(isPlayer1, portal);
                 }
                 else
                 {
-                    portal.GetComponent<MeshRenderer>().material = player2Material;
+                    isPlayer1 = false;
+                    SetMaterialOnPP(!isPlayer1, portal);
+                   // portal.GetComponent<MeshRenderer>().material = player2Material;
                 }
                 portalController.AddPuckToList(portal);
                 NetworkServer.Spawn(portal);
@@ -85,6 +89,20 @@ public class PortalPuck : NetworkBehaviour
             Debug.Log("End Spawn");
             DestroyObject();
             //NetworkServer.Destroy(gameObject);
+        }
+    }
+
+    [ClientRpc]
+    private void SetMaterialOnPP(bool isPlayer1, GameObject portal)
+    {
+        if (isPlayer1)
+        {
+            portal.GetComponent<MeshRenderer>().material = player1Material;
+        }
+
+        else
+        {
+            portal.GetComponent<MeshRenderer>().material = player2Material;
         }
     }
 
