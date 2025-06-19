@@ -37,7 +37,9 @@ public class HoleScript : NetworkBehaviour
        
        if (puck.GetComponent<PuckScript>() != null)
        {
-           puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation);
+            puck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+            puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation);
+            puck.transform.GetChild(2).gameObject.SetActive(false);
        }
     }
 
