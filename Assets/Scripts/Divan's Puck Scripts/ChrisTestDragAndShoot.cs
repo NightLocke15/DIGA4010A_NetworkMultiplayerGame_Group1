@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class ChrisTestDragAndShoot : NetworkBehaviour
 {
+    private LineRenderer aimLine;
+
     //Reference mirror billiards example
     private bool Mouse(out Vector3 mousePos)
     {
@@ -21,18 +23,26 @@ public class ChrisTestDragAndShoot : NetworkBehaviour
     }
 
     [ClientCallback]
+    private void OnMouseDown()
+    {
+        aimLine.SetPosition(0, transform.position);
+        aimLine.SetPosition(1, transform.position);
+        aimLine.gameObject.SetActive(true);
+    }
+
+    [ClientCallback]
     private void OnMouseDrag()
     {
         if (!Mouse(out Vector3 currentPos))
         {
             return;
         }
-    }
 
-    [Command(requiresAuthority =false)]
-    private void CmdForce(Vector3 frc) 
-    {
-        transform.GetComponent<Rigidbody>().AddForce(frc, ForceMode.Impulse);
+        aimLine.SetPosition(0, transform.position);
+        aimLine.SetPosition(1, new Vector3((transform.position - (currentPos - transform.position).normalized * (currentPos - transform.position).magnitude * 2).x,
+                            transform.position.y,
+                            (transform.position - (currentPos - transform.position).normalized * (currentPos - transform.position).magnitude * 2).z));
+
     }
 
     [ClientCallback]
@@ -43,11 +53,6 @@ public class ChrisTestDragAndShoot : NetworkBehaviour
             return;
         }
 
-        Vector3 startPos = transform.position;
-        Vector3 d = startPos - currentPos;
-        Vector3 force = d * 10;
-        force = Vector3.ClampMagnitude(force, 50);
-
-        CmdForce(force);
+        aimLine.gameObject.SetActive(false);
     }
 }

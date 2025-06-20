@@ -1,23 +1,44 @@
+using System.Collections;
 using Mirror;
 using UnityEngine;
 
 public class TowerHandler : NetworkBehaviour
 {
-    [SerializeField] private EnemySpawning spawningScript;
-    [SerializeField] private int towerHealth = 100;
+    [SyncVar]
+    public int towerHealth = 10;
     [SerializeField] private ParticleSystem onHitTower;
+    [SerializeField] private GameObject towerHealthDisc;
+    private float height = 1;
 
-    private void Start()
+    public void Start()
     {
-     
+        for (int i = 0; i < towerHealth; i++)
+        {
+            CmdSpawnTower();
+        }
     }
 
     private void Update()
     {
-        if (towerHealth <= 0)
+        
+    }
+
+    [Command (requiresAuthority = false)]
+    public void CmdSpawnTower()
+    {
+        RpcSpawnTower();
+    }
+
+    [ClientRpc]
+    public void RpcSpawnTower()
+    {
+        if (isServer)
         {
-            Destroy(gameObject);
+            GameObject health = Instantiate(towerHealthDisc, new Vector3(4.26f, 10f + height, -61.93f), Quaternion.identity);
+            NetworkServer.Spawn(health);
+            height += 1;
         }
+            
     }
 
     //[ClientCallback]
@@ -26,14 +47,36 @@ public class TowerHandler : NetworkBehaviour
     //    if (collision.collider.tag == "Enemy")
     //    {
     //        towerHealth -= 10;
-    //        ParticleSystem system = Instantiate(onHitTower, collision.contacts[0].point, onHitTower.transform.rotation);
-    //        Destroy(collision.gameObject); //Destroy the enemy when it hit's the tower
+    //        DestroyEnemyCmd(collision.gameObject);
+    //        if (towerHealth <= 0)
+    //        {
+    //            NetworkServer.Destroy(gameObject);
+    //        }
     //    }
 
     //    if (collision.collider.tag == "Puck")
     //    {
-    //        ParticleSystem system = Instantiate(onHitTower, collision.contacts[0].point, onHitTower.transform.rotation);
     //        towerHealth -= 10;
+    //        if (towerHealth <= 0)
+    //        {
+    //            NetworkServer.Destroy(gameObject);
+    //        }
     //    }
-    //}    
+    //}
+
+    //[Command(requiresAuthority = false)]
+    //public void DestroyEnemyCmd(GameObject gameObject)
+    //{
+    //    DestroyEnemyRpc(gameObject);
+    //}
+
+    //[Server]
+    //public void DestroyEnemyRpc(GameObject gameObject)
+    //{
+    //    if (isServer)
+    //    {
+    //        NetworkServer.Destroy(gameObject); //Destroy the enemy when it hit's the tower
+    //    }
+        
+    //}
 }

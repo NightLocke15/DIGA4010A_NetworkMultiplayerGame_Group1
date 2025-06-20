@@ -9,6 +9,9 @@ TagManager:
   - Ally
   - Tower
   - Manager
+  - Wall
+  - Floor
+  - StoredPuck
   layers:
   - Default
   - TransparentFX

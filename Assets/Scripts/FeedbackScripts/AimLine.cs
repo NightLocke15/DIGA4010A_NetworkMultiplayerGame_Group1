@@ -1,64 +1,91 @@
 using UnityEngine;
 using Mirror;
+using static Unity.VisualScripting.Member;
 
 public class AimLine : NetworkBehaviour
 {
-    [SerializeField] private Camera playerCamera;
-    private Vector3 mousePos;
-    private Vector3 worldPos;
-    private GameObject chosenPuck;
-    private LineRenderer aimLine;
+    [SerializeField] private LineRenderer aimLine;
 
     private void Start()
     {
-        
+        aimLine.gameObject.SetActive(false);
     }
 
-    private void Update()
+    //Title: White Ball (From Billiards Example in Mirror
+    //Author: Mirror Package (Open Source)
+    //Date: 2 May 2025
+    //Availability: In Examples folder in Mirror Package / https://mirror-networking.gitbook.io/docs/manual/examples/billiards 
+    //Usage: Used it as reference to make aim line with line renderer
+    // private bool Mouse(out Vector3 mousePos)
+    // {
+    //     Ray ray = GameObject.Find("PlayerCamera").GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+    //     Plane plane = new Plane(Vector3.up, transform.position);
+    //
+    //     if (plane.Raycast(ray, out float distance))
+    //     {
+    //         mousePos = ray.GetPoint(distance);
+    //         return true;
+    //     }
+    //     mousePos = default;
+    //     return false;
+    // }
+
+    // [ClientCallback]
+    // private void OnMouseDown()
+    // {
+    //     if (transform.GetComponent<PuckScript>().canDrag == true)
+    //     {
+    //         aimLine.SetPosition(0, transform.position);
+    //         aimLine.SetPosition(1, transform.position);
+    //         aimLine.gameObject.SetActive(true);
+    //     }        
+    // }
+
+    [ClientCallback]
+    public void StartAimLine()
     {
-        //https://stackoverflow.com/questions/75603761/unity-screentoworldpoint-function-always-returns-the-camera-position-even-with-a
-        if (isLocalPlayer)
-        {
-            //mousePos = this.gameObject.GetComponent<DragAndShoot>().currentMouse.position.ReadValue();
-        }
-        
-        Ray ray = playerCamera.ScreenPointToRay(mousePos);
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            worldPos = hit.point;
+        aimLine.SetPosition(0, transform.position);
+        aimLine.SetPosition(1, transform.position);
+        aimLine.gameObject.SetActive(true);
+    }
 
-            if (hit.collider.tag == "Puck")
-            {
-                chosenPuck = hit.collider.gameObject;
-                Debug.Log(chosenPuck.name);
-                aimLine = chosenPuck.transform.GetChild(0).GetComponent<LineRenderer>();               
-            }
+    // [ClientCallback]
+    // private void OnMouseDrag()
+    // {
+    //     if (!Mouse(out Vector3 currentPos))
+    //     {
+    //         return;
+    //     }
+    //
+    //     if (transform.GetComponent<PuckScript>().canDrag == true)
+    //     {
+    //         aimLine.SetPosition(0, transform.position);
+    //         aimLine.SetPosition(1, new Vector3((transform.position - (currentPos - transform.position).normalized * (currentPos - transform.position).magnitude * 2).x,
+    //                             transform.position.y,
+    //                             (transform.position - (currentPos - transform.position).normalized * (currentPos - transform.position).magnitude * 2).z));
+    //     }
+    // }
 
-            if (chosenPuck != null)
-            {
-                if (Input.GetMouseButton(0)) 
-                {
-                    if (aimLine != null)
-                    {
-                        aimLine.enabled = true;
-                        aimLine.SetPosition(0, chosenPuck.transform.position);
-                        aimLine.SetPosition(1, new Vector3((chosenPuck.transform.position - (worldPos - chosenPuck.transform.position).normalized * (worldPos - chosenPuck.transform.position).magnitude * 2).x,
-                            chosenPuck.transform.position.y,
-                            (chosenPuck.transform.position - (worldPos - chosenPuck.transform.position).normalized * (worldPos - chosenPuck.transform.position).magnitude * 2).z));
-                    }
-                }
-                else if (Input.GetMouseButtonUp(0)) 
-                {
-                    if (aimLine != null)
-                    {
-                        aimLine.enabled = false;
-                    }                        
-                }
-                
-            }
-            
-        }
+    public void UpdateAimLine(float clampedMag, Vector3 direction, float force, Vector3 startPos)
+    {
+        aimLine.SetPosition(0, transform.position);
+        aimLine.SetPosition(1,new Vector3((transform.position.x+ (direction.x * clampedMag)), transform.position.y, (transform.position.z + (direction.z * clampedMag))));
+    }
 
-        
+    // [ClientCallback]
+    // private void OnMouseUp()
+    // {
+    //     if (!Mouse(out Vector3 currentPos))
+    //     {
+    //         return;
+    //     }
+    //
+    //     aimLine.gameObject.SetActive(false);
+    // }
+
+    [ClientCallback]
+    public void StopAimLine()
+    {
+        aimLine.gameObject.SetActive(false);
     }
 }

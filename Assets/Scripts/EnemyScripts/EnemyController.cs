@@ -9,6 +9,7 @@ public class EnemyController : NetworkBehaviour
     #region Enemy Information
     public bool bigEnemy;
     [SerializeField] private Material bigEnemyColour;
+    public GameObject TheOrc;
 
 
     public bool smallEnemy;
@@ -25,27 +26,47 @@ public class EnemyController : NetworkBehaviour
     [SerializeField] private GameObject target;
     private NavMeshAgent enemyAgent;
     private NavMeshSurface navSurface;
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip moveSound;
 
-    //[ClientRpc]
+   // [ClientRpc]
     private void Start()
     {
+       
+    }
+
+    [Command(requiresAuthority = false)]
+    public void SpawnedIn(int BH)
+    {
+        RpcSpawnedIn(BH);
+    }
+
+    [ClientRpc]
+    public void RpcSpawnedIn(int BH)
+    {
+        
         //Finding some of the items needed in the hierarchy
         enemyAgent = gameObject.GetComponent<NavMeshAgent>();
         navSurface = GameObject.Find("EnemyNavmesh").GetComponent<NavMeshSurface>();
         target = GameObject.Find("Tower");
 
-        if (bigEnemy) //If a big enemy is spawned (see EnemySpawning)
+        if (BH == 0) //If a big enemy is spawned (see EnemySpawning)
         {
+            bigEnemy = true;
+           
             gameObject.transform.localScale = new Vector3(adjustBig, gameObject.transform.localScale.y, adjustBig); // make the size of the enemy puck bigger
-            
+            gameObject.GetComponent<Rigidbody>().mass = gameObject.GetComponent<Rigidbody>().mass * adjustBig;
 
             //Making the bigger enemy slower by decreasing the speed and acceleration
-            enemyAgent.speed = 2;
-            enemyAgent.acceleration = 4;
+            enemyAgent.speed = 6;
+            enemyAgent.acceleration = 8;
         }
-        else if (smallEnemy) //If a small enemy is spawned (see EnemySpawning)
+        else if (BH == 1) //If a small enemy is spawned (see EnemySpawning)
         {
+            smallEnemy = true;
+            
             gameObject.transform.localScale = new Vector3(adjustSmall, gameObject.transform.localScale.y, adjustSmall); // make the size of the enemy smaller
+            gameObject.GetComponent<Rigidbody>().mass = gameObject.GetComponent<Rigidbody>().mass * adjustSmall;
 
             //Making the smaller enemy slower by decreasing the speed and acceleration
             enemyAgent.speed = 10;
@@ -59,6 +80,7 @@ public class EnemyController : NetworkBehaviour
         {
             moveTime += Time.deltaTime;
             EnemyMove();
+            PlayMoveSound();
         }
         else
         {
@@ -72,10 +94,13 @@ public class EnemyController : NetworkBehaviour
         }
     }
 
+    [ClientCallback]
     private void EnemyMove()
     {
+        
         navSurface.BuildNavMesh(); // Rebuilding the NavMesh in the case that there are new stationary objects on the board that the enemies need to avoid
         enemyAgent.enabled = true; // Reenabling the enemy navmesh (it is disabled when not moving in order to prevent it sliding around out of turn)
+        
 
         if (enemyAgent.enabled) // Checking if the navmesh agent is enabled
         {
@@ -90,5 +115,18 @@ public class EnemyController : NetworkBehaviour
             enemyAgent.SetDestination(transform.position); //When stopping the enemy's movement, setting it's destination to it's current destination
         }            
         enemyAgent.enabled = false; // Disabling the nav mesh agent, to prevent the enemy sliding around out of turn.
+    }
+
+    [Command(requiresAuthority =false)]
+    public void PlayMoveSound()
+    {
+        PlayMoveSoundRpc();
+    }
+
+    [ClientRpc]
+    public void PlayMoveSoundRpc()
+    {
+        transform.GetComponent<AudioSource>().clip = moveSound;
+        transform.GetComponent<AudioSource>().Play();
     }
 }
