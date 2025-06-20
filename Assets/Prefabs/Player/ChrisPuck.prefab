@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 6372604442020403187}
   - component: {fileID: -7907217953403370168}
   - component: {fileID: 2270149550160280082}
+  - component: {fileID: 4427016295673463461}
   m_Layer: 3
   m_Name: ChrisPuck
   m_TagString: StoredPuck
@@ -274,6 +275,9 @@ MonoBehaviour:
   clampX: 5
   clampZ: 2.5
   variant: 0
+  healerAdd: 0
+  leaderCircle: {fileID: 0}
+  collWithWall: 1
   portalPuck: {fileID: 0}
 --- !u!114 &-4370584505178754850
 MonoBehaviour:
@@ -438,6 +442,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outline: {fileID: -7907217953403370168}
   puckScript: {fileID: 5510505782007248028}
+--- !u!208 &4427016295673463461
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285002100531235846}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 2
 --- !u!1 &6412110799630239388
 GameObject:
   m_ObjectHideFlags: 0

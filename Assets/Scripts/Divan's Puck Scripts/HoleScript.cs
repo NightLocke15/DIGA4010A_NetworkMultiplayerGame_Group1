@@ -38,8 +38,10 @@ public class HoleScript : NetworkBehaviour
        if (puck.GetComponent<PuckScript>() != null)
        {
             puck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
-            puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation);
-            puck.transform.GetChild(2).gameObject.SetActive(false);
+            //puck.GetComponentInChildren<PuckScript>().leaderCircle.SetActive(false);
+            puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation); 
+            
+            //puck.transform.GetChild(2).gameObject.SetActive(false);
        }
     }
 
@@ -83,6 +85,7 @@ public class HoleScript : NetworkBehaviour
     [ClientRpc]
     private void SetVarient(GameObject instantiatedPuck, ECscript ecscript)
     {
+        instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(false);
         ECscript.EnemyTypes type = ecscript.enemyType;
         switch (type)
         {
@@ -107,5 +110,6 @@ public class HoleScript : NetworkBehaviour
     private void SetNormalH(GameObject instantiatedPuck, ECscript ecscript)
     {
         instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+       // instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(false);
     }
 }

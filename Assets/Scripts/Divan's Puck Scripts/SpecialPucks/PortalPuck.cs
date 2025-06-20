@@ -178,6 +178,7 @@ public class PortalPuck : NetworkBehaviour
         {
             case ECscript.EnemyTypes.Goblin:
                 instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
+               
                // DestroyObject();
                 break;
             case ECscript.EnemyTypes.Orc:
@@ -191,6 +192,7 @@ public class PortalPuck : NetworkBehaviour
             default:
                 break;
         }
+        instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(true);
     }
 
     [Command(requiresAuthority = false)]

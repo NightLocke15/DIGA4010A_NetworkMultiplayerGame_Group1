@@ -33,6 +33,7 @@ public class PuckScript : NetworkBehaviour
     public puckVariants variant;
     public bool healerAdd;
     public GameObject leaderCircle;
+    [SerializeField] private bool collWithWall = true;
 
     public PortalPuck portalPuck;
     public enum puckVariants
@@ -189,7 +190,10 @@ public class PuckScript : NetworkBehaviour
         {
             WallHit(collision.contacts[0].point); //Spawns VFX
 
-            WallColl(); //Checks if a special collision should happen
+            if (collWithWall)
+            {
+                WallColl(); //Checks if a special collision should happen
+            }
         }
 
         if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck") //Checks if we hit a puck
@@ -201,7 +205,7 @@ public class PuckScript : NetworkBehaviour
         
     }
 
-    private void WallColl() //Calls special puck functions on wall collisions
+    public void WallColl() //Calls special puck functions on wall collisions
     {
         switch (variant)
         {

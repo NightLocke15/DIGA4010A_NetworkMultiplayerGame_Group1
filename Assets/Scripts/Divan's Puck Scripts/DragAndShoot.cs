@@ -72,6 +72,9 @@ public class DragAndShoot : NetworkBehaviour
 
     [Header("Ping System")]
     [SerializeField] private GameObject Ping;
+    
+    [Header("Special Pucks")]
+    public PuckScript specialPuck;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -187,7 +190,10 @@ public class DragAndShoot : NetworkBehaviour
         
                     Vector3 brCorner = new Vector3(placePos.position.x - x, placePos.transform.position.y, placePos.position.z + z);
                     lineRenderer.SetPosition(3, brCorner);
-                    
+                    Debug.DrawLine(blCorner, tlCorner, Color.red);
+                    Debug.DrawLine(tlCorner, trCorner, Color.green);
+                    Debug.DrawLine(trCorner, brCorner, Color.blue);
+                    Debug.DrawLine(brCorner, blCorner, Color.magenta);
                     puckScript.CmdMoveThePuck(placePos.position, 1, moveSpeed, inputDirection, radius);
                 }
 
@@ -210,10 +216,10 @@ public class DragAndShoot : NetworkBehaviour
         
                     Vector3 brCorner = new Vector3(placePos.position.x + x,  placePos.transform.position.y, placePos.position.z - z);
                     lineRenderer.SetPosition(3, brCorner);
-                    // Debug.DrawLine(blCorner, tlCorner, Color.red);
-                    // Debug.DrawLine(tlCorner, trCorner, Color.green);
-                    // Debug.DrawLine(trCorner, brCorner, Color.blue);
-                    // Debug.DrawLine(brCorner, blCorner, Color.magenta);
+                    Debug.DrawLine(blCorner, tlCorner, Color.red);
+                    Debug.DrawLine(tlCorner, trCorner, Color.green);
+                    Debug.DrawLine(trCorner, brCorner, Color.blue);
+                    Debug.DrawLine(brCorner, blCorner, Color.magenta);
                     puckScript.CmdMoveThePuck(placePos.position, -1, moveSpeed, inputDirection, radius);
                 }
             }        
@@ -279,14 +285,18 @@ public class DragAndShoot : NetworkBehaviour
                                 switch (puckScript.variant)
                                 {
                                     case PuckScript.puckVariants.Normal:
+                                        specialPuck = null;
                                         break;
                                     case PuckScript.puckVariants.Magnet:
+                                        //specialPuck = 
                                         break;
                                     case PuckScript.puckVariants.Portal:
                                         Debug.Log("Callrelease");
+                                        specialPuck = puckScript;
                                         puckScript.portalPuck.ReleasedInWild(storePos);
                                         break;
                                     case PuckScript.puckVariants.Healer:
+                                        specialPuck = puckScript;
                                         break;
                                     default:
                                         throw new ArgumentOutOfRangeException();
@@ -504,6 +514,31 @@ public class DragAndShoot : NetworkBehaviour
             GameObject pingObj = Instantiate(Ping, pos, Quaternion.identity);
             NetworkServer.Spawn(pingObj);
         
+    }
+
+    [Command(requiresAuthority = false)]
+    public void Cmd_EndSpecialPuckPowers()
+    {
+        Rpc_EndSpecialPuckPowers();
+    }
+
+    [ClientRpc]
+    private void Rpc_EndSpecialPuckPowers()
+    {
+        if (specialPuck != null)
+        {
+            Debug.Log(specialPuck.name);
+            specialPuck.WallColl();
+        }
+        else
+        {
+            Debug.LogWarning("Special Puck Powers not found");
+        }
+        specialPuck = null;
+        if (specialPuck == null)
+        {
+            Debug.LogWarning("No Special Puck Powers found");
+        }
     }
 
 }

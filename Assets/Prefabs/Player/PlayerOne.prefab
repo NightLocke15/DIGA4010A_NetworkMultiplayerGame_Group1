@@ -798,7 +798,7 @@ GameObject:
   - component: {fileID: 8574501273887138932}
   m_Layer: 0
   m_Name: PlayerOne
-  m_TagString: Untagged
+  m_TagString: Player_1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -987,6 +987,7 @@ MonoBehaviour:
   turnOrderManager: {fileID: 0}
   haveTakenAShot: 0
   Ping: {fileID: 6963328926172549758, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+  specialPuck: {fileID: 0}
 --- !u!114 &-3839216030010492780
 MonoBehaviour:
   m_ObjectHideFlags: 0

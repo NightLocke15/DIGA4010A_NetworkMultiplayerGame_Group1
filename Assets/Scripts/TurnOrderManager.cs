@@ -50,6 +50,7 @@ public class TurnOrderManager : NetworkBehaviour
    
    [SerializeField]
    private ESscript escript;
+   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -120,8 +121,10 @@ public class TurnOrderManager : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void ChangeTurn()  //Changes the turnOrder
     {
+        
         if (isServer)
         {
+            RunTheSpecialPucks();
             int placeCountPl1 = placeLocPl1.childCount;
             int placeCountPl2 = placeLocPl2.childCount;
             int storeCountPl1 = storeLocPl1.childCount;
@@ -178,6 +181,22 @@ public class TurnOrderManager : NetworkBehaviour
         }
     }
 
+    private void RunTheSpecialPucks()
+    {
+        if (playerTwo == null)
+        {
+            playerTwo = GameObject.FindGameObjectWithTag("Player_2").GetComponent<DragAndShoot>();
+        }
+
+        if (playerOne == null)
+        {
+            playerOne = GameObject.FindGameObjectWithTag("Player_1").GetComponent<DragAndShoot>();
+        }
+        
+        playerTwo.Cmd_EndSpecialPuckPowers();
+        playerOne.Cmd_EndSpecialPuckPowers();
+    }
+    
     public void WaitBeforeChangeTurn() //A buffer before the turn order is changed, so that pucks can finish moving before the turn ends
     {
         shouldChangeOrder = true;

@@ -327,6 +327,7 @@ MonoBehaviour:
   variant: 0
   healerAdd: 0
   leaderCircle: {fileID: 5445979909967871645}
+  collWithWall: 0
   portalPuck: {fileID: 0}
 --- !u!114 &5314393450607210442
 MonoBehaviour:
@@ -569,7 +570,6 @@ GameObject:
   - component: {fileID: 5239629425833977843}
   - component: {fileID: 5977917064968222640}
   - component: {fileID: 999194081239911630}
-  - component: {fileID: 7884923267195594053}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -645,28 +645,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7884923267195594053
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5445979909967871645}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &5907441833803353694
 GameObject:
   m_ObjectHideFlags: 0
