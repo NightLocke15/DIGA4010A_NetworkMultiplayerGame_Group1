@@ -1188,7 +1188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5810706677294906531, guid: 8c427efd287c54045bcd3ff1ba6b47d4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5810706677294906531, guid: 8c427efd287c54045bcd3ff1ba6b47d4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1232,7 +1232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6834333839861128958, guid: 8c427efd287c54045bcd3ff1ba6b47d4, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
