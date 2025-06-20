@@ -31,7 +31,11 @@ public class ECscript : NetworkBehaviour
     
     [Header("Leader Variables")]
     public bool isLeader = false;
-    public GameObject particles;
+    public ParticleSystem particles;
+    [SyncVar]
+    public int noRate = 0;
+    [SyncVar]
+    public int Rate = 100;
 
     public enum EnemyTypes
     {
@@ -60,6 +64,34 @@ public class ECscript : NetworkBehaviour
         {
             turnOrderManager = GameObject.FindWithTag("Manager").GetComponent<TurnOrderManager>();
         }
+
+        
+
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdParticles()
+    {
+        RpcParticles();
+    }
+
+    [ClientRpc]
+    private void RpcParticles()
+    {
+        if (isServer)
+        {
+            if (isLeader)
+            {
+                var emmision = particles.emission;
+                emmision.rateOverTime = Rate;
+            }
+            else
+            {
+                var emmision = particles.emission;
+                emmision.rateOverTime = noRate;
+            }
+        }
+       
     }
 
     [Command(requiresAuthority = false)]
