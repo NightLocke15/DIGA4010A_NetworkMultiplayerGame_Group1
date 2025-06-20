@@ -75,31 +75,6 @@ public class ECscript : NetworkBehaviour
     }
 
     [Command(requiresAuthority = false)]
-    public void CmdParticles()
-    {
-        RpcParticles();
-    }
-
-    [ClientRpc]
-    private void RpcParticles()
-    {
-        if (isServer)
-        {
-            if (isLeader)
-            {
-                var emmision = particles.emission;
-                emmision.rateOverTime = Rate;
-            }
-            else
-            {
-                var emmision = particles.emission;
-                emmision.rateOverTime = noRate;
-            }
-        }
-       
-    }
-
-    [Command(requiresAuthority = false)]
     public void DeleteStuff()
     {
         DestroyYourself();
