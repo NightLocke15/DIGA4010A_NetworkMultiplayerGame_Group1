@@ -20614,8 +20614,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   goblinChance: 50
-  orcChance: 0
-  ogreChance: 0
+  orcChance: 50
+  ogreChance: 50
   spawnAmount: 0
   goblinPrefab: {fileID: 618699028185002727, guid: b6f045b8d5090bb4a87cbad97f7af4cc, type: 3}
   orcPrefab: {fileID: 9147738124939488509, guid: 387d85e4e8a13a8459e12dabddcdc164, type: 3}
