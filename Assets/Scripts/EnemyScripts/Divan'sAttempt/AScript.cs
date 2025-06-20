@@ -30,6 +30,8 @@ public class AScript : NetworkBehaviour
     [Header("Audio")]
     private AudioSource audioSource;
     [SerializeField] private AudioClip moveSound;
+
+    [SerializeField] private Animator animator;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -263,6 +265,9 @@ public class AScript : NetworkBehaviour
  //  [Server]
     public void MoveAgent(Vector3 destination)
     {
+        
+        //animator.transform.LookAt(destination);
+
         if (!isServer)
         {
             return;
@@ -273,8 +278,12 @@ public class AScript : NetworkBehaviour
        {
            connectedEnemy.canMove = true;
            agent.destination = destination;
+            animator.SetInteger("Anim", 1);
+            animator.transform.LookAt(new Vector3(targetTransform.position.x, animator.transform.position.y, targetTransform.transform.position.z));
 
-           if (connectedEnemy.lastEnemy)
+            //animator.transform.LookAt(targetTransform);
+
+            if (connectedEnemy.lastEnemy)
            {
                connectedEnemy.moveDistance += connectedEnemy.increaseMoveDistance;
                connectedEnemy.lastEnemy = false;
@@ -284,7 +293,9 @@ public class AScript : NetworkBehaviour
        else
        {
            agent.destination = destination;
-       }
+            animator.SetInteger("Anim", 0);
+            animator.transform.LookAt(new Vector3(targetTransform.position.x, animator.transform.position.y, targetTransform.transform.position.z));
+        }
         
     }
 
@@ -292,5 +303,6 @@ public class AScript : NetworkBehaviour
     public void StopAgent()
     {
         connectedEnemy.canMove = false;
+        
     }
 }

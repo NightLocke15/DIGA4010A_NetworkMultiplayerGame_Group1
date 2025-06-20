@@ -934,6 +934,7 @@ MonoBehaviour:
   updateSpeed: 1000
   moveSpeed: 5
   moveSound: {fileID: 0}
+  animator: {fileID: 6636584938940742552}
 --- !u!1 &8148342188310563427
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,6 +1230,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 113d917915625d54dbbc65cc75333f73, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6636584938940742552}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 113d917915625d54dbbc65cc75333f73, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3935756133473152703}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 113d917915625d54dbbc65cc75333f73, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 934871443024727240}
   m_SourcePrefab: {fileID: 100100000, guid: 113d917915625d54dbbc65cc75333f73, type: 3}
 --- !u!1 &4680345977912034136 stripped
 GameObject:
@@ -1257,6 +1264,57 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3935756133473152703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680345977912034136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  clientAuthority: 0
+  animator: {fileID: 6636584938940742552}
+--- !u!114 &934871443024727240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4680345977912034136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 5456178508760898018}
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!4 &5456178508760898018 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 113d917915625d54dbbc65cc75333f73, type: 3}
