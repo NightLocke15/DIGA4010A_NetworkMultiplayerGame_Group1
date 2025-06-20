@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 3689685911003177719}
   - component: {fileID: 1877722458780962810}
   - component: {fileID: 4944053250718714051}
+  - component: {fileID: 6996252716455035648}
   m_Layer: 3
   m_Name: PortalPuck
   m_TagString: Tower
@@ -388,3 +389,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde557dec8ec2c349b99cd3cd7e63393, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!208 &6996252716455035648
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7705023387640981969}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

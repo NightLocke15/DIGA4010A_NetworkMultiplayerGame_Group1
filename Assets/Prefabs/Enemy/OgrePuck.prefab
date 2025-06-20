@@ -330,6 +330,7 @@ MonoBehaviour:
   leaderCircle: {fileID: 5790345031248715232}
   collWithWall: 0
   portalPuck: {fileID: 0}
+  magnetPuck: {fileID: 0}
 --- !u!114 &8120819114266516047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -527,7 +528,7 @@ NavMeshObstacle:
   m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 2
+  m_TimeToStationary: 1.5
 --- !u!114 &1751202689669991453
 MonoBehaviour:
   m_ObjectHideFlags: 0
