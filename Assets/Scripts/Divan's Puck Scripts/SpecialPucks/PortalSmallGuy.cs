@@ -30,7 +30,7 @@ public class PortalSmallGuy : MonoBehaviour
         {
             ECscript eCscript = collision.gameObject.GetComponentInChildren<ECscript>();
             gameObject.GetComponentInParent<PortalController>().StoreTheEnemyPuck(eCscript);
-            eCscript.DeleteStuff();
+            //eCscript.DeleteStuff();
             gameObject.GetComponentInParent<PortalController>().RemovePuckFromList();
         }
     }

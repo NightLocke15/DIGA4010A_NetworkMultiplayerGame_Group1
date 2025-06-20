@@ -12,8 +12,7 @@ public class PortalController : NetworkBehaviour
     [SerializeField] private GameObject goblinPuck, orcPuck, ogrePuck;
     
     [SerializeField]private Material player1Material, player2Material;
-    
-    private bool SecondRun = false;
+ 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,18 +24,12 @@ public class PortalController : NetworkBehaviour
         {
                 for (int i = 0; i < portalPucks.Count; i++)
                 {
-                    if (!isServer && !SecondRun)
+                    if (!isServer)
                     {
                         AddPuckAsChild(i);
                     }
                     SetMaterialOnPP(i);
                 }
-        }
-
-        if (!SecondRun)
-        {
-            SecondRun = true;
-            Start();
         }
     }
 
@@ -144,38 +137,44 @@ public class PortalController : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void StoreTheEnemyPuck(ECscript ecscript)
     {
-        ECscript.EnemyTypes type = ecscript.enemyType;
-        GameObject puck = new GameObject();
-        switch (type)
+        if (ecscript != null)
         {
-            case ECscript.EnemyTypes.Goblin:
-                puck = goblinPuck;
-                break;
-            case ECscript.EnemyTypes.Orc:
-                puck = orcPuck;
-                break;
-            case ECscript.EnemyTypes.Ogre:
-                puck = ogrePuck;
-                break;
-            default:
-                break;
-        }
+            ECscript.EnemyTypes type = ecscript.enemyType;
+            GameObject puck = new GameObject();
+            switch (type)
+            {
+                case ECscript.EnemyTypes.Goblin:
+                    puck = goblinPuck;
+                    break;
+                case ECscript.EnemyTypes.Orc:
+                    puck = orcPuck;
+                    break;
+                case ECscript.EnemyTypes.Ogre:
+                    puck = ogrePuck;
+                    break;
+                default:
+                    break;
+            }
         
-        GameObject instantiatedPuck = Instantiate(puck);
-        NetworkServer.Spawn(instantiatedPuck);
+            GameObject instantiatedPuck = Instantiate(puck);
+            NetworkServer.Spawn(instantiatedPuck);
         
-        if (ecscript.isLeader == true)
-        {
-           RpcPortalSetVariant(instantiatedPuck, ecscript);
-        }
+            if (ecscript.isLeader == true)
+            {
+                RpcPortalSetVariant(instantiatedPuck, ecscript);
+            }
 
-        else
-        {
-            SetNormalH(instantiatedPuck, ecscript);
+            else
+            {
+                SetNormalH(instantiatedPuck, ecscript);
+            }
+        
+        
+            instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
+        
+            ecscript.DeleteStuff();
         }
         
-        
-        instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);;
             
         
     }
@@ -184,6 +183,21 @@ public class PortalController : NetworkBehaviour
     private void SetNormalH(GameObject instantiatedPuck, ECscript ecscript)
     {
         instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+        if (instantiatedPuck.GetComponent<PuckScript>().leaderCircle != null)
+        {
+            instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(false);
+        }
+        
+        if (instantiatedPuck.GetComponent<PuckScript>().portalPuck != null)
+        {
+            instantiatedPuck.GetComponent<PuckScript>().portalPuck.canCreatePortal = false;
+        }
+        
+        if (instantiatedPuck.GetComponent<PuckScript>().magnetPuck != null)
+        {
+            instantiatedPuck.GetComponent<PuckScript>().magnetPuck.canMagnet = false;
+        }
+        // instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(false);
     }
 
     [ClientRpc]

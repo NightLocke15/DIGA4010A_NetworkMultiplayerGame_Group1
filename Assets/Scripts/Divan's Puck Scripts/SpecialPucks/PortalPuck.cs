@@ -59,6 +59,7 @@ public class PortalPuck : NetworkBehaviour
         //Debug.Log("Spawn before bool check");
         if (canCreatePortal)
         {
+            canCreatePortal = false;
             GameObject porContainer = new GameObject();
             PortalController portalController = new PortalController();
           //  Debug.Log("Spawn after bool check");
@@ -132,7 +133,7 @@ public class PortalPuck : NetworkBehaviour
             case ECscript.EnemyTypes.Ogre:
                 Cmd_PortalBoolFalse();
                 instantiatedPuck = gameObject;
-                puck = ogrePrefab;
+              
               //  NetworkServer.Destroy(gameObject);
                 break;
             default:
@@ -153,11 +154,16 @@ public class PortalPuck : NetworkBehaviour
 
         if (instantiatedPuck != null)
         {
-            NetworkServer.Spawn(instantiatedPuck);
-            instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
             if (instantiatedPuck != gameObject)
             {
+                NetworkServer.Spawn(instantiatedPuck);
+                instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
                 DestroyObject();
+            }
+
+            else
+            {
+                instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
             }
         }
         
