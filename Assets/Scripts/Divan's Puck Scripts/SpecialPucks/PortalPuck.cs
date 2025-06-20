@@ -116,56 +116,60 @@ public class PortalPuck : NetworkBehaviour
     [Server]
     public void StoreTheEnemyPuck(ECscript ecscript)
     {
-       // Debug.Log("Store enemy start");
-        ECscript.EnemyTypes type = ecscript.enemyType;
-        GameObject puck = new GameObject();
-        GameObject instantiatedPuck = new GameObject();
-        switch (type)
+        if (ecscript != null)
         {
-            case ECscript.EnemyTypes.Goblin:
-                puck = goblinPuck;
-                instantiatedPuck = Instantiate(puck);
-                break;
-            case ECscript.EnemyTypes.Orc:
-                puck = orcPuck;
-                instantiatedPuck = Instantiate(puck);
-                break;
-            case ECscript.EnemyTypes.Ogre:
-                Cmd_PortalBoolFalse();
-                instantiatedPuck = gameObject;
-              
-              //  NetworkServer.Destroy(gameObject);
-                break;
-            default:
-               break;
-        }
-       // GameObject instantiatedPuck = new GameObject();
-     //   instantiatedPuck = Instantiate(puck);
-        if (ecscript.isLeader == true)
-        {
-            Cmd_SetLeaderVariant(instantiatedPuck, ecscript);
-        }
-
-        else
-        {
-            Cmd_PortalBoolFalse();
-            Cmd_NormalVariant(instantiatedPuck);
-        }
-
-        if (instantiatedPuck != null)
-        {
-            if (instantiatedPuck != gameObject)
+            // Debug.Log("Store enemy start");
+            ECscript.EnemyTypes type = ecscript.enemyType;
+            GameObject puck = new GameObject();
+            GameObject instantiatedPuck = new GameObject();
+            switch (type)
             {
-                NetworkServer.Spawn(instantiatedPuck);
-                instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
-                DestroyObject();
+                case ECscript.EnemyTypes.Goblin:
+                    puck = goblinPuck;
+                    instantiatedPuck = Instantiate(puck);
+                    break;
+                case ECscript.EnemyTypes.Orc:
+                    puck = orcPuck;
+                    instantiatedPuck = Instantiate(puck);
+                    break;
+                case ECscript.EnemyTypes.Ogre:
+                    Cmd_PortalBoolFalse();
+                    instantiatedPuck = gameObject;
+
+                    //  NetworkServer.Destroy(gameObject);
+                    break;
+                default:
+                    break;
+            }
+            // GameObject instantiatedPuck = new GameObject();
+            //   instantiatedPuck = Instantiate(puck);
+            if (ecscript.isLeader == true)
+            {
+                Cmd_SetLeaderVariant(instantiatedPuck, ecscript);
             }
 
             else
             {
-                instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
+                Cmd_PortalBoolFalse();
+                Cmd_NormalVariant(instantiatedPuck);
+            }
+
+            if (instantiatedPuck != null)
+            {
+                if (instantiatedPuck != gameObject)
+                {
+                    NetworkServer.Spawn(instantiatedPuck);
+                    instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
+                    DestroyObject();
+                }
+
+                else
+                {
+                    instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storeLocation);
+                }
             }
         }
+       
         
         //Debug.Log("Store enemy end");
     }

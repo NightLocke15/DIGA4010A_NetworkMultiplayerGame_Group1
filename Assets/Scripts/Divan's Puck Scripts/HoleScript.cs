@@ -50,37 +50,41 @@ public class HoleScript : NetworkBehaviour
     private void CmdSpawn(ECscript ecscript)
     {
       //  Debug.Log(ecscript.gameObject.name);
-        ECscript.EnemyTypes type = ecscript.enemyType;
-        GameObject puck = new GameObject();
-        switch (type)
+      if (ecscript != null)
         {
-            case ECscript.EnemyTypes.Goblin:
-               puck = goblinPuck;
-                break;
-            case ECscript.EnemyTypes.Orc:
-                puck = orcPuck;
-                break;
-            case ECscript.EnemyTypes.Ogre:
-               puck = ogrePuck;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-        }
-        
-        GameObject instantiatedPuck = Instantiate(puck);
-        NetworkServer.Spawn(instantiatedPuck);
-        if (ecscript.isLeader == true)
-        {
-           SetVarient(instantiatedPuck, ecscript);
-        }
+            ECscript.EnemyTypes type = ecscript.enemyType;
+            GameObject puck = new GameObject();
+            switch (type)
+            {
+                case ECscript.EnemyTypes.Goblin:
+                    puck = goblinPuck;
+                    break;
+                case ECscript.EnemyTypes.Orc:
+                    puck = orcPuck;
+                    break;
+                case ECscript.EnemyTypes.Ogre:
+                    puck = ogrePuck;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
 
-        else
-        {
-            SetNormalH(instantiatedPuck);
+            GameObject instantiatedPuck = Instantiate(puck);
+            NetworkServer.Spawn(instantiatedPuck);
+            if (ecscript.isLeader == true)
+            {
+                SetVarient(instantiatedPuck, ecscript);
+            }
+
+            else
+            {
+                SetNormalH(instantiatedPuck);
+            }
+
+
+            instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storelocation);
         }
         
-        
-        instantiatedPuck.GetComponent<PuckScript>().ChangePosToStorage(storelocation);
     }
 
     [ClientRpc]
