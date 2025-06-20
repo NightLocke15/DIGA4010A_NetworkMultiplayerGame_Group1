@@ -170,6 +170,7 @@ GameObject:
   - component: {fileID: 1897092585057352123}
   - component: {fileID: 5336055661830010949}
   - component: {fileID: -5011664571494472760}
+  - component: {fileID: 6959624162744469272}
   m_Layer: 0
   m_Name: GoblinPuck
   m_TagString: Enemy
@@ -327,7 +328,9 @@ MonoBehaviour:
   variant: 0
   healerAdd: 0
   leaderCircle: {fileID: 8959117430261699836}
+  collWithWall: 0
   portalPuck: {fileID: 0}
+  magnetPuck: {fileID: 6959624162744469272}
 --- !u!114 &5314393450607210442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -558,6 +561,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outline: {fileID: 5336055661830010949}
   puckScript: {fileID: 4969833448608663454}
+--- !u!114 &6959624162744469272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2553680312261272050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f2e27c07549bc84d9afaf6a7cea0bf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  canMagnet: 0
+  magForce: 5000
+  ownRb: {fileID: 6771805570371029866}
+  radius: 10
 --- !u!1 &5907441833803353694
 GameObject:
   m_ObjectHideFlags: 0

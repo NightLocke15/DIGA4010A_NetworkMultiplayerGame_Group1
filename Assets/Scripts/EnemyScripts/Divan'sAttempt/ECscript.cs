@@ -30,12 +30,8 @@ public class ECscript : NetworkBehaviour
     private TowerHandler towerHandler;
     
     [Header("Leader Variables")]
-    public bool isLeader = false;
-    public ParticleSystem particles;
-    [SyncVar]
-    public int noRate = 0;
-    [SyncVar]
-    public int Rate = 100;
+    [SyncVar] public bool isLeader = false;
+    public GameObject particles;
 
     public enum EnemyTypes
     {
@@ -47,8 +43,17 @@ public class ECscript : NetworkBehaviour
     void Start()
     {
         towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
+        Debug.Log(isLeader);
+        if (isLeader)
+        {
+            ActivateLeaderParticles();
+        }
     }
 
+    private void ActivateLeaderParticles()
+    {
+        particles.SetActive(true);
+    }
     // Update is called once per frame
     void Update()
     {

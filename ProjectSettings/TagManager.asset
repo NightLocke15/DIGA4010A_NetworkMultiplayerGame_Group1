@@ -12,6 +12,8 @@ TagManager:
   - Wall
   - Floor
   - StoredPuck
+  - Player_1
+  - Player_2
   layers:
   - Default
   - TransparentFX

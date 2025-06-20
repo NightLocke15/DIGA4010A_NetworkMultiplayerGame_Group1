@@ -327,6 +327,7 @@ MonoBehaviour:
   variant: 0
   healerAdd: 0
   leaderCircle: {fileID: 5445979909967871645}
+  collWithWall: 0
   portalPuck: {fileID: 0}
 --- !u!114 &5314393450607210442
 MonoBehaviour:

@@ -12,24 +12,31 @@ public class PortalController : NetworkBehaviour
     [SerializeField] private GameObject goblinPuck, orcPuck, ogrePuck;
     
     [SerializeField]private Material player1Material, player2Material;
+    
+    private bool SecondRun = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (storeLocation == null)
         {
-            Debug.Log("nothing to store location");
+            
         }
         else
         {
-                Debug.Log(storeLocation.name);
                 for (int i = 0; i < portalPucks.Count; i++)
                 {
-                    SetMaterialOnPP(i);
-                    if (!isServer)
+                    if (!isServer && !SecondRun)
                     {
                         AddPuckAsChild(i);
                     }
+                    SetMaterialOnPP(i);
                 }
+        }
+
+        if (!SecondRun)
+        {
+            SecondRun = true;
+            Start();
         }
     }
 
@@ -197,5 +204,6 @@ public class PortalController : NetworkBehaviour
             default:
                 break;
         }
+        instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(true);
     }
 }

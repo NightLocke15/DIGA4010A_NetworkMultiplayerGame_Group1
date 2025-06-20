@@ -5733,7 +5733,8 @@ MonoBehaviour:
   - {fileID: 7938673590062367663, guid: 5b50c65e61f31a44b9caf597abd5f91d, type: 3}
   - {fileID: 9147738124939488509, guid: 387d85e4e8a13a8459e12dabddcdc164, type: 3}
   - {fileID: 2553680312261272050, guid: 41dd7e5866b594f4b8ae140c7c9008e2, type: 3}
-  - {fileID: 0}
+  - {fileID: 7001828546882617282, guid: b928a56bbc16b6f48b7908902377aee9, type: 3}
+  - {fileID: 7705023387640981969, guid: 511fcb9f2a77f98409de2be31ccf582e, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 2
@@ -15146,9 +15147,9 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  goblinChance: 33
-  orcChance: 33
-  ogreChance: 33
+  goblinChance: 50
+  orcChance: 0
+  ogreChance: 0
   spawnAmount: 0
   goblinPrefab: {fileID: 618699028185002727, guid: b6f045b8d5090bb4a87cbad97f7af4cc, type: 3}
   orcPrefab: {fileID: 9147738124939488509, guid: 387d85e4e8a13a8459e12dabddcdc164, type: 3}
@@ -15160,7 +15161,7 @@ MonoBehaviour:
   enemyParent: {fileID: 0}
   agentScripts: []
   menuScript: {fileID: 417065761}
-  destroyPucks: 0
+  destroyPucks: 1
   pucksOnTheboard: {fileID: 590838838}
   tower: {fileID: 1718592648}
 --- !u!114 &1718592647
