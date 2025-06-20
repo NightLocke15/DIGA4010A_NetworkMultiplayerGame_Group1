@@ -28,6 +28,7 @@ public class DragAndShoot : NetworkBehaviour
     [SerializeField] private float adjustlenght = 10f;
     [FormerlySerializedAs("mouseDown")] [SerializeField]
     private bool leftMouseDown = false; //checks if the mouse button is being held down on a puck
+    [SerializeField] private float bufferLenght = 1f;
 
     [Header("Move Puck Variables")]
     [SerializeField] private bool rightMouseDown = false;
@@ -36,6 +37,8 @@ public class DragAndShoot : NetworkBehaviour
     private Vector3 newMousePos;
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private Vector3 puckStartPos, inputDirection;
+    [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private GameObject gOLR;
     
     [Header("Gamepad Settings: Mouse")] //Variables used to create a virtual mouse that the gamepad can use
  
@@ -69,6 +72,9 @@ public class DragAndShoot : NetworkBehaviour
 
     [Header("Ping System")]
     [SerializeField] private GameObject Ping;
+    
+    [Header("Special Pucks")]
+    public PuckScript specialPuck;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -85,6 +91,7 @@ public class DragAndShoot : NetworkBehaviour
             targetDollyPos = splineDolly.CameraPosition;
             inputModule = GameObject.Find("EventSystem").GetComponent<InputSystemUIInputModule>();
             gameObject.GetComponent<PlayerInput>().uiInputModule = inputModule;
+            lineRenderer.enabled = false;
             if (Turnorder == 1) //Checks if this is player one
             {
                 target = turnOrderManager.targetPL1;
@@ -166,11 +173,53 @@ public class DragAndShoot : NetworkBehaviour
             {
                 if (isServer)
                 {
+                    lineRenderer.enabled = true;
+                    
+                    float x = puckScript.clampX;
+                    float z = puckScript.clampZ;
+
+                    Vector3 blCorner = new Vector3(placePos.position.x - x, placePos.transform.position.y, placePos.position.z - z);
+                    lineRenderer.SetPosition(0, blCorner);
+                   // lineRenderer.SetPosition(4, blCorner);
+        
+                    Vector3 tlCorner = new Vector3(placePos.position.x + x, placePos.transform.position.y, placePos.position.z - z);
+                    lineRenderer.SetPosition(1, tlCorner);
+        
+                    Vector3 trCorner = new Vector3(placePos.position.x + x, placePos.transform.position.y, placePos.position.z + z);
+                    lineRenderer.SetPosition(2, trCorner);
+        
+                    Vector3 brCorner = new Vector3(placePos.position.x - x, placePos.transform.position.y, placePos.position.z + z);
+                    lineRenderer.SetPosition(3, brCorner);
+                    Debug.DrawLine(blCorner, tlCorner, Color.red);
+                    Debug.DrawLine(tlCorner, trCorner, Color.green);
+                    Debug.DrawLine(trCorner, brCorner, Color.blue);
+                    Debug.DrawLine(brCorner, blCorner, Color.magenta);
                     puckScript.CmdMoveThePuck(placePos.position, 1, moveSpeed, inputDirection, radius);
                 }
 
                 else
                 {
+                    lineRenderer.enabled = true;
+                    
+                    float x = puckScript.clampX;
+                    float z = puckScript.clampZ;
+
+                    Vector3 blCorner = new Vector3(placePos.position.x + x,  placePos.transform.position.y, placePos.position.z + z);
+                    lineRenderer.SetPosition(0, blCorner);
+                    //lineRenderer.SetPosition(4, blCorner);
+        
+                    Vector3 tlCorner = new Vector3(placePos.position.x - x,  placePos.transform.position.y, placePos.position.z + z);
+                    lineRenderer.SetPosition(1, tlCorner);
+        
+                    Vector3 trCorner = new Vector3(placePos.position.x - x,  placePos.transform.position.y, placePos.position.z - z);
+                    lineRenderer.SetPosition(2, trCorner);
+        
+                    Vector3 brCorner = new Vector3(placePos.position.x + x,  placePos.transform.position.y, placePos.position.z - z);
+                    lineRenderer.SetPosition(3, brCorner);
+                    Debug.DrawLine(blCorner, tlCorner, Color.red);
+                    Debug.DrawLine(tlCorner, trCorner, Color.green);
+                    Debug.DrawLine(trCorner, brCorner, Color.blue);
+                    Debug.DrawLine(brCorner, blCorner, Color.magenta);
                     puckScript.CmdMoveThePuck(placePos.position, -1, moveSpeed, inputDirection, radius);
                 }
             }        
@@ -232,23 +281,57 @@ public class DragAndShoot : NetworkBehaviour
                                 float mag = new Vector3(StartPos.x - EndPos.x, 0f, StartPos.y - EndPos.y)
                                     .magnitude; //We get the lenght between start and end pos
                                 float clampedMag = Mathf.Clamp(mag, 0, MaxLength); //We put a max limit on the lenght
-                                if (isServer) //Checks if this is the host. If not host we have to invert the direction
+
+                                switch (puckScript.variant)
                                 {
-                                    puckScript.Drag(clampedMag, direction, mouseForce);
+                                    case PuckScript.puckVariants.Normal:
+                                        specialPuck = null;
+                                        break;
+                                    case PuckScript.puckVariants.Magnet:
+                                        specialPuck = puckScript;
+                                        puckScript.magnetPuck.Cmd_ActivateMag();
+                                        break;
+                                    case PuckScript.puckVariants.Portal:
+                                        Debug.Log("Callrelease");
+                                        specialPuck = puckScript;
+                                        puckScript.portalPuck.ReleasedInWild(storePos);
+                                        break;
+                                    case PuckScript.puckVariants.Healer:
+                                        specialPuck = puckScript;
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
                                 }
-                                else  //Inverts the direction
+
+                                if (clampedMag > bufferLenght)
                                 {
-                                    puckScript.Drag(clampedMag, -direction, mouseForce);
+                                    if (isServer) //Checks if this is the host. If not host we have to invert the direction
+                                    {
+                                        puckScript.Drag(clampedMag, direction, mouseForce);
+                                    }
+                                    else  //Inverts the direction
+                                    {
+                                        puckScript.Drag(clampedMag, -direction, mouseForce);
+                                    }
+                                    aimLine = puckScript.GetComponent<AimLine>();
+                                    aimLine.StopAimLine();
+                                    hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
+                                    hit = new RaycastHit(); //Reset hit
+                                    cmdNewParent(pucksOnBoardTransform, puckScript);
+                                    rb = null; //Reset rb
+                                    puckScript = null; //Reset puckScript
+                                    haveTakenAShot = true;
+                                    turnOrderManager.WaitBeforeChangeTurn();
                                 }
-                                aimLine = puckScript.GetComponent<AimLine>();
-                                aimLine.StopAimLine();
-                                hit.collider.gameObject.layer = LayerMask.NameToLayer("Default");
-                                hit = new RaycastHit(); //Reset hit
-                                cmdNewParent(pucksOnBoardTransform, puckScript);
-                                rb = null; //Reset rb
-                                puckScript = null; //Reset puckScript
-                                haveTakenAShot = true;
-                                turnOrderManager.WaitBeforeChangeTurn();
+
+                                else
+                                {
+                                    aimLine = puckScript.GetComponent<AimLine>();
+                                    aimLine.StopAimLine();
+                                    hit = new RaycastHit(); //Reset hit
+                                    rb = null; //Reset rb
+                                    puckScript = null; //Reset puckScript
+                                }
 
                             }
 
@@ -272,6 +355,21 @@ public class DragAndShoot : NetworkBehaviour
                 }
             }
                 
+        }
+    }
+
+    public void OnRemovePuck(InputValue value)
+    {
+        if (placePos != null)
+        {
+            if (placePos.childCount > 0)
+            {
+                for (int i = placePos.childCount-1; i >= 0; i--)
+                {
+                    PuckScript swicthPuck = placePos.GetChild(i).GetComponent<PuckScript>();
+                    swicthPuck.ChangePosToStorage(storePos);
+                }
+            }
         }
     }
 
@@ -369,6 +467,7 @@ public class DragAndShoot : NetworkBehaviour
                             StartPos = placePos.position; //Grabs the position where the puck is placed on board
                             newMousePos = Mouse.current.position.ReadValue(); //Gets the current mouse position of when the button is pressed down
                             rb = hit.collider.gameObject.GetComponent<Rigidbody>(); // Get the rigidbody of the puck
+                            lineRenderer.enabled = true;
                             rightMouseDown = true;
                         }
                     }
@@ -378,6 +477,7 @@ public class DragAndShoot : NetworkBehaviour
 
             else
             {
+                lineRenderer.enabled = false;
                 hit = new RaycastHit();
                 rb = null; //Reset rb
                 puckScript = null; //Reset puckScript
@@ -430,6 +530,31 @@ public class DragAndShoot : NetworkBehaviour
             GameObject pingObj = Instantiate(Ping, pos, Quaternion.identity);
             NetworkServer.Spawn(pingObj);
         
+    }
+
+    [Command(requiresAuthority = false)]
+    public void Cmd_EndSpecialPuckPowers()
+    {
+        Rpc_EndSpecialPuckPowers();
+    }
+
+    [ClientRpc]
+    private void Rpc_EndSpecialPuckPowers()
+    {
+        if (specialPuck != null)
+        {
+            Debug.Log(specialPuck.name);
+            specialPuck.WallColl();
+        }
+        else
+        {
+            Debug.LogWarning("Special Puck Powers not found");
+        }
+        specialPuck = null;
+        if (specialPuck == null)
+        {
+            Debug.LogWarning("No Special Puck Powers found");
+        }
     }
 
 }

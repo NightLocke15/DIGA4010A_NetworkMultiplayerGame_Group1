@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Telepathy;
 
 public class CustomNetworkManager : NetworkManager
 {
@@ -15,10 +16,11 @@ public class CustomNetworkManager : NetworkManager
     [SerializeField] private GameObject waitingP2;  
     [SerializeField] private GameObject ready;
     [SerializeField] private GameObject menuPanel;
-    [SerializeField] private GameObject connectionPanel;
-    [SerializeField] private TextMeshProUGUI connectionStatus;
-    private bool disconnected;
+    [SerializeField] private GameObject endScreen;
+    public bool disconnected;
+    public bool menu;
     private float time;
+    [SerializeField] private GameObject disconnectedPanel;
 
     public override void OnServerAddPlayer(NetworkConnectionToClient connection)
     {
@@ -48,41 +50,73 @@ public class CustomNetworkManager : NetworkManager
 
     }
 
-    private void Update()
-    {
-        if (disconnected)
-        {
-            time += Time.deltaTime;
-        }
+    //public override void OnStopHost()
+    //{
+    //    StopHost();
+    //    connectionPanel.SetActive(true);
+    //    connectionStatus.text = "Player Disconnected";
+    //    disconnected = true;
+    //    SceneManager.LoadScene(0);
+    //    base.OnStopHost();
+    //}
 
-        if (time > 1f)
-        {
-            disconnected = false;
-            connectionPanel.SetActive(false);
-            time = 0;            
-        }
-    }
+    //public override void OnStopServer()
+    //{
+    //    StopServer();
+    //    connectionPanel.SetActive(true);
+    //    connectionStatus.text = "Player Disconnected";
+    //    disconnected = true;
+    //    SceneManager.LoadScene(0);
+    //    base.OnStopServer();
+    //}
+
+    //public override void OnStopClient()
+    //{
+    //    StopClient();
+    //    connectionPanel.SetActive(true);
+    //    connectionStatus.text = "Player Disconnected";
+    //    disconnected = true;
+    //    SceneManager.LoadScene(0);
+    //    base.OnStopClient();
+    //}
 
     public override void OnClientDisconnect()
     {
+        if (!menu)
+        {
+            StopHost();
+            StopClient();
+        }
+        disconnectedPanel.SetActive(true);
+        Debug.Log("Client Gone");
+
         base.OnClientDisconnect();
-        connectionPanel.SetActive(true);
-        connectionStatus.text = "Player Disconnected";
-        disconnected = true;
-        SceneManager.LoadScene(0);
+
     }
 
     public override void OnServerDisconnect(NetworkConnectionToClient conn)
     {
+        if (!menu)
+        {
+            StopHost();
+            StopClient();
+        }
+        disconnectedPanel.SetActive(true);
+        Debug.Log("Server Gone");
+        
         base.OnServerDisconnect(conn);
-        connectionPanel.SetActive(true);
-        connectionStatus.text = "Player Disconnected";
-        disconnected = true;
-        SceneManager.LoadScene(0);
     }
 
     public void OnConnectedToServer()
     {
         Debug.Log("OnConnectedToServer"+ name);
+    }
+
+    public void MenuDisconnect()
+    {
+        
+        disconnectedPanel.SetActive(false);
+        endScreen.SetActive(false);
+        SceneManager.LoadScene(1);
     }
 }

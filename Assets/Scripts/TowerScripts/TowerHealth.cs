@@ -5,31 +5,55 @@ public class TowerHealth : NetworkBehaviour
 {
     private TowerHandler towerHandler;
     [SyncVar]
-    private bool floored;
+    public bool floored;
 
+    [ClientCallback]
     private void Start()
     {
-        towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
+        towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
+        transform.GetComponent<AudioSource>().Play();
+    }
+
+    private void Update()
+    {
+       
     }
 
     [ClientCallback]
     private void OnCollisionEnter(Collision collision)
     {
-        if (floored)
+        if (collision.gameObject.tag == "Floor")
         {
-            if (collision.collider.tag == "Enemy")
-            {
-                towerHandler.towerHealth -= 1;
-                CmdKillEnemy(collision.collider.gameObject);
-                CmdLoseHealth();
-            }
+            floored = true;
+            
+        }
+        
+        // if (floored)
+        // {
+        //     if (collision.collider.tag == "Enemy")
+        //     {
+        //         towerHandler.LoseHealth();
+        //         CmdKillEnemy(collision.collider.gameObject);
+        //         CmdLoseHealth();
+        //     }
+        //     
+        //     if (collision.collider.tag == "Puck")
+        //     {
+        //         towerHandler.LoseHealth();
+        //         CmdKillEnemy(collision.collider.gameObject);
+        //         CmdLoseHealth();
+        //     }
+        // }        
+    }
 
-            if (collision.collider.tag == "Puck")
-            {
-                towerHandler.towerHealth -= 1;
-                CmdLoseHealth();
-            }
-        }        
+    public void TheTowerWasHit(GameObject deletePuck, string puckName)
+    {
+        towerHandler.LoseHealth();
+        towerHandler.CmdDeleteHealth(puckName);
+        // CmdKillEnemy(deletePuck);
+        DestroyCollPuck(deletePuck);
+        //CmdLoseHealth();
+        //DestroyYourself();
     }
 
     private void OnCollisionStay(Collision collision)
@@ -40,6 +64,18 @@ public class TowerHealth : NetworkBehaviour
         }
     }
 
+    [Command(requiresAuthority = false)]
+    private void DestroyYourself()
+    {
+        NetworkServer.Destroy(gameObject);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void DestroyCollPuck(GameObject deletePuck)
+    {
+        NetworkServer.Destroy(deletePuck);
+    }
+    
     [Command(requiresAuthority = false)]
     public void CmdLoseHealth()
     {
@@ -69,4 +105,6 @@ public class TowerHealth : NetworkBehaviour
     {
         NetworkServer.Destroy(enemy);
     }
+
+    
 }

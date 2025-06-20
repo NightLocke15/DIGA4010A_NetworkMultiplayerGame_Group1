@@ -898,12 +898,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 680820873}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 556ceaf38c0037542b24613d6852d9a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawningScript: {fileID: 0}
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  towerHealth: 10
+  onHitTower: {fileID: 0}
+  towerHealthDisc: {fileID: 0}
 --- !u!1 &757832194
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,7 +1198,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 967205641}
-  - component: {fileID: 967205640}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -1201,27 +1205,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &967205640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 967205639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15e3da4f39cb25e408af6bae62e82323, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawned: 0
-  wave: 1
-  maxSpawn: 0
-  spawnCount: 0
-  bigSpawn: 0
-  smallSpawn: 0
-  waitTime: 0.2
-  enemy: {fileID: 1954547992502422919, guid: eedd1bbc66589814c8c9258c4dd4382f, type: 3}
-  tower: {fileID: 0}
 --- !u!4 &967205641
 Transform:
   m_ObjectHideFlags: 0
@@ -1585,6 +1568,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1431748318}
+  - component: {fileID: 1431748319}
   m_Layer: 0
   m_Name: Environment
   m_TagString: Untagged
@@ -1620,6 +1604,23 @@ Transform:
   - {fileID: 180263007}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1431748319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431748317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 3082607077
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &1539781137
 GameObject:
   m_ObjectHideFlags: 0

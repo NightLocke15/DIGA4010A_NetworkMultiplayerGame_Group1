@@ -8,6 +8,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 327107399808254293, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+      propertyPath: m_UseCustomVertexStreams
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 547728284452969169, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 547728284452969169, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 547728284452969169, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f0462b63105839c4da39c8aa14a31e1c, type: 2}
+    - target: {fileID: 547728284452969169, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f0462b63105839c4da39c8aa14a31e1c, type: 2}
     - target: {fileID: 4303301653538852460, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
       propertyPath: prewarm
       value: 1
@@ -39,6 +59,14 @@ PrefabInstance:
     - target: {fileID: 4303301653538852460, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
       propertyPath: InitialModule.startColor.maxGradient.key1.r
       value: 0.9668875
+      objectReference: {fileID: 0}
+    - target: {fileID: 4339721574306741269, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4339721574306741269, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4339721574306741269, guid: 524cf6173b32c5b4b917f25e7aab43cd, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b

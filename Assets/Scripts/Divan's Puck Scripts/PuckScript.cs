@@ -4,7 +4,9 @@ using Mirror;
 using Unity.Cinemachine;
 using Mirror.BouncyCastle.Crypto.Digests;
 using Telepathy;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 public class PuckScript : NetworkBehaviour
 {
@@ -17,18 +19,47 @@ public class PuckScript : NetworkBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Collider coll;
 
-    [SerializeField] private GameObject onHitTower;
+    [SerializeField] private GameObject onHitWall;
     [SerializeField] private GameObject onHitPuck;
 
     [Header("Move Puck variables")]
-    [SerializeField] private float clampX = 5f, clampZ = 2.5f;
+    [SerializeField] public float clampX = 5f, clampZ = 2.5f;
     //[SerializeField] private Outline outline;
-    
+    private CustomNetworkManager networkManager;
+    private TowerHandler towerHandler;
+
+
+    [Header("Special Pucks")] 
+    public puckVariants variant;
+    public bool healerAdd;
+    public GameObject leaderCircle;
+    [SerializeField] private bool collWithWall = true;
+
+    public PortalPuck portalPuck;
+    public MagnetPuck magnetPuck;
+    public enum puckVariants
+    {
+        Normal,
+        Magnet,
+        Portal,
+        Healer
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        networkManager = GameObject.Find("NetworkManager").GetComponent<CustomNetworkManager>();
+        towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
+        if (gameObject.GetComponent<PortalPuck>() != null)
+        {
+            portalPuck = gameObject.GetComponent<PortalPuck>();
+        }
+
+        if (gameObject.GetComponent<MagnetPuck>() != null)
+        {
+            magnetPuck = gameObject.GetComponent<MagnetPuck>();
+        }
         //outline.enabled = false;
 
         //  ChangePosToStorage(transform.parent);
@@ -57,6 +88,7 @@ public class PuckScript : NetworkBehaviour
         // mag = Mathf.Clamp(mag, 0f, radius); //Clamp the magnitude, if restricting to a circle
         difference.x = Mathf.Clamp(difference.x, -clampX, clampX); //Clamps to a rectangle
         difference.z = Mathf.Clamp(difference.z, -clampZ, clampZ); //clamps to a rectangle
+        
         Vector3 restrictPos = new Vector3();
         restrictPos = difference.normalized * difference.magnitude; //We used the clamped magnitude and it to the difference direction.
 
@@ -114,18 +146,19 @@ public class PuckScript : NetworkBehaviour
         transform.parent = newParent;
         transform.gameObject.tag = "StoredPuck";
         
-        if (gameObject.GetComponent<EnemyController>())
-        {
-            Destroy(gameObject.GetComponent<EnemyController>().TheOrc);
-            Destroy(gameObject.GetComponent<EnemyController>());
-            // puck.tag = "Puck";
-        }
+        // if (gameObject.GetComponent<EnemyController>())
+        // {
+        //     Destroy(gameObject.GetComponent<EnemyController>().TheOrc);
+        //     Destroy(gameObject.GetComponent<EnemyController>());
+        //     gameObject.AddComponent<NetworkRigidbodyReliable>();
+        //     gameObject.AddComponent<NavMeshObstacle>();
+        //   // puck.tag = "Puck";
+        // }
     }
 
     [Command(requiresAuthority = false)]
     public void ChangePosToBoard(Transform newPos)
     {
-        
         CanBeDrag();
         transform.parent = newPos;
         rb.linearVelocity = Vector3.zero;
@@ -134,35 +167,111 @@ public class PuckScript : NetworkBehaviour
         RpcChangePosToStorage(newPos);
     }
 
-    
+    [ClientCallback]
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == "Tower")
         {
-            TowerHit(collision.contacts[0].point);
+            towerHandler.TowerHit(collision.contacts[0].point);
+
+            if (collision.gameObject.GetComponent<TowerHealth>())
+            {
+                if (collision.gameObject.GetComponent<TowerHealth>().floored)
+                {
+                    if (variant == puckVariants.Healer && healerAdd == false)
+                    {
+                        towerHandler.towerHealth += 1;
+                        towerHandler.SpawnHealth();
+                        collision.gameObject.GetComponent<TowerHealth>().DestroyCollPuck(gameObject);
+                    }
+                    else
+                    {
+                        collision.gameObject.GetComponent<TowerHealth>().TheTowerWasHit(gameObject, gameObject.name);
+                    }                       
+                }
+            }
         }
-        
-        if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck")
+
+        if (collision.collider.tag == "Wall") //Checks if we hit a wall
         {
-            PuckHit(collision.contacts[0].point);
+            WallHit(collision.contacts[0].point); //Spawns VFX
+
+            if (collWithWall)
+            {
+                WallColl(); //Checks if a special collision should happen
+            }
+        }
+
+        if (collision.collider.tag == "Enemy" || collision.collider.tag == "Puck") //Checks if we hit a puck
+        {
+            PuckHit(collision.contacts[0].point); //Spawns VFX
+            PuckColl(collision.gameObject); //Checks if a special collision should happen
+        }
+
+        
+    }
+
+    public void WallColl() //Calls special puck functions on wall collisions
+    {
+        switch (variant)
+        {
+            case puckVariants.Normal:
+                break;
+            case puckVariants.Magnet:
+                magnetPuck.Cmd_deActivateMag();
+                break;
+            case puckVariants.Portal:
+//                Debug.Log("Wall Coll");
+                if (portalPuck.canCreatePortal)
+                {
+                    portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                    portalPuck.DestroyObject();
+                }
+                break;
+            case puckVariants.Healer:
+                healerAdd = true;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    [Command(requiresAuthority = false)]
-    public void TowerHit(Vector3 pos)
+    private void PuckColl(GameObject other) //Calls special wall collisions on puck collisons
     {
-        TowerHitRpc(pos);
-    }
-
-    [Server]
-    public void TowerHitRpc(Vector3 pos)
-    {
-        if (isServer)
+        switch (variant)
         {
-            GameObject system = Instantiate(onHitTower, pos, onHitTower.transform.rotation);
-            NetworkServer.Spawn(system);
+            case puckVariants.Normal:
+              //  portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                break;
+            case puckVariants.Magnet:
+                magnetPuck.Cmd_deActivateMag();
+             //   portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                break;
+            case puckVariants.Portal:
+               // Debug.Log("Puck Coll");
+               if (portalPuck.canCreatePortal)
+               {
+                   portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
+                   
+                   if (other.GetComponent<ECscript>() != null)
+                   {
+                       portalPuck.StoreTheEnemyPuck(other.GetComponent<ECscript>()); //Stores enemy puck
+                       other.GetComponent<ECscript>().DeleteStuff();
+                   }
+                   else
+                   {
+                       portalPuck.StoreTheOtherPuck(other.gameObject.GetComponent<PuckScript>());
+                       portalPuck.DestroyObject();
+                   }
+                   
+               }
+                break;
+            case puckVariants.Healer:
+                healerAdd = true;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
-        
     }
 
     [Command(requiresAuthority = false)]
@@ -171,23 +280,29 @@ public class PuckScript : NetworkBehaviour
         PuckHitRpc(pos);
     }
 
-    [Server]
+    [Command(requiresAuthority = false)]
+    public void WallHit(Vector3 pos)
+    {
+        WallHitRpc(pos);
+    }
+
+    [ClientRpc]
     public void PuckHitRpc(Vector3 pos)
     {
         if (isServer)
         {
-            GameObject system = Instantiate(onHitPuck, pos, onHitTower.transform.rotation);
+            GameObject system = Instantiate(onHitPuck, pos, onHitPuck.transform.rotation);
             NetworkServer.Spawn(system);
         }
-    }
+    }    
 
-    private void OnTriggerEnter(Collider other)
+    [ClientRpc]
+    public void WallHitRpc(Vector3 pos)
     {
-        
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        
+        if (isServer)
+        {
+            GameObject system = Instantiate(onHitWall, pos, onHitWall.transform.rotation);
+            NetworkServer.Spawn(system);
+        }            
     }
 }

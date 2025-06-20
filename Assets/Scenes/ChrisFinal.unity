@@ -338,7 +338,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 738061776}
+  goblinPuck: {fileID: 0}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 0}
 --- !u!65 &92166093
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1503,7 +1509,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 738061776}
+  goblinPuck: {fileID: 0}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 0}
 --- !u!65 &457886950
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1636,6 +1648,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 505833558}
+  - component: {fileID: 505833559}
   m_Layer: 0
   m_Name: TargetLocation
   m_TagString: Untagged
@@ -1661,6 +1674,23 @@ Transform:
   - {fileID: 1399539484}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &505833559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505833557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 586659873
+  _assetId: 0
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &507976261
 GameObject:
   m_ObjectHideFlags: 0
@@ -2540,7 +2570,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 738061776}
+  goblinPuck: {fileID: 0}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 0}
 --- !u!1 &676577526
 GameObject:
   m_ObjectHideFlags: 0
@@ -2645,6 +2681,12 @@ MonoBehaviour:
   - {fileID: 2850685191081914487, guid: ef10169ce88df1c4cae0591bdb9db780, type: 3}
   menuCanvas: {fileID: 0}
   Manager: {fileID: 1718592640}
+  waitingP1: {fileID: 0}
+  waitingP2: {fileID: 0}
+  ready: {fileID: 0}
+  menuPanel: {fileID: 0}
+  connectionPanel: {fileID: 0}
+  connectionStatus: {fileID: 0}
 --- !u!114 &676577530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3546,7 +3588,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 1109907817}
+  goblinPuck: {fileID: 0}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 0}
 --- !u!1 &819517248
 GameObject:
   m_ObjectHideFlags: 0
@@ -4490,7 +4538,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 1109907817}
+  goblinPuck: {fileID: 0}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 0}
 --- !u!1 &1106200096
 GameObject:
   m_ObjectHideFlags: 0
@@ -5312,9 +5366,9 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  spawningScript: {fileID: 0}
   towerHealth: 100
   onHitTower: {fileID: 5250491225676461945, guid: bfaa21ca0178719419712e34a531351c, type: 3}
+  towerHealthDisc: {fileID: 0}
 --- !u!136 &1166196101
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -6799,7 +6853,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 1109907817}
+  goblinPuck: {fileID: 0}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 0}
 --- !u!65 &1636655849
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6995,6 +7055,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   currentTurn: -1
+  totalWaves: 0
   enemySpawning: {fileID: 1718592642}
   Manager: {fileID: 1718592640}
   Tower: {fileID: 0}
@@ -7018,6 +7079,7 @@ MonoBehaviour:
   canvasObject: {fileID: 0}
   targetPL1: {fileID: 0}
   targetPL2: {fileID: 0}
+  escript: {fileID: 0}
 --- !u!114 &1718592642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7995,7 +8057,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 738061776}
+  goblinPuck: {fileID: 0}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 0}
 --- !u!43 &2044160510
 Mesh:
   m_ObjectHideFlags: 0
@@ -8274,7 +8342,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e6e37cb98666b409c5dfc031693dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   storelocation: {fileID: 1109907817}
+  goblinPuck: {fileID: 0}
+  orcPuck: {fileID: 0}
+  ogrePuck: {fileID: 0}
 --- !u!65 &2146113867
 BoxCollider:
   m_ObjectHideFlags: 0

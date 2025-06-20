@@ -11,11 +11,12 @@ public class PlayerUI : NetworkBehaviour
     [SerializeField] private GameObject playerTwoTurnImg;
     [SerializeField] private GameObject enemyTurnImg;
     [SerializeField] private GameObject yourTurnImg;
+    [SerializeField] private TextMeshProUGUI wave;
 
     private void Start()
     {
        // towerHealthSlider = transform.GetChild(0).gameObject.GetComponent<Slider>();
-        towerHandler = GameObject.Find("Tower").GetComponent<TowerHandler>();
+        towerHandler = GameObject.Find("Manager").GetComponent<TowerHandler>();
         turnOrderManager = GameObject.Find("Manager").GetComponent<TurnOrderManager>();
         playerOneTurnImg.SetActive(false);
         playerTwoTurnImg.SetActive(false);
@@ -74,5 +75,7 @@ public class PlayerUI : NetworkBehaviour
                 playerTwoTurnImg.SetActive(false);
             }
         }
+
+        wave.text = turnOrderManager.totalWaves.ToString();
     }
 }
