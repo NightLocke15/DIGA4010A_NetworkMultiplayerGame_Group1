@@ -8,8 +8,10 @@ public class PauseMenu : NetworkBehaviour
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject disconnectedPanel;
     [SerializeField] private GameObject pauseButton;
+    [SerializeField] private GameObject howToPlayPanel;
     public bool isPaused;
     [SerializeField] private CustomNetworkManager manager;
+
 
     private void Start()
     {
@@ -60,5 +62,17 @@ public class PauseMenu : NetworkBehaviour
         GameObject.Find("NetworkManager").GetComponent<NetworkManager>().StopHost();
         GameObject.Find("NetworkManager").GetComponent<NetworkManager>().StopClient();
         SceneManager.LoadScene(1);
+    }
+
+    public void HowToPlay()
+    {
+        howToPlayPanel.SetActive(true);
+        pausePanel.SetActive(false);
+    }
+
+    public void Back()
+    {
+        howToPlayPanel.SetActive(false);
+        pausePanel.SetActive(true);
     }
 }
