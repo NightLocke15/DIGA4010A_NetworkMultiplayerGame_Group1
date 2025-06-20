@@ -37,7 +37,8 @@ public class HoleScript : NetworkBehaviour
        
        if (puck.GetComponent<PuckScript>() != null)
        {
-            puck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+            //puck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+            SetNormalH(puck);
             //puck.GetComponentInChildren<PuckScript>().leaderCircle.SetActive(false);
             puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation); 
             
@@ -75,7 +76,7 @@ public class HoleScript : NetworkBehaviour
 
         else
         {
-            SetNormalH(instantiatedPuck, ecscript);
+            SetNormalH(instantiatedPuck);
         }
         
         
@@ -108,9 +109,18 @@ public class HoleScript : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void SetNormalH(GameObject instantiatedPuck, ECscript ecscript)
+    private void SetNormalH(GameObject instantiatedPuck)
     {
         instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
-       // instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(false);
+        if (instantiatedPuck.GetComponent<PuckScript>().portalPuck != null)
+        {
+            instantiatedPuck.GetComponent<PuckScript>().portalPuck.canCreatePortal = false;
+        }
+        
+        if (instantiatedPuck.GetComponent<PuckScript>().magnetPuck != null)
+        {
+            instantiatedPuck.GetComponent<PuckScript>().magnetPuck.canMagnet = false;
+        }
+        // instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(false);
     }
 }

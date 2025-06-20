@@ -69,6 +69,7 @@ public class TurnOrderManager : NetworkBehaviour
 
         if (waitTime > bufferTime)
         {
+           // RunTheSpecialPucks();
             shouldChangeOrder = false;
             waitTime = 0;
             ChangeTurn();
@@ -91,7 +92,7 @@ public class TurnOrderManager : NetworkBehaviour
 
         if (moveTime > bufferTime)  //How long the buffer time is
         {
-            
+           // RunTheSpecialPucks();
             enemiesAreMoving = false; //Stops counter
             ChangeTurn();  //enmies are moving
             escript.StopMovement();

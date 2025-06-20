@@ -141,7 +141,18 @@ public class ESscript : NetworkBehaviour
             for (int i = pucksOnTheboard.childCount-1; i >= 0; i--)
             {
                 GameObject puck = pucksOnTheboard.GetChild(i).gameObject;
-                NetworkServer.Destroy(puck);
+                if (puck.GetComponent<PortalPuck>() != null)
+                {
+                    if (puck.GetComponent<PortalPuck>().canCreatePortal == false)
+                    {
+                        NetworkServer.Destroy(puck); 
+                    }
+                }
+                else
+                {
+                    NetworkServer.Destroy(puck); 
+                }
+                
             }
         }
     }
