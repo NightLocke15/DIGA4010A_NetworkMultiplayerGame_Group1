@@ -92,6 +92,7 @@ public class HoleScript : NetworkBehaviour
             case ECscript.EnemyTypes.Goblin:
                 instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
                 instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(true);
+                instantiatedPuck.GetComponent<PuckScript>().magnetPuck.Cmd_deActivateMag();
                 break;
             case ECscript.EnemyTypes.Orc:
                 instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;

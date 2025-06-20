@@ -36,6 +36,7 @@ public class PuckScript : NetworkBehaviour
     [SerializeField] private bool collWithWall = true;
 
     public PortalPuck portalPuck;
+    public MagnetPuck magnetPuck;
     public enum puckVariants
     {
         Normal,
@@ -53,6 +54,11 @@ public class PuckScript : NetworkBehaviour
         if (gameObject.GetComponent<PortalPuck>() != null)
         {
             portalPuck = gameObject.GetComponent<PortalPuck>();
+        }
+
+        if (gameObject.GetComponent<MagnetPuck>() != null)
+        {
+            magnetPuck = gameObject.GetComponent<MagnetPuck>();
         }
         //outline.enabled = false;
 
@@ -212,6 +218,7 @@ public class PuckScript : NetworkBehaviour
             case puckVariants.Normal:
                 break;
             case puckVariants.Magnet:
+                magnetPuck.Cmd_deActivateMag();
                 break;
             case puckVariants.Portal:
 //                Debug.Log("Wall Coll");
@@ -237,6 +244,7 @@ public class PuckScript : NetworkBehaviour
               //  portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
                 break;
             case puckVariants.Magnet:
+                magnetPuck.Cmd_deActivateMag();
              //   portalPuck.SpawnThePortalPucks(transform); //Creates the portal pucks
                 break;
             case puckVariants.Portal:

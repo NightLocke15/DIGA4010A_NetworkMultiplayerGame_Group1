@@ -288,7 +288,8 @@ public class DragAndShoot : NetworkBehaviour
                                         specialPuck = null;
                                         break;
                                     case PuckScript.puckVariants.Magnet:
-                                        //specialPuck = 
+                                        specialPuck = puckScript;
+                                        puckScript.magnetPuck.Cmd_ActivateMag();
                                         break;
                                     case PuckScript.puckVariants.Portal:
                                         Debug.Log("Callrelease");
