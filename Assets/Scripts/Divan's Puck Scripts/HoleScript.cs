@@ -112,6 +112,11 @@ public class HoleScript : NetworkBehaviour
     private void SetNormalH(GameObject instantiatedPuck)
     {
         instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+        if (instantiatedPuck.GetComponent<PuckScript>().leaderCircle != null)
+        {
+            instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(false);
+        }
+        
         if (instantiatedPuck.GetComponent<PuckScript>().portalPuck != null)
         {
             instantiatedPuck.GetComponent<PuckScript>().portalPuck.canCreatePortal = false;

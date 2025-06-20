@@ -204,7 +204,17 @@ public class PortalPuck : NetworkBehaviour
     [ClientRpc]
     private void RPC_NormalVariant(GameObject instantiatedPuck)
     {
+        instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+        instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(false);
+        if (instantiatedPuck.GetComponent<PuckScript>().portalPuck != null)
+        {
+            instantiatedPuck.GetComponent<PuckScript>().portalPuck.canCreatePortal = false;
+        }
         
+        if (instantiatedPuck.GetComponent<PuckScript>().magnetPuck != null)
+        {
+            instantiatedPuck.GetComponent<PuckScript>().magnetPuck.canMagnet = false;
+        }
     }
     
     [Command(requiresAuthority = false)]

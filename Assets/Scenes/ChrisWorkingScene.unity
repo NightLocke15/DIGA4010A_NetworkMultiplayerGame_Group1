@@ -22073,7 +22073,7 @@ MonoBehaviour:
   enemyParent: {fileID: 0}
   agentScripts: []
   menuScript: {fileID: 417065761}
-  destroyPucks: 0
+  destroyPucks: 1
   pucksOnTheboard: {fileID: 590838838}
   tower: {fileID: 1718592648}
 --- !u!114 &1718592647
