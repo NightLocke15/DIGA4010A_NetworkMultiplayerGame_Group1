@@ -16,7 +16,9 @@ public class CustomNetworkManager : NetworkManager
     [SerializeField] private GameObject waitingP2;  
     [SerializeField] private GameObject ready;
     [SerializeField] private GameObject menuPanel;
+    [SerializeField] private GameObject endScreen;
     public bool disconnected;
+    public bool menu;
     private float time;
     [SerializeField] private GameObject disconnectedPanel;
 
@@ -80,12 +82,12 @@ public class CustomNetworkManager : NetworkManager
 
     public override void OnClientDisconnect()
     {
-        //if (NetworkClient.active)
-        //{
-        //    StopClient();
-        //}
-        
-        //disconnectedPanel.SetActive(true);
+        if (!menu)
+        {
+            StopHost();
+            StopClient();
+        }
+        disconnectedPanel.SetActive(true);
         Debug.Log("Client Gone");
 
         base.OnClientDisconnect();
@@ -94,12 +96,12 @@ public class CustomNetworkManager : NetworkManager
 
     public override void OnServerDisconnect(NetworkConnectionToClient conn)
     {
-        //if (NetworkServer.active)
-        //{
-        //    StopServer();
-        //    StopClient();
-        //}
-        //disconnectedPanel.SetActive(true);
+        if (!menu)
+        {
+            StopHost();
+            StopClient();
+        }
+        disconnectedPanel.SetActive(true);
         Debug.Log("Server Gone");
         
         base.OnServerDisconnect(conn);
@@ -112,7 +114,9 @@ public class CustomNetworkManager : NetworkManager
 
     public void MenuDisconnect()
     {
-        menuPanel.SetActive(true);
+        
         disconnectedPanel.SetActive(false);
+        endScreen.SetActive(false);
+        SceneManager.LoadScene(1);
     }
 }

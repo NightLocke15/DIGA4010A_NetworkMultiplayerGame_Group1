@@ -37,8 +37,9 @@ public class HoleScript : NetworkBehaviour
        
        if (puck.GetComponent<PuckScript>() != null)
        {
-           //Set puck to normal
-           puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation);
+            puck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Normal;
+            puck.GetComponentInChildren<PuckScript>().ChangePosToStorage(storelocation);
+            puck.transform.GetChild(2).gameObject.SetActive(false);
        }
     }
 
@@ -87,12 +88,15 @@ public class HoleScript : NetworkBehaviour
         {
             case ECscript.EnemyTypes.Goblin:
                 instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Magnet;
+                instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(true);
                 break;
             case ECscript.EnemyTypes.Orc:
                 instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Healer;
+                instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(true);
                 break;
             case ECscript.EnemyTypes.Ogre:
                 instantiatedPuck.GetComponent<PuckScript>().variant = PuckScript.puckVariants.Portal;
+                instantiatedPuck.GetComponent<PuckScript>().leaderCircle.SetActive(true);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
