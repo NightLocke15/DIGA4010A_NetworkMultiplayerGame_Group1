@@ -1116,9 +1116,7 @@ MonoBehaviour:
   es_Script: {fileID: 0}
   onTowerHit: {fileID: 403067584933432972, guid: 787364e725c6b0346806deb49dddaed8, type: 3}
   isLeader: 0
-  particles: {fileID: 662480072489979512}
-  noRate: 0
-  Rate: 100
+  particles: {fileID: 8379970159966585013}
 --- !u!1 &8352664184196350736
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,8 +1342,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5810706677294906531, guid: 8c427efd287c54045bcd3ff1ba6b47d4, type: 3}
   m_PrefabInstance: {fileID: 6334863144133906566}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &662480072489979512 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6834333839861128958, guid: 8c427efd287c54045bcd3ff1ba6b47d4, type: 3}
+--- !u!1 &8379970159966585013 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2567709301661388851, guid: 8c427efd287c54045bcd3ff1ba6b47d4, type: 3}
   m_PrefabInstance: {fileID: 6334863144133906566}
   m_PrefabAsset: {fileID: 0}
