@@ -25,6 +25,7 @@ public class MenuUI : MonoBehaviour
     public TMP_InputField portAddress;
 
     public GameObject howToPlayPanel;
+    public GameObject howToPlayPanelPauseMenu;
     public Vector2 targetLeft;
     public Vector2 targetRight;
 
@@ -44,6 +45,10 @@ public class MenuUI : MonoBehaviour
             targetLeft, Time.deltaTime *5);
         howToPlayPanel.GetComponent<RectTransform>().offsetMax = Vector2.Lerp(howToPlayPanel.GetComponent<RectTransform>().offsetMax,
             targetRight, Time.deltaTime*5);
+        howToPlayPanelPauseMenu.GetComponent<RectTransform>().offsetMin = Vector2.Lerp(howToPlayPanel.GetComponent<RectTransform>().offsetMin,
+            targetLeft, Time.deltaTime * 5);
+        howToPlayPanelPauseMenu.GetComponent<RectTransform>().offsetMax = Vector2.Lerp(howToPlayPanel.GetComponent<RectTransform>().offsetMax,
+            targetRight, Time.deltaTime * 5);
     }
 
     public void OnClickPlay()
