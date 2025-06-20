@@ -15147,8 +15147,8 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  goblinChance: 0
-  orcChance: 0
+  goblinChance: 50
+  orcChance: 50
   ogreChance: 50
   spawnAmount: 0
   goblinPrefab: {fileID: 618699028185002727, guid: b6f045b8d5090bb4a87cbad97f7af4cc, type: 3}
@@ -15161,7 +15161,7 @@ MonoBehaviour:
   enemyParent: {fileID: 0}
   agentScripts: []
   menuScript: {fileID: 417065761}
-  destroyPucks: 0
+  destroyPucks: 1
   pucksOnTheboard: {fileID: 590838838}
   tower: {fileID: 1718592648}
 --- !u!114 &1718592647

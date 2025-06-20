@@ -357,6 +357,21 @@ public class DragAndShoot : NetworkBehaviour
         }
     }
 
+    public void OnRemovePuck(InputValue value)
+    {
+        if (placePos != null)
+        {
+            if (placePos.childCount > 0)
+            {
+                for (int i = placePos.childCount-1; i >= 0; i--)
+                {
+                    PuckScript swicthPuck = placePos.GetChild(i).GetComponent<PuckScript>();
+                    swicthPuck.ChangePosToStorage(storePos);
+                }
+            }
+        }
+    }
+
     [ClientRpc]
     public void crpcnewParent(Transform parent, PuckScript puckTrans)
     {
