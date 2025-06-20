@@ -117,7 +117,9 @@ public class ESscript : NetworkBehaviour
                 if (i + 1 == spawnAmount)
                 {
                     enemyObject.GetComponentInChildren<ECscript>().isLeader = true;
-                    enemyObject.GetComponentInChildren<ECscript>().particles.SetActive(true);
+                    var emission = enemyObject.transform.GetChild(0).GetChild(3).GetComponent<ParticleSystem>().emission;
+                    emission.rateOverTime = 100;
+
                 }
                 
                 NetworkServer.Spawn(enemyObject);
